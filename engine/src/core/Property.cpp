@@ -14,41 +14,40 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKENGINE_CORE_ENTITYCOMPONENT_HPP_
-#define _PEAKENGINE_CORE_ENTITYCOMPONENT_HPP_
+#include "peakengine/entity/Property.hpp"
+#include "peakengine/entity/Entity.hpp"
+#include "peakengine/entity/EntityManager.hpp"
 
 namespace peak
 {
-	class Entity;
-
-	enum EntityComponentType
+	Property::Property(Entity *entity) : dirty(false), entity(entity),
+		changetime(0)
 	{
-		EECT_Script = 1,
-		EECT_Physics = 2,
-		EECT_Graphics = 3,
-	};
-
-	class EntityComponent
+	}
+	Property::~Property()
 	{
-		public:
-			EntityComponent(Entity *entity);
-			virtual ~EntityComponent();
+	}
 
-			virtual bool installProperties();
-			virtual bool init();
+	void Property::setDirty(bool dirty)
+	{
+		this->dirty = dirty;
+	}
+	bool Property::isDirty()
+	{
+		return dirty;
+	}
 
-			virtual void update();
+	void Property::setLastChange(unsigned int time)
+	{
+		changetime = time;
+	}
+	unsigned int Property::getLastChange()
+	{
+		return changetime;
+	}
 
-			virtual int getType() = 0;
-
-			Entity *getEntity()
-			{
-				return entity;
-			}
-		private:
-			Entity *entity;
-	};
+	void Property::setChanged()
+	{
+		setLastChange(entity->getManager()->getTime());
+	}
 }
-
-#endif
-

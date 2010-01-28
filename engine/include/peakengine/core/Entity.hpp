@@ -17,11 +17,17 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef _PEAKENGINE_CORE_ENTITY_HPP_
 #define _PEAKENGINE_CORE_ENTITY_HPP_
 
+#include "../support/Mutex.hpp"
+
 #include <string>
+#include <map>
+#include <vector>
 
 namespace peak
 {
 	class World;
+	class Property;
+	class EntityComponent;
 
 	/**
 	 * Dynamic game object, this can be everything from the player to objects
@@ -40,7 +46,7 @@ namespace peak
 			/**
 			 * Destructor.
 			 */
-			virtual ~Entity();
+			~Entity();
 
 			/**
 			 * Sets the ID of the entity. Entity IDs are unique within one
@@ -60,7 +66,45 @@ namespace peak
 			/**
 			 * Returns the type name of the entity.
 			 */
-			virtual std::string getType() = 0;
+			std::string getType()
+			{
+				return type;
+			}
+
+			/**
+			 * Adds a property to the entity. Memory management for the
+			 * property is then done by the entity.
+			 * @return Property which is available under the name. Might be
+			 * different from the property which was passed in if it already
+			 * existed. Might be 0 if a property with the same name but
+			 * different type already was registered.
+			 */
+			Property *addProperty(Property *property, std::string name);
+			/**
+			 * Returns the property with a certain name.
+			 * @return 0 if no property with this name has been registered.
+			 */
+			Property *getProperty(std::string name);
+
+			/**
+			 * Adds a component to the entity. Memory management for the
+			 * property is then done by the entity. Must not be called after
+			 * init() has been called for this entity.
+			 */
+			void addComponent(EntityComponent *component);
+
+			/**
+			 * Returns the world this entity belongs to.
+			 */
+			World *getWorld()
+			{
+				return world;
+			}
+
+			/**
+			 * Installs all components.
+			 */
+			bool init();
 
 			/**
 			 * Updates all components.
@@ -69,9 +113,29 @@ namespace peak
 
 		private:
 			/**
+			 * Type name.
+			 */
+			std::string type;
+			/**
+			 * World of the entity.
+			 */
+			World *world;
+			/**
 			 * ID of the entity.
 			 */
 			unsigned int id;
+			/**
+			 * Entity properties.
+			 */
+			std::map<std::string, Property*> properties;
+			/**
+			 * Components.
+			 */
+			std::vector<EntityComponent*> components;
+			/**
+			 * Mutex protecting the member variables.
+			 */
+			Mutex mutex;
 	};
 }
 

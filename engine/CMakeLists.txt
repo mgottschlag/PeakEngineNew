@@ -12,6 +12,10 @@ else(WIN32)
 endif(WIN32)
 
 set(SRC
+src/core/Engine.cpp
+src/core/Entity.cpp
+src/core/EntityComponent.cpp
+src/core/Property.cpp
 src/core/World.cpp
 src/support/Buffer.cpp
 src/support/ConditionVariable.cpp

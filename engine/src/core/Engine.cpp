@@ -47,7 +47,7 @@ namespace peak
 	void Engine::addWorld(World *world)
 	{
 		mutex.lock();
-		worlds->push_back(world);
+		worlds.push_back(world);
 		mutex.unlock();
 	}
 	void Engine::removeWorld(World *world)
