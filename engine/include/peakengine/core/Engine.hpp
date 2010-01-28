@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009, Mathias Gottschlag
+Copyright (c) 2010, Mathias Gottschlag
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -17,12 +17,19 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef _PEAKENGINE_CORE_ENGINE_HPP_
 #define _PEAKENGINE_CORE_ENGINE_HPP_
 
+#include "../support/Mutex.hpp"
+
+#include <string>
+#include <vector>
+
 namespace peak
 {
 	class World;
+	class Game;
 
 	/**
 	 * Main engine class.
+	 * @note Threadsafe expect for setGame(), setDirectory()
 	 */
 	class Engine
 	{
@@ -74,6 +81,18 @@ namespace peak
 			 * Current engine working directory.
 			 */
 			std::string directory;
+			/**
+			 * Currently used game implementation.
+			 */
+			Game *game;
+			/**
+			 * List of currently existing worlds.
+			 */
+			std::vector<World*> worlds;
+			/**
+			 * Mutex protecting all member functions.
+			 */
+			Mutex mutex;
 	};
 }
 

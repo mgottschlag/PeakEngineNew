@@ -14,39 +14,34 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKENGINE_CORE_ENTITYFACTORY_HPP_
-#define _PEAKENGINE_CORE_ENTITYFACTORY_HPP_
+#ifndef _PEAKENGINE_CORE_ENTITYCOMPONENTFACTORY_HPP_
+#define _PEAKENGINE_CORE_ENTITYCOMPONENTFACTORY_HPP_
 
 #include <string>
 
 namespace peak
 {
-	class Entity;
-	class World;
-
 	/**
-	 * Class which produces entities.
+	 * Class which produces entity components.
 	 */
-	class EntityFactory
+	class EntityComponentFactory
 	{
 		public:
 			/**
 			 * Constructor.
-			 * @param name Type name of the entities created by this factory.
+			 * @param name Type name of the entity components created by this
+			 * factory.
 			 * This name has to be unique for the Game the factory belongs to.
 			 */
-			EntityFactory(std::string name) : name(name)
+			EntityComponentFactory(std::string name) : name(name)
 			{
 			}
-			/**
-			 * Destructor.
-			 */
-			virtual ~EntityFactory()
+			virtual ~EntityComponentFactory()
 			{
 			}
 
 			/**
-			 * Returns the type name of the created entities.
+			 * Returns the type name of the created components.
 			 */
 			std::string getName()
 			{
@@ -54,17 +49,13 @@ namespace peak
 			}
 
 			/**
-			 * Creates an entity for use with the given world. Does not insert
-			 * the entity into the world.
+			 * Creates an entity component for the given entity. Does not add
+			 * it to the entity.
 			 */
-			virtual Entity *createEntity(World *world, bool local = true) = 0;
+			virtual EntityComponent *createComponent(Entity *entity) = 0;
 		private:
-			/**
-			 * Type name of the factory.
-			 */
 			std::string name;
 	};
 }
 
 #endif
-
