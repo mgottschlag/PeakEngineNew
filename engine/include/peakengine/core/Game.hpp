@@ -18,6 +18,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define _PEAKENGINE_CORE_GAME_HPP_
 
 #include "EntityFactory.hpp"
+#include "EntityComponentFactory.hpp"
 
 #include <string>
 #include <map>
@@ -96,9 +97,30 @@ namespace peak
 					return 0;
 				return it->second;
 			}
+
+			/**
+			 * Adds an entity component factory to the game definition.
+			 * The factory must be allocated manually as it is deleted when the
+			 * game is destroyed.
+			 */
+			void addEntityComponentFactory(EntityComponentFactory *factory)
+			{
+				compfactories.insert(std::pair<std::string, EntityComponentFactory*>(factory->getName(), factory));
+			}
+			/**
+			 * Returns the entity component factory with the specified name.
+			 */
+			EntityComponentFactory *getEntityComponentFactory(std::string name)
+			{
+				std::map<std::string, EntityComponentFactory*>::iterator it = compfactories.find(name);
+				if (it == compfactories.end())
+					return 0;
+				return it->second;
+			}
 		private:
 			Engine *engine;
 			std::map<std::string, EntityFactory*> factories;
+			std::map<std::string, EntityComponentFactory*> compfactories;
 	};
 }
 

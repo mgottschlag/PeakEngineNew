@@ -14,18 +14,29 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKENGINE_CORE_SCRIPTENTITYCOMPONENT_HPP_
-#define _PEAKENGINE_CORE_SCRIPTENTITYCOMPONENT_HPP_
+#ifndef _PEAKENGINE_IMPORT_SCRIPTENTITYCOMPONENT_HPP_
+#define _PEAKENGINE_IMPORT_SCRIPTENTITYCOMPONENT_HPP_
 
-#include "EntityComponent.hpp"
+#include "../core/EntityComponent.hpp"
+
+#include <string>
 
 namespace peak
 {
-	class ScriptEntityComponent
+	class Script;
+
+	class ScriptEntityComponent : public EntityComponent
 	{
 		public:
 			ScriptEntityComponent(Entity *entity, std::string data);
 			virtual ~ScriptEntityComponent();
+
+			virtual bool installProperties();
+			virtual bool init();
+
+			virtual void update();
+
+			virtual int getType();
 		private:
 			Script *script;
 	};

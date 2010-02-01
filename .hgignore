@@ -9,3 +9,4 @@ relre:CMakeCache.txt
 glob:tools/editor/editor
 relre:install_manifest\.txt
 relre:ui_.*\.h
+glob:tools/editor/PeakEditor

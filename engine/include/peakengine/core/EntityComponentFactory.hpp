@@ -21,6 +21,9 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 namespace peak
 {
+	class EntityComponent;
+	class Entity;
+
 	/**
 	 * Class which produces entity components.
 	 */
