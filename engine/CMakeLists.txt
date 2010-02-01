@@ -27,6 +27,10 @@ src/support/OS.cpp
 src/support/ScopedLock.cpp
 src/support/Script.cpp
 src/support/Thread.cpp
+src/support/tinystr.cpp
+src/support/tinyxml.cpp
+src/support/tinyxmlerror.cpp
+src/support/tinyxmlparser.cpp
 )
 
 include_directories(include ${LUA_INCLUDE_DIR})
