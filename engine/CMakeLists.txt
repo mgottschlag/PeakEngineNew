@@ -19,6 +19,8 @@ src/core/Property.cpp
 src/core/World.cpp
 src/import/ScriptEntityComponent.cpp
 src/import/ScriptEntityComponentFactory.cpp
+src/import/XMLEntityFactory.cpp
+src/import/XMLGame.cpp
 src/support/Buffer.cpp
 src/support/ConditionVariable.cpp
 src/support/FrameLimiter.cpp

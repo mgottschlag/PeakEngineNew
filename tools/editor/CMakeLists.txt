@@ -2,11 +2,13 @@
 project(PeakEditor)
 
 cmake_minimum_required(VERSION 2.4.0)
+if(COMMAND cmake_policy)
+	cmake_policy(SET CMP0003 NEW)
+endif(COMMAND cmake_policy)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-parameter")
 
 find_package(Qt4 REQUIRED)
-
 
 set(QT_USE_OPENGL TRUE)
 set(QT_USE_QTXML TRUE)
@@ -55,6 +57,6 @@ QT4_WRAP_UI(UIS_H ${UIS})
 include_directories(include ../../engine/include ${CMAKE_CURRENT_BINARY_DIR} ${QT_QTOPENGL_INCLUDE_DIR})
 
 add_executable(PeakEditor ${SRC} ${UIS_H} ${MOC_SRC} ${QRC_SRC})
-target_link_libraries(PeakEditor ${QT_LIBRARIES} ${QT_QTOPENGL_LIBRARIES})
+target_link_libraries(PeakEditor PeakEngine ${QT_LIBRARIES} ${QT_QTOPENGL_LIBRARIES})
 
 install(TARGETS PeakEditor RUNTIME DESTINATION bin)

@@ -17,9 +17,11 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef _PEAKENGINE_CORE_XMLENTITYFACTORY_HPP_
 #define _PEAKENGINE_CORE_XMLENTITYFACTORY_HPP_
 
+#include "../core/EntityFactory.hpp"
+
 namespace peak
 {
-	class XMLEntityFactory
+	class XMLEntityFactory : public EntityFactory
 	{
 		public:
 			XMLEntityFactory(std::string name, std::string file);
@@ -29,6 +31,7 @@ namespace peak
 
 			virtual Entity *createEntity(World *world, bool local = true);
 		private:
+			std::string file;
 	};
 }
 

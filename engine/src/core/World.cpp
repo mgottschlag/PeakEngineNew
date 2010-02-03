@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 namespace peak
 {
 	World::World(Engine *engine)
-		: limiter(20000), threadrunning(false)
+		: limiter(20000), threadrunning(false), time(0)
 	{
 	}
 	World::~World()

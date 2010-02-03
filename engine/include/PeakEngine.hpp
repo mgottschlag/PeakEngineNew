@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/core/Game.hpp"
 #include "peakengine/core/EntityComponent.hpp"
 #include "peakengine/core/EntityFactory.hpp"
+#include "peakengine/import/ScriptEntityComponentFactory.hpp"
+#include "peakengine/import/XMLGame.hpp"
 
 /**
  * Namespace containing all PeakEngine classes, but also those from plugins.

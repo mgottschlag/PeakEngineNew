@@ -61,6 +61,14 @@ namespace peak
 			void removeEntity(Entity *entity);
 
 			/**
+			 * Returns the time of the world. The unit used are 20ms steps.
+			 */
+			unsigned int getTime()
+			{
+				return time;
+			}
+
+			/**
 			 * Starts the update loop.
 			 */
 			void start();
@@ -97,6 +105,8 @@ namespace peak
 			volatile bool stopthread;
 			volatile bool pausethread;
 			volatile bool threadrunning;
+
+			unsigned int time;
 	};
 }
 

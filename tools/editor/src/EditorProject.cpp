@@ -168,8 +168,8 @@ bool EditorProject::rebuildGameSource()
 	codegen.addHeaderCode("#include <PeakEngine.hpp>\n");
 	codegen.addCode("#include \"GameTemplate.hpp\"\n");
 	codegen.addCode("#include \"Game.hpp\"\n");
-	codegen.addClass("GameTemplate", "peak::Game");
-	codegen.addConstructor("GameTemplate()", "peak::Game()", EV_Public);
+	codegen.addClass("GameTemplate", "peak::XMLGame");
+	codegen.addConstructor("GameTemplate()", "peak::XMLGame()", EV_Public);
 	codegen.endFunction();
 	codegen.addFunction("", "~GameTemplate()", EV_Public);
 	codegen.endFunction();

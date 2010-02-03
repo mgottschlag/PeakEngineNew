@@ -14,40 +14,22 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include "peakengine/core/Property.hpp"
-#include "peakengine/core/Entity.hpp"
-#include "peakengine/core/World.hpp"
+#ifndef _PEAKENGINE_IMPORT_XMLGAME_HPP_
+#define _PEAKENGINE_IMPORT_XMLGAME_HPP_
+
+#include "../core/Game.hpp"
 
 namespace peak
 {
-	Property::Property(Entity *entity) : dirty(false), entity(entity),
-		changetime(0)
+	class XMLGame : public Game
 	{
-	}
-	Property::~Property()
-	{
-	}
+		public:
+			XMLGame();
+			virtual ~XMLGame();
 
-	void Property::setDirty(bool dirty)
-	{
-		this->dirty = dirty;
-	}
-	bool Property::isDirty()
-	{
-		return dirty;
-	}
-
-	void Property::setLastChange(unsigned int time)
-	{
-		changetime = time;
-	}
-	unsigned int Property::getLastChange()
-	{
-		return changetime;
-	}
-
-	void Property::setChanged()
-	{
-		setLastChange(entity->getWorld()->getTime());
-	}
+			virtual bool load();
+			virtual bool shutdown();
+	};
 }
+
+#endif
