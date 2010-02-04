@@ -228,7 +228,7 @@ bool EditorProject::recompile()
 		return false;
 	}
 	// Create game
-	peak::Game*(*createFunction)() = (peak::Game*(*)())library.resolve("createGame");
+	peak::XMLGame*(*createFunction)() = (peak::XMLGame*(*)())library.resolve("createGame");
 	if (createFunction == 0)
 	{
 		compileroutput += "Did not find createFunction()!\n";

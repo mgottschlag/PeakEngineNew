@@ -46,6 +46,7 @@ EditorWindow::EditorWindow()
 	QObject::connect(ui.actionCloseObject, SIGNAL(activated()), this, SLOT(closeObject()));
 	QObject::connect(ui.objectList, SIGNAL(activated(QModelIndex)), this, SLOT(objectSelected(QModelIndex)));
 	QObject::connect(ui.actionConfigure, SIGNAL(activated()), this, SLOT(configure()));
+	QObject::connect(ui.actionLaunch, SIGNAL(activated()), this, SLOT(launch()));
 	// Initialize object list
 	ui.objectList->setModel(&objectlistmodel);
 	ui.objectList->setIndentation(0);
@@ -130,6 +131,8 @@ void EditorWindow::closeProject(bool ask)
 		return;
 	if (currentobject)
 		currentobject = 0;
+	// Stop game engine
+	stopEngine();
 	// Close project
 	setProjectActions(false);
 	if (!project->save())
@@ -147,11 +150,13 @@ void EditorWindow::recompile()
 	if (!project)
 		return;
 	// TODO: Close everything
+	stopEngine();
 	// Recompile project
 	if (!project->recompile())
 		QMessageBox::critical(this, tr("Error"), tr("Compiling the project sources failed."));
 	ui.console->setPlainText(project->getCompilerOutput());
-	// TODO: Get Game instance
+	// Restart engine
+	startEngine();
 	updatePlayActions();
 }
 void EditorWindow::newObject()
@@ -234,6 +239,10 @@ void EditorWindow::configure()
 	if (!project)
 		return;
 	project->getSettingsWindow().show();
+}
+void EditorWindow::launch()
+{
+	
 }
 
 void EditorWindow::closeEvent(QCloseEvent *event)
@@ -327,5 +336,26 @@ void EditorWindow::updateInspector()
 		default:
 			ui.inspectorStack->setCurrentWidget(ui.nothingInspector);
 			break;
+	}
+}
+
+void EditorWindow::startEngine()
+{
+	if (!project)
+		return;
+	if (!project->getGame())
+		return;
+	stopEngine();
+	engine.setGame(project->getGame());
+	// TODO: Check return value
+	project->getGame()->load();
+}
+void EditorWindow::stopEngine()
+{
+	if (engine.getGame())
+	{
+		engine.stop(true);
+		engine.getGame()->shutdown();
+		engine.setGame(0);
 	}
 }

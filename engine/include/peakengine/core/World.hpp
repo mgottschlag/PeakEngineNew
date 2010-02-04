@@ -48,7 +48,7 @@ namespace peak
 			/**
 			 * Destructor.
 			 */
-			~World();
+			virtual ~World();
 
 			/**
 			 * Adds an entity to the world and sets its ID accordingly. The
@@ -80,6 +80,18 @@ namespace peak
 			 * Stops the update loop completely.
 			 */
 			void stop(bool wait = false);
+			/**
+			 * Returns true if the world is currently running.
+			 */
+			bool isRunning();
+
+			/**
+			 * Returns the engine this world was created for.
+			 */
+			Engine *getEngine()
+			{
+				return engine;
+			}
 
 		private:
 			/**

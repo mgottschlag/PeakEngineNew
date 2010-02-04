@@ -17,7 +17,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef _EDITORPROJECT_HPP_
 #define _EDITORPROJECT_HPP_
 
-#include "peakengine/core/Game.hpp"
+#include <PeakEngine.hpp>
 
 #include "ProjectSettings.hpp"
 
@@ -57,7 +57,7 @@ class EditorProject
 			return compileroutput;
 		}
 
-		peak::Game *getGame()
+		peak::XMLGame *getGame()
 		{
 			return game;
 		}
@@ -86,7 +86,7 @@ class EditorProject
 		QDomElement objelem;
 		QString compileroutput;
 		QLibrary library;
-		peak::Game *game;
+		peak::XMLGame *game;
 		std::vector<EditorObject*> objects;
 
 		ObjectListModel *listmodel;

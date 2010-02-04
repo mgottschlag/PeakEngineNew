@@ -15,6 +15,10 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "peakengine/import/XMLEntityFactory.hpp"
+#include "peakengine/core/World.hpp"
+#include "peakengine/core/Game.hpp"
+#include "peakengine/core/Engine.hpp"
+#include "peakengine/core/Entity.hpp"
 #include "peakengine/support/tinyxml.h"
 
 #include <iostream>
@@ -39,8 +43,8 @@ namespace peak
 				<< xml.ErrorDesc() << std::endl;
 			return false;
 		}
-		TiXmlNode *node = xml.FirstChild("Entity");
-		if (!node)
+		TiXmlNode *root = xml.FirstChild("Entity");
+		if (!root)
 		{
 			std::cerr << "Parser error: <Entity> not found." << std::endl;
 			return false;
@@ -48,12 +52,60 @@ namespace peak
 		// Load properties
 		// TODO
 		// Load components
-		// TODO
+		TiXmlNode *componentnode = root->FirstChild("Component");
+		while (componentnode)
+		{
+			TiXmlElement *componentelem = componentnode->ToElement();
+			if (!componentelem)
+			{
+				componentnode = root->IterateChildren("Component", componentnode);
+				continue;
+			}
+			if (!componentelem->Attribute("type"))
+			{
+				std::cout << "Entity: Component type missing." << std::endl;
+				componentnode = root->IterateChildren("Component", componentnode);
+				continue;
+			}
+			components.push_back(componentelem->Attribute("type"));
+			componentnode = root->IterateChildren("Component", componentnode);
+		}
 		return true;
 	}
 
 	Entity *XMLEntityFactory::createEntity(World *world, bool local)
 	{
-		return 0;
+		Game *game = world->getEngine()->getGame();
+		// Get component factories
+		std::vector<EntityComponentFactory*> componentfactories;
+		for (unsigned int i = 0; i < components.size(); i++)
+		{
+			EntityComponentFactory *factory = game->getEntityComponentFactory(components[i]);
+			if (!factory)
+				return 0;
+			componentfactories.push_back(factory);
+		}
+		// Create entity
+		Entity *entity = new Entity(world);
+		// Create properties
+		// TODO
+		// Create components
+		for (unsigned int i = 0; i < componentfactories.size(); i++)
+		{
+			EntityComponent *component = componentfactories[i]->createComponent(entity);
+			if (!component)
+			{
+				delete entity;
+				return 0;
+			}
+			entity->addComponent(component);
+		}
+		// Initialize entity
+		if (!entity->init())
+		{
+			delete entity;
+			return 0;
+		}
+		return entity;
 	}
 }

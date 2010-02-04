@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "ui_MainWindow.h"
 #include "ObjectListModel.hpp"
 
+#include <PeakEngine.hpp>
+
 class EditorProject;
 
 class EditorWindow : public QMainWindow
@@ -40,6 +42,7 @@ class EditorWindow : public QMainWindow
 		void closeObject();
 		void objectSelected(const QModelIndex &index);
 		void configure();
+		void launch();
 	protected:
 		virtual void closeEvent(QCloseEvent *event);
 	private:
@@ -49,6 +52,9 @@ class EditorWindow : public QMainWindow
 		void updatePlayActions();
 		void updateInspector();
 
+		void startEngine();
+		void stopEngine();
+
 		Ui::MainWindow ui;
 		ObjectListModel objectlistmodel;
 		QActionGroup playactions;
@@ -56,6 +62,8 @@ class EditorWindow : public QMainWindow
 		QString title;
 		EditorProject *project;
 		EditorObject *currentobject;
+
+		peak::Engine engine;
 };
 
 #endif

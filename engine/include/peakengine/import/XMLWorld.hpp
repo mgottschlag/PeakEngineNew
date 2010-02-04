@@ -14,24 +14,24 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKENGINE_IMPORT_SCRIPTENTITYCOMPONENTFACTORY_HPP_
-#define _PEAKENGINE_IMPORT_SCRIPTENTITYCOMPONENTFACTORY_HPP_
+#ifndef _PEAKENGINE_CORE_XMLWORLD_HPP_
+#define _PEAKENGINE_CORE_XMLWORLD_HPP_
 
-#include "../core/EntityComponentFactory.hpp"
+#include "../core/World.hpp"
+
+#include <string>
 
 namespace peak
 {
-	class ScriptEntityComponentFactory : public EntityComponentFactory
+	class XMLWorld : public World
 	{
 		public:
-			ScriptEntityComponentFactory(std::string name);
-			virtual ~ScriptEntityComponentFactory();
+			XMLWorld(Engine *engine, std::string file);
+			virtual ~XMLWorld();
 
-			bool load(std::string file);
-
-			virtual EntityComponent *createComponent(Entity *entity);
+			bool load();
 		private:
-			std::string data;
+			std::string file;
 	};
 }
 

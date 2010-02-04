@@ -55,7 +55,7 @@ namespace peak
 
 	void ScriptEntityComponent::update()
 	{
-		if (script->isFunction("init"))
+		if (script->isFunction("update"))
 			script->callFunction("update");
 	}
 

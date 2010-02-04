@@ -30,6 +30,7 @@ namespace peak
 	void Engine::setGame(Game *game)
 	{
 		this->game = game;
+		game->setEngine(this);
 	}
 	Game *Engine::getGame()
 	{
@@ -66,9 +67,29 @@ namespace peak
 
 	void Engine::stop(bool wait)
 	{
+		mutex.lock();
 		for (unsigned int i = 0; i < worlds.size(); i++)
 		{
+			// TODO: Possible deadlocks?
 			worlds[i]->stop(wait);
 		}
+		mutex.unlock();
+	}
+
+	bool Engine::isRunning()
+	{
+		bool running = false;
+		mutex.lock();
+		for (unsigned int i = 0; i < worlds.size(); i++)
+		{
+			// TODO: Possible deadlocks?
+			if (worlds[i]->isRunning())
+			{
+				running = true;
+				break;
+			}
+		}
+		mutex.unlock();
+		return running;
 	}
 }

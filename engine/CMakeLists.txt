@@ -21,6 +21,7 @@ src/import/ScriptEntityComponent.cpp
 src/import/ScriptEntityComponentFactory.cpp
 src/import/XMLEntityFactory.cpp
 src/import/XMLGame.cpp
+src/import/XMLWorld.cpp
 src/support/Buffer.cpp
 src/support/ConditionVariable.cpp
 src/support/FrameLimiter.cpp
@@ -38,7 +39,7 @@ src/support/tinyxmlparser.cpp
 include_directories(include ${LUA_INCLUDE_DIR})
 
 add_library(PeakEngine SHARED ${SRC})
-target_link_libraries(PeakEngine luabind ${LUA_LIBRARIES})
+target_link_libraries(PeakEngine luabind ${LUA_LIBRARIES} pthread)
 
 install(DIRECTORY include/peakengine/ DESTINATION include/peakengine FILES_MATCHING PATTERN *.hpp)
 install(FILES include/PeakEngine.hpp DESTINATION include)

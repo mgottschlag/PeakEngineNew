@@ -29,6 +29,10 @@ namespace peak
 
 			virtual bool load();
 			virtual bool shutdown();
+
+			World *createInitialWorld();
+		private:
+			std::string initialworld;
 	};
 }
 

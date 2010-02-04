@@ -18,6 +18,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define _PEAKENGINE_CORE_ENGINE_HPP_
 
 #include "../support/Mutex.hpp"
+#include "../support/ConditionVariable.hpp"
 
 #include <string>
 #include <vector>
@@ -75,6 +76,20 @@ namespace peak
 			 * Tells all worlds to stop.
 			 */
 			void stop(bool wait = false);
+			/**
+			 * Prepares for calling wait() once later.
+			 */
+			void initWait();
+			/**
+			 * Waits for any other thread to call stop(). initWait() has to be
+			 * called before the initial world has been created so that no
+			 * deadlocks occur.
+			 */
+			void wait();
+			/**
+			 * Checks whether there are any worlds running.
+			 */
+			bool isRunning();
 
 		private:
 			/**
@@ -93,6 +108,11 @@ namespace peak
 			 * Mutex protecting all member functions.
 			 */
 			Mutex mutex;
+			/**
+			 * Condition variable used to catch the signal when someone calls
+			 * stop().
+			 */
+			//ConditionVariable stopped;
 	};
 }
 

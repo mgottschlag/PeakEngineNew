@@ -18,8 +18,10 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define _PEAKENGINE_HPP_
 
 #include "peakengine/core/Game.hpp"
+#include "peakengine/core/Engine.hpp"
 #include "peakengine/core/EntityComponent.hpp"
 #include "peakengine/core/EntityFactory.hpp"
+#include "peakengine/core/World.hpp"
 #include "peakengine/import/ScriptEntityComponentFactory.hpp"
 #include "peakengine/import/XMLGame.hpp"
 

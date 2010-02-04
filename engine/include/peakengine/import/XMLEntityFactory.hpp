@@ -19,6 +19,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "../core/EntityFactory.hpp"
 
+#include <vector>
+
 namespace peak
 {
 	class XMLEntityFactory : public EntityFactory
@@ -32,6 +34,7 @@ namespace peak
 			virtual Entity *createEntity(World *world, bool local = true);
 		private:
 			std::string file;
+			std::vector<std::string> components;
 	};
 }
 

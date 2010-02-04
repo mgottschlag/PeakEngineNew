@@ -46,11 +46,19 @@ namespace peak
 			 */
 			virtual ~Game()
 			{
+				// Delete entity factories
 				std::map<std::string, EntityFactory*>::iterator it = factories.begin();
 				while (it != factories.end())
 				{
 					delete it->second;
 					it++;
+				}
+				// Delete component factories
+				std::map<std::string, EntityComponentFactory*>::iterator it2 = compfactories.begin();
+				while (it2 != compfactories.end())
+				{
+					delete it2->second;
+					it2++;
 				}
 			}
 			/**

@@ -22,22 +22,30 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 namespace peak
 {
-	ScriptEntityComponentFactory::ScriptEntityComponentFactory(std::string name, std::string file)
+	ScriptEntityComponentFactory::ScriptEntityComponentFactory(std::string name)
 		: EntityComponentFactory(name)
+	{
+	}
+	ScriptEntityComponentFactory::~ScriptEntityComponentFactory()
+	{
+	}
+
+	bool ScriptEntityComponentFactory::load(std::string file)
 	{
 		std::ifstream input(file.c_str(), std::ios_base::in);
 		if (!input)
 		{
 			std::cout << "Error while opening \"" << file << "\"" << std::endl;
+			return false;
 		}
 		else
 		{
-			input >> data;
+			std::string line;
+			while (getline(input, line))
+				data += line + '\n';
 			std::cout << "Script read: \"" << data << "\"" << std::endl;
+			return true;
 		}
-	}
-	ScriptEntityComponentFactory::~ScriptEntityComponentFactory()
-	{
 	}
 
 	EntityComponent *ScriptEntityComponentFactory::createComponent(Entity *entity)
