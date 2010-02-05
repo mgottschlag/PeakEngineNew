@@ -28,6 +28,7 @@ namespace peak
 {
 	class Engine;
 	class Entity;
+	class WorldComponent;
 
 	/**
 	 * A world forms the central class for all scenes in the game, be it game
@@ -37,6 +38,8 @@ namespace peak
 	 * A world can hold several world components that extend the world, like
 	 * a networking component that implements client-server networking or a
 	 * a physics component containing static geometry.
+	 *
+	 * @note Threadsafe.
 	 */
 	class World
 	{
@@ -67,6 +70,16 @@ namespace peak
 			{
 				return time;
 			}
+
+			/**
+			 * Adds a world component to the world. The memory management for
+			 * the component is then done by the world.
+			 */
+			void addComponent(WorldComponent *component);
+			/**
+			 * Returns the world component with the given type.
+			 */
+			WorldComponent *getComponent(unsigned int type);
 
 			/**
 			 * Starts the update loop.
@@ -107,11 +120,15 @@ namespace peak
 
 			Engine *engine;
 
+			Mutex componentmutex;
+			std::vector<WorldComponent*> components;
+
 			Mutex entitymutex;
 			std::vector<Entity*> entities;
 			std::queue<unsigned int> freelist;
 			std::queue<unsigned int> removalqueue;
 
+			Mutex threadmutex;
 			Thread thread;
 			FrameLimiter limiter;
 			volatile bool stopthread;

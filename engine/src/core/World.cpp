@@ -16,6 +16,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "peakengine/core/World.hpp"
 #include "peakengine/core/Entity.hpp"
+#include "peakengine/core/WorldComponent.hpp"
 
 namespace peak
 {
@@ -34,6 +35,11 @@ namespace peak
 			{
 				delete entities[i];
 			}
+		}
+		// Delete components
+		for (unsigned int i = 0; i < components.size(); i++)
+		{
+			delete components[i];
 		}
 	}
 
@@ -71,8 +77,32 @@ namespace peak
 		entitymutex.unlock();
 	}
 
+	void World::addComponent(WorldComponent *component)
+	{
+		componentmutex.lock();
+		components.push_back(component);
+		componentmutex.unlock();
+	}
+	WorldComponent *World::getComponent(unsigned int type)
+	{
+		WorldComponent *component = 0;
+		componentmutex.lock();
+		for (unsigned int i = 0; i < components.size(); i++)
+		{
+			if (components[i]->getType() == type)
+			{
+				component = components[i];
+				break;
+			}
+		}
+		componentmutex.unlock();
+		return component;
+	}
+
+
 	void World::start()
 	{
+		threadmutex.lock();
 		if (threadrunning)
 			return;
 		// Start thread
@@ -80,20 +110,25 @@ namespace peak
 		stopthread = false;
 		pausethread = false;
 		thread.create(new ClassFunctor<World>(this, &World::worldThread));
+		threadmutex.unlock();
 	}
 	void World::pause()
 	{
+		threadmutex.lock();
 		if (!threadrunning)
 			return;
 		pausethread = true;
+		threadmutex.unlock();
 	}
 	void World::stop(bool wait)
 	{
+		threadmutex.lock();
 		if (!threadrunning)
 			return;
 		stopthread = true;
 		if (wait)
 			thread.wait();
+		threadmutex.unlock();
 	}
 	bool World::isRunning()
 	{
@@ -107,6 +142,15 @@ namespace peak
 			entitymutex.lock();
 			if (!pausethread)
 			{
+				// Pre-update callbacks
+				componentmutex.lock();
+				for (unsigned int i = 0; i < components.size(); i++)
+				{
+					components[i]->onPreUpdate();
+				}
+				componentmutex.unlock();
+				// Increase time
+				time++;
 				// Update entities
 				// TODO: Locking
 				for (unsigned int i = 0; i < entities.size(); i++)
@@ -118,6 +162,13 @@ namespace peak
 						entitymutex.lock();
 					}
 				}
+				// Post-update callbacks
+				componentmutex.lock();
+				for (unsigned int i = 0; i < components.size(); i++)
+				{
+					components[i]->onPostUpdate();
+				}
+				componentmutex.unlock();
 			}
 			// Delete unneeded entities
 			while (!removalqueue.empty())
