@@ -39,6 +39,7 @@ and to alter it and redistribute it freely, subject to the following restriction
 #define _PEAKENGINE_SUPPORT_QUATERNION_HPP_
 
 #include "Vector3.hpp"
+#include "Matrix4.hpp"
 
 namespace peak
 {
@@ -120,6 +121,8 @@ namespace peak
 			void normalize()
 			{
 				float s = q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3];
+				if (s == 1)
+					return;
 				*this /= sqrtf(s);
 			}
 			/**
@@ -135,6 +138,22 @@ namespace peak
 				Quaternion dv = b - a;
 				*this = a + dv * d;
 				return *this;
+			}
+
+			/**
+			 * Creates a rotation matrix from the quaternion.
+			 */
+			Matrix4 toMatrix()
+			{
+				Matrix4 m1(q[3], q[2], -q[1], q[0],
+				           -q[2], q[3], q[0], q[1],
+				           q[1], -q[0], q[3], q[2],
+				           -q[0], -q[1], -q[2], q[3]);
+				Matrix4 m2(q[3], q[2], -q[1], -q[0],
+				           -q[2], q[3], q[0], -q[1],
+				           q[1], -q[0], q[3], -q[2],
+				           q[0], q[1], q[2], q[3]);
+				return m1 * m2;
 			}
 
 			Quaternion operator*(float s) const
