@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "EntityFactory.hpp"
 #include "EntityComponentFactory.hpp"
+#include "WorldComponentFactory.hpp"
 
 #include <string>
 #include <map>
@@ -59,6 +60,12 @@ namespace peak
 				{
 					delete it2->second;
 					it2++;
+				}
+				std::map<std::string, WorldComponentFactory*>::iterator it3 = wcompfactories.begin();
+				while (it3 != wcompfactories.end())
+				{
+					delete it3->second;
+					it3++;
 				}
 			}
 			/**
@@ -125,10 +132,31 @@ namespace peak
 					return 0;
 				return it->second;
 			}
+
+			/**
+			 * Adds a world component factory to the game definition.
+			 * The factory must be allocated manually as it is deleted when the
+			 * game is destroyed.
+			 */
+			void addWorldComponentFactory(WorldComponentFactory *factory)
+			{
+				wcompfactories.insert(std::pair<std::string, WorldComponentFactory*>(factory->getName(), factory));
+			}
+			/**
+			 * Returns the world component factory with the specified name.
+			 */
+			WorldComponentFactory *getWorldComponentFactory(std::string name)
+			{
+				std::map<std::string, WorldComponentFactory*>::iterator it = wcompfactories.find(name);
+				if (it == wcompfactories.end())
+					return 0;
+				return it->second;
+			}
 		private:
 			Engine *engine;
 			std::map<std::string, EntityFactory*> factories;
 			std::map<std::string, EntityComponentFactory*> compfactories;
+			std::map<std::string, WorldComponentFactory*> wcompfactories;
 	};
 }
 

@@ -19,11 +19,27 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 namespace peak
 {
+	class World;
+
+	enum WorldComponentType
+	{
+		EWCT_Server,
+		EWCT_Client,
+		EWCT_Graphics,
+		EWCT_Physics,
+		EWCT_Sound
+	};
+
 	class WorldComponent
 	{
 		public:
-			WorldComponent(World *world, unsigned int type);
-			virtual ~WorldComponent();
+			WorldComponent(World *world, unsigned int type)
+				: world(world), type(type)
+			{
+			}
+			virtual ~WorldComponent()
+			{
+			}
 
 			virtual void onPostUpdate() {};
 			virtual void onPreUpdate() {};

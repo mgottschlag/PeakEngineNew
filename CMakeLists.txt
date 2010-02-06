@@ -13,7 +13,9 @@ add_subdirectory(engine)
 # Plugins
 
 add_subdirectory(plugins/graphics)
+add_subdirectory(plugins/network)
 add_subdirectory(plugins/physics)
+add_subdirectory(plugins/sound)
 
 # Tools
 
