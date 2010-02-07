@@ -19,10 +19,14 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "../core/EntityFactory.hpp"
 
+#include "peakengine/support/tinyxml.h"
+
 #include <vector>
 
 namespace peak
 {
+	class EntityComponentTemplate;
+
 	class XMLEntityFactory : public EntityFactory
 	{
 		public:
@@ -34,7 +38,15 @@ namespace peak
 			virtual Entity *createEntity(World *world, bool local = true);
 		private:
 			std::string file;
-			std::vector<std::string> components;
+			TiXmlDocument xml;
+			struct ComponentInfo
+			{
+				std::string type;
+				bool loaded;
+				TiXmlElement *xml;
+				EntityComponentTemplate *tpl;
+			};
+			std::vector<ComponentInfo> components;
 	};
 }
 

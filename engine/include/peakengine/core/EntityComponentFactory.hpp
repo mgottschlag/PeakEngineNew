@@ -19,10 +19,32 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <string>
 
+class TiXmlElement;
+
 namespace peak
 {
 	class EntityComponent;
 	class Entity;
+	class EntityComponentFactory;
+
+	class EntityComponentTemplate
+	{
+		public:
+			EntityComponentTemplate(EntityComponentFactory *factory)
+				: factory(factory)
+			{
+			}
+			virtual ~EntityComponentTemplate()
+			{
+			}
+
+			EntityComponentFactory *getFactory()
+			{
+				return factory;
+			}
+		private:
+			EntityComponentFactory *factory;
+	};
 
 	/**
 	 * Class which produces entity components.
@@ -52,10 +74,29 @@ namespace peak
 			}
 
 			/**
+			 * Creates a component template from XML data. The caller has to
+			 * delete the template when it is not needed anymore.
+			 * @return Returns 0 if no template could be created.
+			 */
+			virtual EntityComponentTemplate *createTemplate(TiXmlElement *xml)
+			{
+				return 0;
+			}
+
+			/**
 			 * Creates an entity component for the given entity. Does not add
 			 * it to the entity.
 			 */
 			virtual EntityComponent *createComponent(Entity *entity) = 0;
+			/**
+			 * Creates an entity component for the given entity from XML data.
+			 * Does not add it to the entity.
+			 */
+			virtual EntityComponent *createComponent(Entity *entity,
+				EntityComponentTemplate *tpl)
+			{
+				return createComponent(entity);
+			}
 		private:
 			std::string name;
 	};

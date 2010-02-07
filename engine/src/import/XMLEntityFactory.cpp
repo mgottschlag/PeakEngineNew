@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/core/Game.hpp"
 #include "peakengine/core/Engine.hpp"
 #include "peakengine/core/Entity.hpp"
-#include "peakengine/support/tinyxml.h"
 
 #include <iostream>
 
@@ -31,13 +30,19 @@ namespace peak
 	}
 	XMLEntityFactory::~XMLEntityFactory()
 	{
+		// Delete template
+		for (unsigned int i = 0; i < components.size(); i++)
+		{
+			if (components[i].tpl)
+				delete components[i].tpl;
+		}
 	}
 
 	bool XMLEntityFactory::load()
 	{
+		// FIXME: Thread safety
 		// Open XML file
-		TiXmlDocument xml(file.c_str());
-		if (!xml.LoadFile() || xml.Error())
+		if (!xml.LoadFile(file.c_str()) || xml.Error())
 		{
 			std::cout << "Could not load XML file " << file << ": "
 				<< xml.ErrorDesc() << std::endl;
@@ -67,7 +72,12 @@ namespace peak
 				componentnode = root->IterateChildren("Component", componentnode);
 				continue;
 			}
-			components.push_back(componentelem->Attribute("type"));
+			ComponentInfo info;
+			info.type = componentelem->Attribute("type");
+			info.loaded = false;
+			info.xml = componentelem;
+			info.tpl = 0;
+			components.push_back(info);
 			componentnode = root->IterateChildren("Component", componentnode);
 		}
 		return true;
@@ -80,9 +90,16 @@ namespace peak
 		std::vector<EntityComponentFactory*> componentfactories;
 		for (unsigned int i = 0; i < components.size(); i++)
 		{
-			EntityComponentFactory *factory = game->getEntityComponentFactory(components[i]);
+			ComponentInfo &info = components[i];
+			EntityComponentFactory *factory = game->getEntityComponentFactory(info.type);
 			if (!factory)
 				return 0;
+			if (!info.loaded)
+			{
+				// Load template
+				info.tpl = factory->createTemplate(info.xml);
+				info.loaded = true;
+			}
 			componentfactories.push_back(factory);
 		}
 		// Create entity
@@ -92,7 +109,8 @@ namespace peak
 		// Create components
 		for (unsigned int i = 0; i < componentfactories.size(); i++)
 		{
-			EntityComponent *component = componentfactories[i]->createComponent(entity);
+			EntityComponent *component = componentfactories[i]->createComponent(entity,
+				components[i].tpl);
 			if (!component)
 			{
 				delete entity;
