@@ -18,6 +18,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define _PEAKGRAPHICS_CORE_GRAPHICSENTITYCOMPONENTFACTORY_HPP_
 
 #include "peakengine/core/EntityComponentFactory.hpp"
+#include "peakengine/support/Vector3.hpp"
 
 #include <vector>
 
@@ -35,15 +36,33 @@ namespace peak
 				{
 				}
 
-				struct ModelInfo
+				struct SceneNodeInfo
 				{
 					std::string name;
+					Vector3F position;
+					Vector3F rotation;
+					Vector3F scale;
+				};
+
+				struct ModelInfo
+				{
+					SceneNodeInfo info;
 					std::string file;
 				};
 				std::vector<ModelInfo> models;
 
+				struct LightInfo
+				{
+					SceneNodeInfo info;
+					std::string file;
+					std::string lighting;
+					std::string shadow;
+				};
+				std::vector<LightInfo> lights;
+
 				struct CameraInfo
 				{
+					SceneNodeInfo info;
 					std::string name;
 					std::string file;
 				};
@@ -64,6 +83,9 @@ namespace peak
 				virtual EntityComponent *createComponent(Entity *entity,
 					EntityComponentTemplate *tpl);
 			private:
+				bool readSceneNodeInfo(TiXmlElement *xml,
+					GraphicsEntityComponentTemplate::SceneNodeInfo &info);
+
 				Graphics *graphics;
 		};
 	}

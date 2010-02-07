@@ -14,47 +14,37 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKGRAPHICS_CORE_GRAPHICSENTITYCOMPONENT_HPP_
-#define _PEAKGRAPHICS_CORE_GRAPHICSENTITYCOMPONENT_HPP_
+#include "peakgraphics/scene/LightSceneNode.hpp"
+#include "peakgraphics/core/Graphics.hpp"
 
-#include "peakengine/core/EntityComponent.hpp"
-#include "../scene/SceneNode.hpp"
+#include <Horde3D.h>
 
-#include <string>
-#include <map>
+#include <iostream>
 
 namespace peak
 {
 	namespace graphics
 	{
-		class GraphicsEntityComponent : public EntityComponent
+		LightSceneNode::LightSceneNode(Graphics *graphics, std::string material,
+			std::string lightingcontext, std::string shadowcontext)
+			: SceneNode(graphics), material(material),
+			lightingcontext(lightingcontext), shadowcontext(shadowcontext)
 		{
-			public:
-				GraphicsEntityComponent(Entity *entity, Graphics *graphics);
-				virtual ~GraphicsEntityComponent();
+			graphics->registerLoading(this);
+		}
+		LightSceneNode::~LightSceneNode()
+		{
+		}
 
-				void addSceneNode(std::string name, SceneNode *node);
-				SceneNode *getSceneNode(std::string name);
-
-				virtual int getType()
-				{
-					return EECT_Graphics;
-				}
-
-				virtual void update();
-
-				Graphics *getGraphics()
-				{
-					return graphics;
-				}
-			private:
-				Graphics *graphics;
-
-				SceneNode *rootnode;
-
-				std::map<std::string, SceneNode*> scenenodes;
-		};
+		bool LightSceneNode::load()
+		{
+			mutex.lock();
+			H3DRes materialres = h3dAddResource(H3DResTypes::Material, material.c_str(), 0);
+			graphics->loadAll();
+			node = h3dAddLightNode(H3DRootNode, "Light", materialres,
+				lightingcontext.c_str(), shadowcontext.c_str());
+			mutex.unlock();
+			return true;
+		}
 	}
 }
-
-#endif

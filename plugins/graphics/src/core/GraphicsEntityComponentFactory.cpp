@@ -19,10 +19,13 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakgraphics/core/Graphics.hpp"
 #include "peakgraphics/scene/ModelSceneNode.hpp"
 #include "peakgraphics/scene/CameraSceneNode.hpp"
+#include "peakgraphics/scene/LightSceneNode.hpp"
+#include "peakgraphics/scene/GroupSceneNode.hpp"
 
 #include "peakengine/support/tinyxml.h"
 
 #include <iostream>
+#include <sstream>
 
 namespace peak
 {
@@ -44,8 +47,9 @@ namespace peak
 					modelnode = xml->IterateChildren("Model", modelnode);
 					continue;
 				}
-				if (!modelelem->Attribute("file")
-					|| !modelelem->Attribute("name"))
+				GraphicsEntityComponentTemplate::ModelInfo modelinfo;
+				if (!readSceneNodeInfo(modelelem, modelinfo.info)
+					|| !modelelem->Attribute("file"))
 				{
 					std::cout << "Model file or name missing." << std::endl;
 					modelnode = xml->IterateChildren("Model", modelnode);
@@ -53,13 +57,41 @@ namespace peak
 				}
 				// Get component factory information
 				std::string file = modelelem->Attribute("file");
-				std::string name = modelelem->Attribute("name");
-				GraphicsEntityComponentTemplate::ModelInfo modelinfo;
 				modelinfo.file = file;
-				modelinfo.name = name;
 				tpl->models.push_back(modelinfo);
 				// Create model
 				modelnode = xml->IterateChildren("Model", modelnode);
+			}
+			// Light scene nodes
+			TiXmlNode *lightnode = xml->FirstChild("Light");
+			while (lightnode)
+			{
+				TiXmlElement *lightelem = lightnode->ToElement();
+				if (!lightelem)
+				{
+					modelnode = xml->IterateChildren("Light", modelnode);
+					continue;
+				}
+				GraphicsEntityComponentTemplate::LightInfo lightinfo;
+				if (!readSceneNodeInfo(lightelem, lightinfo.info)
+					|| !lightelem->Attribute("file")
+					|| !lightelem->Attribute("shadow")
+					|| !lightelem->Attribute("lighting"))
+				{
+					std::cout << "Light file, contexts or name missing." << std::endl;
+					lightnode = xml->IterateChildren("Light", lightnode);
+					continue;
+				}
+				// Get component factory information
+				std::string lighting = lightelem->Attribute("lighting");
+				std::string shadow = lightelem->Attribute("shadow");
+				std::string file = lightelem->Attribute("file");
+				lightinfo.file = file;
+				lightinfo.shadow = shadow;
+				lightinfo.lighting = lighting;
+				tpl->lights.push_back(lightinfo);
+				// Create model
+				lightnode = xml->IterateChildren("Light", lightnode);
 			}
 			// Camera scene nodes
 			// TODO
@@ -81,16 +113,71 @@ namespace peak
 			if (!tpl || tpl->getFactory() != this)
 				return component;
 			GraphicsEntityComponentTemplate *gtpl = (GraphicsEntityComponentTemplate*)tpl;
+			// Add root scene node
+			GroupSceneNode *root = new GroupSceneNode(graphics);
+			component->addSceneNode("", root);
 			// Add model scene nodes
 			for (unsigned int i = 0; i < gtpl->models.size(); i++)
 			{
+				GraphicsEntityComponentTemplate::ModelInfo &info = gtpl->models[i];
 				peak::graphics::ModelSceneNode *model = new peak::graphics::ModelSceneNode(graphics,
-					gtpl->models[i].file.c_str());
+					info.file);
 				// TODO: Group scene node
-				model->setParent(graphics->getRootSceneNode());
-				component->addSceneNode(gtpl->models[i].name, model);
+				model->setParent(root);
+				model->setPosition(info.info.position);
+				model->setRotation(info.info.rotation);
+				model->setScale(info.info.scale);
+				component->addSceneNode(info.info.name, model);
+			}
+			// Add light scene nodes
+			for (unsigned int i = 0; i < gtpl->lights.size(); i++)
+			{
+				GraphicsEntityComponentTemplate::LightInfo &info = gtpl->lights[i];
+				peak::graphics::LightSceneNode *light = new peak::graphics::LightSceneNode(graphics,
+					info.file, info.lighting, info.shadow);
+				// TODO: Group scene node
+				light->setParent(root);
+				light->setPosition(info.info.position);
+				light->setRotation(info.info.rotation);
+				light->setScale(info.info.scale);
+				component->addSceneNode(info.info.name, light);
 			}
 			return component;
+		}
+
+		bool GraphicsEntityComponentFactory::readSceneNodeInfo(TiXmlElement *xml,
+			GraphicsEntityComponentTemplate::SceneNodeInfo &info)
+		{
+			// Read name (needed)
+			if (!xml->Attribute("file"))
+				return false;
+			info.name = xml->Attribute("file");
+			// Read position/rotation/scale (optional)
+			if (xml->Attribute("position"))
+			{
+				std::istringstream in(xml->Attribute("position"));
+				char sep;
+				in >> info.position.x >> sep  >> info.position.y >> sep  >> info.position.z;
+			}
+			else
+				info.position = Vector3F(0, 0, 0);
+			if (xml->Attribute("scale"))
+			{
+				std::istringstream in(xml->Attribute("scale"));
+				char sep;
+				in >> info.scale.x >> sep  >> info.scale.y >> sep  >> info.scale.z;
+			}
+			else
+				info.scale = Vector3F(1, 1, 1);
+			if (xml->Attribute("rotation"))
+			{
+				std::istringstream in(xml->Attribute("rotation"));
+				char sep;
+				in >> info.rotation.x >> sep  >> info.rotation.y >> sep  >> info.rotation.z;
+			}
+			else
+				info.rotation = Vector3F(0, 0, 0);
+			return true;
 		}
 	}
 }

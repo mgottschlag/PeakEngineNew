@@ -14,47 +14,30 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKGRAPHICS_CORE_GRAPHICSENTITYCOMPONENT_HPP_
-#define _PEAKGRAPHICS_CORE_GRAPHICSENTITYCOMPONENT_HPP_
+#include "peakgraphics/scene/GroupSceneNode.hpp"
+#include "peakgraphics/core/Graphics.hpp"
 
-#include "peakengine/core/EntityComponent.hpp"
-#include "../scene/SceneNode.hpp"
-
-#include <string>
-#include <map>
+#include <Horde3D.h>
 
 namespace peak
 {
 	namespace graphics
 	{
-		class GraphicsEntityComponent : public EntityComponent
+		GroupSceneNode::GroupSceneNode(Graphics *graphics)
+			: SceneNode(graphics)
 		{
-			public:
-				GraphicsEntityComponent(Entity *entity, Graphics *graphics);
-				virtual ~GraphicsEntityComponent();
+			graphics->registerLoading(this);
+		}
+		GroupSceneNode::~GroupSceneNode()
+		{
+		}
 
-				void addSceneNode(std::string name, SceneNode *node);
-				SceneNode *getSceneNode(std::string name);
-
-				virtual int getType()
-				{
-					return EECT_Graphics;
-				}
-
-				virtual void update();
-
-				Graphics *getGraphics()
-				{
-					return graphics;
-				}
-			private:
-				Graphics *graphics;
-
-				SceneNode *rootnode;
-
-				std::map<std::string, SceneNode*> scenenodes;
-		};
+		bool GroupSceneNode::load()
+		{
+			mutex.lock();
+			node = h3dAddGroupNode(H3DRootNode, "Group");
+			mutex.unlock();
+			return true;
+		}
 	}
 }
-
-#endif

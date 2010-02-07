@@ -21,7 +21,8 @@ namespace peak
 	namespace graphics
 	{
 		GraphicsEntityComponent::GraphicsEntityComponent(Entity *entity,
-			Graphics *graphics) : EntityComponent(entity), graphics(graphics)
+			Graphics *graphics) : EntityComponent(entity), graphics(graphics),
+			rootnode(0)
 		{
 		}
 		GraphicsEntityComponent::~GraphicsEntityComponent()
@@ -45,6 +46,8 @@ namespace peak
 			// Add new scene node
 			node->grab();
 			scenenodes[name] = node;
+			if (name == "")
+				rootnode = node;
 		}
 		SceneNode *GraphicsEntityComponent::getSceneNode(std::string name)
 		{

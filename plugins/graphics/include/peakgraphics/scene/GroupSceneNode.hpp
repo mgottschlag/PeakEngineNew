@@ -14,45 +14,24 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKGRAPHICS_CORE_GRAPHICSENTITYCOMPONENT_HPP_
-#define _PEAKGRAPHICS_CORE_GRAPHICSENTITYCOMPONENT_HPP_
+#ifndef _PEAKGRAPHICS_SCENE_GROUPSCENENODE_HPP_
+#define _PEAKGRAPHICS_SCENE_GROUPSCENENODE_HPP_
 
-#include "peakengine/core/EntityComponent.hpp"
-#include "../scene/SceneNode.hpp"
+#include "SceneNode.hpp"
 
 #include <string>
-#include <map>
 
 namespace peak
 {
 	namespace graphics
 	{
-		class GraphicsEntityComponent : public EntityComponent
+		class GroupSceneNode : public SceneNode
 		{
 			public:
-				GraphicsEntityComponent(Entity *entity, Graphics *graphics);
-				virtual ~GraphicsEntityComponent();
+				GroupSceneNode(Graphics *graphics);
+				~GroupSceneNode();
 
-				void addSceneNode(std::string name, SceneNode *node);
-				SceneNode *getSceneNode(std::string name);
-
-				virtual int getType()
-				{
-					return EECT_Graphics;
-				}
-
-				virtual void update();
-
-				Graphics *getGraphics()
-				{
-					return graphics;
-				}
-			private:
-				Graphics *graphics;
-
-				SceneNode *rootnode;
-
-				std::map<std::string, SceneNode*> scenenodes;
+				virtual bool load();
 		};
 	}
 }

@@ -18,6 +18,8 @@ src/core/GraphicsEntityComponentFactory.cpp
 src/core/GraphicsWorldComponent.cpp
 src/core/GraphicsWorldComponentFactory.cpp
 src/scene/CameraSceneNode.cpp
+src/scene/GroupSceneNode.cpp
+src/scene/LightSceneNode.cpp
 src/scene/ModelSceneNode.cpp
 src/scene/RootSceneNode.cpp
 src/scene/SceneNode.cpp
