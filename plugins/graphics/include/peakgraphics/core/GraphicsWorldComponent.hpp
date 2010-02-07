@@ -23,12 +23,20 @@ namespace peak
 {
 	namespace graphics
 	{
+		class Graphics;
+
 		class GraphicsWorldComponent : public WorldComponent
 		{
 			public:
-				GraphicsWorldComponent(World *world);
+				GraphicsWorldComponent(World *world, Graphics *graphics);
 				virtual ~GraphicsWorldComponent();
+
+				Graphics *getGraphics()
+				{
+					return graphics;
+				}
 			private:
+				Graphics *graphics;
 		};
 	}
 }

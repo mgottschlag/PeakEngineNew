@@ -20,8 +20,9 @@ namespace peak
 {
 	namespace graphics
 	{
-		GraphicsWorldComponent::GraphicsWorldComponent(World *world)
-			: WorldComponent(world, EWCT_Graphics)
+		GraphicsWorldComponent::GraphicsWorldComponent(World *world,
+			Graphics *graphics) : WorldComponent(world, EWCT_Graphics),
+			graphics(graphics)
 		{
 		}
 		GraphicsWorldComponent::~GraphicsWorldComponent()

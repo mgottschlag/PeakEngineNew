@@ -18,6 +18,10 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define _PEAKGRAPHICS_CORE_GRAPHICSENTITYCOMPONENT_HPP_
 
 #include "peakengine/core/EntityComponent.hpp"
+#include "../scene/SceneNode.hpp"
+
+#include <string>
+#include <map>
 
 namespace peak
 {
@@ -26,9 +30,27 @@ namespace peak
 		class GraphicsEntityComponent : public EntityComponent
 		{
 			public:
-				GraphicsEntityComponent(Entity *entity);
+				GraphicsEntityComponent(Entity *entity, Graphics *graphics);
 				virtual ~GraphicsEntityComponent();
+
+				void addSceneNode(std::string name, SceneNode *node);
+				SceneNode *getSceneNode(std::string name);
+
+				virtual int getType()
+				{
+					return EECT_Graphics;
+				}
+
+				virtual void update();
+
+				Graphics *getGraphics()
+				{
+					return graphics;
+				}
 			private:
+				Graphics *graphics;
+
+				std::map<std::string, SceneNode*> scenenodes;
 		};
 	}
 }

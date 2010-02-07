@@ -15,15 +15,17 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "peakgraphics/core/Graphics.hpp"
+#include "peakgraphics/core/GraphicsWorldComponentFactory.hpp"
+#include "peakgraphics/core/GraphicsEntityComponentFactory.hpp"
 #include "peakgraphics/scene/RootSceneNode.hpp"
 #include "peakgraphics/scene/CameraSceneNode.hpp"
 #include "peakengine/core/Engine.hpp"
+#include "peakengine/core/Game.hpp"
 
 #include <Horde3D.h>
 #include <Horde3DUtils.h>
 
 #include <string>
-#include <iostream>
 
 namespace peak
 {
@@ -60,6 +62,18 @@ namespace peak
 		}
 		void Graphics::resize(int width, int height)
 		{
+			h3dSetupViewport(0, 0, width, height, true);
+		}
+		void Graphics::registerComponents(Game *game)
+		{
+			// Register world component factory
+			GraphicsWorldComponentFactory *worldfactory;
+			worldfactory = new GraphicsWorldComponentFactory(this);
+			game->addWorldComponentFactory(worldfactory);
+			// Register entity component factory
+			GraphicsEntityComponentFactory *entityfactory;
+			entityfactory = new GraphicsEntityComponentFactory(this);
+			game->addEntityComponentFactory(entityfactory);
 		}
 
 		bool Graphics::loadAll()
@@ -117,10 +131,7 @@ namespace peak
 			// Render everything with the default camera
 			mutex.lock();
 			if (defcamera)
-			{
-				std::cout << "Render: " << defcamera->getNode() << std::endl;
 				h3dRender(defcamera->getNode());
-			}
 			mutex.unlock();
 			h3dFinalizeFrame();
 			h3dutDumpMessages();

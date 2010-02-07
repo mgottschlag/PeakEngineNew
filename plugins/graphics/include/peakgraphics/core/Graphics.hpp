@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 namespace peak
 {
 	class Engine;
+	class Game;
 
 	namespace graphics
 	{
@@ -38,6 +39,7 @@ namespace peak
 				bool init(int width, int height);
 				bool shutdown();
 				void resize(int width, int height);
+				void registerComponents(Game *game);
 
 				bool loadAll();
 

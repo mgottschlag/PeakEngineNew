@@ -15,6 +15,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "peakgraphics/core/GraphicsWorldComponentFactory.hpp"
+#include "peakgraphics/core/GraphicsWorldComponent.hpp"
 
 namespace peak
 {
@@ -30,7 +31,8 @@ namespace peak
 
 		WorldComponent *GraphicsWorldComponentFactory::createComponent(World *world)
 		{
-			return 0;
+			GraphicsWorldComponent *component = new GraphicsWorldComponent(world, graphics);
+			return component;
 		}
 		WorldComponent *GraphicsWorldComponentFactory::createComponent(World *world,
 			TiXmlElement *xml)
