@@ -78,27 +78,25 @@ namespace peak
 				m[3][2] = m32;
 				m[3][3] = m33;
 			}
-			Matrix4(const Vector3F &translation)
+			static Matrix4 TransMat(const Vector3F &translation)
 			{
-				m[0][0] = 1;
-				m[0][1] = 0;
-				m[0][2] = 0;
-				m[0][3] = 0;
-
-				m[1][0] = 0;
-				m[1][1] = 1;
-				m[1][2] = 0;
-				m[1][3] = 0;
-
-				m[2][0] = 0;
-				m[2][1] = 0;
-				m[2][2] = 1;
-				m[2][3] = 0;
-
-				m[3][0] = translation.x;
-				m[3][1] = translation.y;
-				m[3][2] = translation.z;
-				m[3][3] = 1;
+				float x = translation.x;
+				float y = translation.y;
+				float z = translation.z;
+				return Matrix4(1, 0, 0, 0,
+				               0, 1, 0, 0,
+				               0, 0, 1, 0,
+				               x, y, z, 1);
+			}
+			static Matrix4 ScaleMat(const Vector3F &scale)
+			{
+				float x = scale.x;
+				float y = scale.y;
+				float z = scale.z;
+				return Matrix4(x, 0, 0, 0,
+				               0, y, 0, 0,
+				               0, 0, z, 0,
+				               0, 0, 0, 1);
 			}
 
 			Matrix4 operator*(const Matrix4 &o)
