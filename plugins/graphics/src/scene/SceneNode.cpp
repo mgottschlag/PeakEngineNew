@@ -120,8 +120,7 @@ namespace peak
 			if (changed && isLoaded())
 			{
 				Matrix4 rot = rotation.toMatrix();
-				Matrix4 m(position);
-				m = m * rot;
+				Matrix4 m = Matrix4::TransMat(position) * Matrix4::ScaleMat(scale) * rot;
 				h3dSetNodeTransMat(node, m.x);
 				changed = false;
 			}

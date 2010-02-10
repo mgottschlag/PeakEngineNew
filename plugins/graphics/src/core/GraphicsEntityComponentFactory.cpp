@@ -115,6 +115,7 @@ namespace peak
 			GraphicsEntityComponentTemplate *gtpl = (GraphicsEntityComponentTemplate*)tpl;
 			// Add root scene node
 			GroupSceneNode *root = new GroupSceneNode(graphics);
+			root->setParent(graphics->getRootSceneNode());
 			component->addSceneNode("", root);
 			// Add model scene nodes
 			for (unsigned int i = 0; i < gtpl->models.size(); i++)
