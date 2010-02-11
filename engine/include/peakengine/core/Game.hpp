@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "EntityFactory.hpp"
 #include "EntityComponentFactory.hpp"
 #include "WorldComponentFactory.hpp"
+#include "../support/ScriptBinding.hpp"
 
 #include <string>
 #include <map>
@@ -68,6 +69,11 @@ namespace peak
 				{
 					delete it3->second;
 					it3++;
+				}
+				// Delete script bindings
+				for (unsigned int i = 0; i < scriptbindings.size(); i++)
+				{
+					delete scriptbindings[i];
 				}
 			}
 			/**
@@ -158,7 +164,8 @@ namespace peak
 			/**
 			 * Adds an additional script binding to the game. The engine core
 			 * script binding must not be added here, and no identical class
-			 * must be registered twice.
+			 * must be registered twice. The script binding must be allocated
+			 * manually as it is deleted when the game is destroyed.
 			 */
 			void addScriptBinding(ScriptBinding *binding)
 			{

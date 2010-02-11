@@ -44,7 +44,6 @@ namespace peak
 		lua_State *state = script->getState();
 		luabind::module(state, "peak")
 		[
-			// Support classes
 			// ReferenceCounted class
 			luabind::class_<ReferenceCounted, SharedPointer<ReferenceCounted> >("ReferenceCounted")
 				.def(luabind::constructor<>()),
@@ -154,6 +153,8 @@ namespace peak
 				.def("addProperty", &Entity::addProperty)
 				.def("getProperty", &Entity::getProperty)
 				.def("addComponent", &Entity::addComponent)
+				.def("getComponent", (EntityComponent *(Entity::*)(int))&Entity::getComponent)
+				.def("getComponent", (EntityComponent *(Entity::*)(int, unsigned int))&Entity::getComponent)
 				.def("getWorld", &Entity::getWorld),
 			// EntityComponent
 			luabind::class_<EntityComponent>("EntityComponent")

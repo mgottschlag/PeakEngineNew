@@ -94,6 +94,24 @@ namespace peak
 	{
 		components.push_back(component);
 	}
+	EntityComponent *Entity::getComponent(int type, unsigned int n)
+	{
+		unsigned int found = 0;
+		for (unsigned int i = 0; i < components.size(); i++)
+		{
+			if (components[i]->getType() == type)
+			{
+				found++;
+				if (found > n)
+					return components[i];
+			}
+		}
+		return 0;
+	}
+	EntityComponent *Entity::getComponent(int type)
+	{
+		return getComponent(type, 0);
+	}
 
 	bool Entity::init()
 	{

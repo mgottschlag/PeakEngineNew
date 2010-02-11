@@ -17,6 +17,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef _PEAKENGINE_SUPPORT_SCRIPT_HPP_
 #define _PEAKENGINE_SUPPORT_SCRIPT_HPP_
 
+#include "ScriptBinding.hpp"
+
 #include <string>
 extern "C"
 {
@@ -26,19 +28,6 @@ extern "C"
 
 namespace peak
 {
-	class Script;
-	/**
-	 * Class used to export additional functions from C++ into lua scripts.
-	 */
-	class ScriptBinding
-	{
-		public:
-			/**
-			 * Exports all functions into the script.
-			 */
-			virtual void apply(Script *script) = 0;
-	};
-
 	/**
 	 * Lua script. Parts of the engine are exported into the lua VM, note
 	 * however that you have to pass reference counted objects as shared
@@ -92,7 +81,15 @@ namespace peak
 			// Functions with return value
 			template <typename R> R callFunction(std::string name)
 			{
-				return luabind::call_function<R>(state, name.c_str());
+				try
+				{
+					return luabind::call_function<R>(state, name.c_str());
+				}
+				catch (luabind::error &e)
+				{
+					std::string msg = lua_tostring(e.state(), -1);
+					throw Exception(msg);
+				}
 			};
 			template <typename R, typename A> R callFunction(std::string name, A arg1)
 			{
@@ -137,6 +134,14 @@ namespace peak
 			 * just calls ScriptBinding::apply() internally.
 			 */
 			void addBinding(ScriptBinding *binding);
+
+			class Exception: public std::runtime_error
+			{
+				public:
+					Exception(std::string msg) : std::runtime_error(msg)
+					{
+					}
+			};
 		private:
 			lua_State *state;
 	};

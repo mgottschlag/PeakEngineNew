@@ -92,6 +92,16 @@ namespace peak
 			 * init() has been called for this entity.
 			 */
 			void addComponent(EntityComponent *component);
+			/**
+			 * Returns the pointer to the n-th component with the given type,
+			 * or 0 if there were no or too few components of this type.
+			 */
+			EntityComponent *getComponent(int type, unsigned int n);
+			/**
+			 * Returns the pointer to the first component with the given type,
+			 * or 0 if there were no components of this type.
+			 */
+			EntityComponent *getComponent(int type);
 
 			/**
 			 * Returns the world this entity belongs to.
