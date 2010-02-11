@@ -102,6 +102,11 @@ namespace peak
 			mutex.unlock();
 		}
 
+		void Graphics::injectMouseMovement(int x, int y, int dx, int dy)
+		{
+			mouseevent.trigger(dx, dy);
+		}
+
 		bool Graphics::render()
 		{
 			loadingmutex.lock();

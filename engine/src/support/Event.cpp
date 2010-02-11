@@ -15,6 +15,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "peakengine/support/Event.hpp"
+#include "peakengine/support/EventQueue.hpp"
 
 namespace peak
 {
@@ -27,24 +28,6 @@ namespace peak
 	}
 
 	EventReceiver::~EventReceiver()
-	{
-		for (int i = (int)events.size() - 1; i >= 0; i--)
-		{
-			events[i]->disconnect(this);
-		}
-		delete functor;
-	}
-
-	template<> EventReceiver1<class P1>::~EventReceiver1()
-	{
-		for (int i = (int)events.size() - 1; i >= 0; i--)
-		{
-			events[i]->disconnect(this);
-		}
-		delete functor;
-	}
-
-	template<> EventReceiver2<class P1, class P2>::~EventReceiver2()
 	{
 		for (int i = (int)events.size() - 1; i >= 0; i--)
 		{

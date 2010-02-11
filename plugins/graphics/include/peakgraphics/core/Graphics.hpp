@@ -18,6 +18,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define _PEAKGRAPHICS_CORE_GRAPHICS_HPP_
 
 #include "../scene/SceneNode.hpp"
+#include "peakengine/support/Event.hpp"
 
 #include <queue>
 
@@ -62,6 +63,13 @@ namespace peak
 					return engine;
 				}
 
+				Event2<int, int> &getMouseMoveEvent()
+				{
+					return mouseevent;
+				}
+
+				void injectMouseMovement(int x, int y, int dx, int dy);
+
 				bool render();
 			private:
 				Engine *engine;
@@ -75,6 +83,8 @@ namespace peak
 
 				Mutex mutex;
 				SharedPointer<CameraSceneNode> defcamera;
+
+				Event2<int, int> mouseevent;
 		};
 	}
 }

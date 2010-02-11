@@ -385,6 +385,24 @@ namespace peak
 		private:
 			std::vector<EventReceiver2<P1, P2>*> receivers;
 	};
+
+	template<class P1> inline EventReceiver1<P1>::~EventReceiver1()
+	{
+		for (int i = (int)events.size() - 1; i >= 0; i--)
+		{
+			events[i]->disconnect(this);
+		}
+		delete functor;
+	}
+
+	template<class P1, class P2> inline EventReceiver2<P1, P2>::~EventReceiver2()
+	{
+		for (int i = (int)events.size() - 1; i >= 0; i--)
+		{
+			events[i]->disconnect(this);
+		}
+		delete functor;
+	}
 }
 
 #endif
