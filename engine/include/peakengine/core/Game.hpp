@@ -23,10 +23,12 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <string>
 #include <map>
+#include <vector>
 
 namespace peak
 {
 	class Engine;
+	class ScriptBinding;
 
 	/**
 	 * Main interface providing the basic game actions. This class has to be
@@ -152,11 +154,29 @@ namespace peak
 					return 0;
 				return it->second;
 			}
+
+			/**
+			 * Adds an additional script binding to the game. The engine core
+			 * script binding must not be added here, and no identical class
+			 * must be registered twice.
+			 */
+			void addScriptBinding(ScriptBinding *binding)
+			{
+				scriptbindings.push_back(binding);
+			}
+			/**
+			 * Returns all additional script bindings.
+			 */
+			const std::vector<ScriptBinding*> &getScriptBindings()
+			{
+				return scriptbindings;
+			}
 		private:
 			Engine *engine;
 			std::map<std::string, EntityFactory*> factories;
 			std::map<std::string, EntityComponentFactory*> compfactories;
 			std::map<std::string, WorldComponentFactory*> wcompfactories;
+			std::vector<ScriptBinding*> scriptbindings;
 	};
 }
 

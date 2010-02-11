@@ -132,7 +132,9 @@ namespace peak
 			}
 
 			/**
-			 * Adds a script binding to the script.
+			 * Adds a script binding to the script. The ScriptBinding instance
+			 * is not used in the script after this function call. The function
+			 * just calls ScriptBinding::apply() internally.
 			 */
 			void addBinding(ScriptBinding *binding);
 		private:

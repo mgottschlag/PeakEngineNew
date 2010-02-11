@@ -16,6 +16,11 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "peakengine/import/ScriptEntityComponent.hpp"
 #include "peakengine/support/Script.hpp"
+#include "peakengine/support/EngineScriptBinding.hpp"
+#include "peakengine/core/Game.hpp"
+#include "peakengine/core/Entity.hpp"
+#include "peakengine/core/World.hpp"
+#include "peakengine/core/Engine.hpp"
 
 #include <iostream>
 
@@ -26,7 +31,18 @@ namespace peak
 	{
 		// Create script
 		script = new Script();
-		// TODO: Bindings
+		// Bindings
+		EngineScriptBinding enginebinding;
+		script->addBinding(&enginebinding);
+		Game *game = entity->getWorld()->getEngine()->getGame();
+		const std::vector<ScriptBinding*> &bindings = game->getScriptBindings();
+		for (unsigned int i = 0; i < bindings.size(); i++)
+		{
+			script->addBinding(bindings[i]);
+		}
+		// Register component
+		script->setVariable("this", this);
+		// Execute script
 		if (!script->runString(data))
 		{
 			std::cout << "Error while running script: \"" << std::endl;

@@ -104,6 +104,7 @@ namespace peak
 		}
 		// Create entity
 		Entity *entity = new Entity(world);
+		entity->setType(getName());
 		// Create properties
 		// TODO
 		// Create components

@@ -24,6 +24,7 @@ src/import/XMLGame.cpp
 src/import/XMLWorld.cpp
 src/support/Buffer.cpp
 src/support/ConditionVariable.cpp
+src/support/EngineScriptBinding.cpp
 src/support/Event.cpp
 src/support/FrameLimiter.cpp
 src/support/Mutex.cpp
