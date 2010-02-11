@@ -69,7 +69,7 @@ namespace peak
 				TiXmlElement *lightelem = lightnode->ToElement();
 				if (!lightelem)
 				{
-					modelnode = xml->IterateChildren("Light", modelnode);
+					lightnode = xml->IterateChildren("Light", lightnode);
 					continue;
 				}
 				GraphicsEntityComponentTemplate::LightInfo lightinfo;
@@ -94,7 +94,30 @@ namespace peak
 				lightnode = xml->IterateChildren("Light", lightnode);
 			}
 			// Camera scene nodes
-			// TODO
+			TiXmlNode *cameranode = xml->FirstChild("Camera");
+			while (cameranode)
+			{
+				TiXmlElement *cameraelem = cameranode->ToElement();
+				if (!cameraelem)
+				{
+					cameranode = xml->IterateChildren("Camera", cameranode);
+					continue;
+				}
+				GraphicsEntityComponentTemplate::CameraInfo camerainfo;
+				if (!readSceneNodeInfo(cameraelem, camerainfo.info)
+					|| !cameraelem->Attribute("pipeline"))
+				{
+					std::cout << "Camera pipeline or name missing." << std::endl;
+					cameranode = xml->IterateChildren("Camera", cameranode);
+					continue;
+				}
+				// Get component factory information
+				std::string file = cameraelem->Attribute("pipeline");
+				camerainfo.file = file;
+				tpl->cameras.push_back(camerainfo);
+				// Create model
+				cameranode = xml->IterateChildren("Camera", cameranode);
+			}
 			return tpl;
 		}
 
@@ -123,7 +146,6 @@ namespace peak
 				GraphicsEntityComponentTemplate::ModelInfo &info = gtpl->models[i];
 				peak::graphics::ModelSceneNode *model = new peak::graphics::ModelSceneNode(graphics,
 					info.file);
-				// TODO: Group scene node
 				model->setParent(root);
 				model->setPosition(info.info.position);
 				model->setRotation(info.info.rotation);
@@ -136,12 +158,23 @@ namespace peak
 				GraphicsEntityComponentTemplate::LightInfo &info = gtpl->lights[i];
 				peak::graphics::LightSceneNode *light = new peak::graphics::LightSceneNode(graphics,
 					info.file, info.lighting, info.shadow);
-				// TODO: Group scene node
 				light->setParent(root);
 				light->setPosition(info.info.position);
 				light->setRotation(info.info.rotation);
 				light->setScale(info.info.scale);
 				component->addSceneNode(info.info.name, light);
+			}
+			// Add camera scene nodes
+			for (unsigned int i = 0; i < gtpl->cameras.size(); i++)
+			{
+				GraphicsEntityComponentTemplate::CameraInfo &info = gtpl->cameras[i];
+				peak::graphics::CameraSceneNode *camera = new peak::graphics::CameraSceneNode(graphics,
+					info.file);
+				camera->setParent(root);
+				camera->setPosition(info.info.position);
+				camera->setRotation(info.info.rotation);
+				camera->setScale(info.info.scale);
+				component->addSceneNode(info.info.name, camera);
 			}
 			return component;
 		}

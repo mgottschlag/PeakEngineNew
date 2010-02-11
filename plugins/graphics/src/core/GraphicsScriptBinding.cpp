@@ -19,6 +19,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakgraphics/core/Graphics.hpp"
 #include "peakgraphics/scene/SceneNode.hpp"
 #include "peakgraphics/scene/CameraSceneNode.hpp"
+#include "peakgraphics/scene/ModelSceneNode.hpp"
+#include "peakgraphics/scene/LightSceneNode.hpp"
 #include "peakengine/core/Engine.hpp"
 
 #include <luabind/operator.hpp>
@@ -49,7 +51,6 @@ namespace peak
 						.def("loadAll", &Graphics::loadAll)
 						.def("getRootSceneNode", &Graphics::getRootSceneNode)
 						.def("setDefaultCamera", &Graphics::setDefaultCamera)
-						.def("setDefaultCamera", &Graphics::setDefaultCamera)
 						.def("getEngine", &Graphics::getEngine)
 						.def("getMouseMoveEvent", &Graphics::getMouseMoveEvent),
 					// GraphicsEntityComponent
@@ -68,7 +69,13 @@ namespace peak
 						.def("setVisible", &SceneNode::setVisible)
 						.def("isVisible", &SceneNode::isVisible)
 						.def("setParent", &SceneNode::setParent)
-						.def("getParent", &SceneNode::getParent)
+						.def("getParent", &SceneNode::getParent),
+					// CameraSceneNode
+					luabind::class_<CameraSceneNode, SceneNode>("CameraSceneNode"),
+					// ModelSceneNode
+					luabind::class_<ModelSceneNode, SceneNode>("ModelSceneNode"),
+					// LightSceneNode
+					luabind::class_<LightSceneNode, SceneNode>("LightSceneNode")
 				]
 			];
 		}

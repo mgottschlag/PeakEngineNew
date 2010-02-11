@@ -63,7 +63,6 @@ namespace peak
 				struct CameraInfo
 				{
 					SceneNodeInfo info;
-					std::string name;
 					std::string file;
 				};
 				std::vector<CameraInfo> cameras;
