@@ -18,6 +18,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/support/ReferenceCounted.hpp"
 #include "peakengine/support/Vector2.hpp"
 #include "peakengine/support/Vector3.hpp"
+#include "peakengine/support/Quaternion.hpp"
 #include "peakengine/support/EventQueue.hpp"
 #include "peakengine/core/Property.hpp"
 #include "peakengine/core/Entity.hpp"
@@ -115,6 +116,12 @@ namespace peak
 				.def_readwrite("x", &Vector3F::x)
 				.def_readwrite("y", &Vector3F::y)
 				.def_readwrite("z", &Vector3F::z),
+			// Quaternion
+			luabind::class_<Quaternion>("Quaternion")
+				.def(luabind::constructor<>())
+				.def(luabind::constructor<float, float, float, float>())
+				.def(luabind::constructor<const Quaternion &>())
+				.def(luabind::constructor<const Vector3F &>()),
 			// ScriptEventReceiver
 			luabind::class_<ScriptEventReceiver>("ScriptEventReceiver")
 				.def(luabind::constructor<Script*, std::string>())
@@ -122,6 +129,8 @@ namespace peak
 				.def("getFunction", &ScriptEventReceiver::getFunction),
 			// EventReceiver
 			luabind::class_<EventReceiver>("EventReceiver"),
+			// EventReceiver2<int, int>
+			luabind::class_<EventReceiver2<int, int> >("EventReceiver2II"),
 			// Event
 			luabind::class_<Event>("Event")
 				.def(luabind::constructor<>())
@@ -130,6 +139,14 @@ namespace peak
 				.def("connect", (void (Event::*)(ScriptEventReceiver*))&Event::connect)
 				.def("disconnect", (void (Event::*)(ScriptEventReceiver*))&Event::disconnect)
 				.def("trigger", &Event::trigger),
+			// Event2II
+			luabind::class_<Event2<int, int> >("Event2II")
+				.def(luabind::constructor<>())
+				.def("connect", (void (Event2<int, int>::*)(EventReceiver2<int, int>*))&Event2<int, int>::connect)
+				.def("disconnect", (void (Event2<int, int>::*)(EventReceiver2<int, int>*))&Event2<int, int>::disconnect)
+				.def("connect", (void (Event2<int, int>::*)(ScriptEventReceiver*))&Event2<int, int>::connect)
+				.def("disconnect", (void (Event2<int, int>::*)(ScriptEventReceiver*))&Event2<int, int>::disconnect)
+				.def("trigger", &Event2<int, int>::trigger),
 			// EventQueue
 			luabind::class_<EventQueue>("EventQueue")
 				.def(luabind::constructor<>())

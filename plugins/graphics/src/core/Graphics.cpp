@@ -17,6 +17,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakgraphics/core/Graphics.hpp"
 #include "peakgraphics/core/GraphicsWorldComponentFactory.hpp"
 #include "peakgraphics/core/GraphicsEntityComponentFactory.hpp"
+#include "peakgraphics/core/GraphicsScriptBinding.hpp"
 #include "peakgraphics/scene/RootSceneNode.hpp"
 #include "peakgraphics/scene/CameraSceneNode.hpp"
 #include "peakengine/core/Engine.hpp"
@@ -74,6 +75,8 @@ namespace peak
 			GraphicsEntityComponentFactory *entityfactory;
 			entityfactory = new GraphicsEntityComponentFactory(this);
 			game->addEntityComponentFactory(entityfactory);
+			// Register script bindings
+			game->addScriptBinding(new GraphicsScriptBinding());
 		}
 
 		bool Graphics::loadAll()

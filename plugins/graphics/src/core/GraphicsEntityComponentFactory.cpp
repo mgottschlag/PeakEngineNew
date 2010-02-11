@@ -150,9 +150,9 @@ namespace peak
 			GraphicsEntityComponentTemplate::SceneNodeInfo &info)
 		{
 			// Read name (needed)
-			if (!xml->Attribute("file"))
+			if (!xml->Attribute("name"))
 				return false;
-			info.name = xml->Attribute("file");
+			info.name = xml->Attribute("name");
 			// Read position/rotation/scale (optional)
 			if (xml->Attribute("position"))
 			{

@@ -15,6 +15,7 @@ set(SRC
 src/core/Graphics.cpp
 src/core/GraphicsEntityComponent.cpp
 src/core/GraphicsEntityComponentFactory.cpp
+src/core/GraphicsScriptBinding.cpp
 src/core/GraphicsWorldComponent.cpp
 src/core/GraphicsWorldComponentFactory.cpp
 src/scene/CameraSceneNode.cpp
