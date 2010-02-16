@@ -32,7 +32,32 @@ namespace peak
 				bool hasChanged(unsigned int time);
 				void getUpdate(Buffer *buffer, unsigned int time);
 				void applyUpdate(Buffer *buffer, unsigned int time);
+
+				/**
+				 * Saves a backup of all registered properties except client
+				 * properties. This backup will be applied before the next
+				 * server update is applied. This has to be called on the server
+				 * before modifying the properties (e.g. for client predition).
+				 */
+				void createBackup();
+				/**
+				 * Returns true if there has been a backup since the last server
+				 * update.
+				 */
+				bool hasBackup();
+				/**
+				 * Applies the backup. Usually only called by Client when a
+				 * server update arrives. The backup stays valid,
+				 * discardBackup() is not called by this function.
+				 */
+				void applyBackup();
+				/**
+				 * Drops the backup without applying it.
+				 */
+				void discardBackup();
 			private:
+				BufferPointer backup;
+				bool backupvalid;
 		};
 	}
 }

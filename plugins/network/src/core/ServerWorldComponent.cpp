@@ -28,6 +28,8 @@ namespace peak
 {
 	namespace network
 	{
+		unsigned int ClientInfo::lastid = 0;
+
 		ServerWorldComponent::ServerWorldComponent(World *world)
 			: NetworkWorldComponent(world, EWCT_Server)
 		{

@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/support/Buffer.hpp"
 
 #include <string>
-#include <queue>
 
 namespace peak
 {
@@ -50,12 +49,17 @@ namespace peak
 				virtual void onPreUpdate();
 				virtual void onPostUpdate();
 			private:
+				void addEntity(Entity *entity);
+				void removeEntity(Entity *entity);
+
 				BufferPointer serverdata;
 				NetworkClient *client;
 				NetworkConnection *connection;
 
 				std::vector<ClientEntityComponent*> entities;
-				std::queue<unsigned int> freelist;
+
+				unsigned int lastupdate;
+				unsigned int lastacked;
 		};
 	}
 }

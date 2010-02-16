@@ -56,7 +56,7 @@ namespace peak
 				{
 					return onmessage;
 				}
-			private:
+			protected:
 				Event1<unsigned int> onupdate;
 				Event1<Buffer*> onmessage;
 

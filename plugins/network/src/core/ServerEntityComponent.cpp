@@ -15,6 +15,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "peaknetwork/core/ServerEntityComponent.hpp"
+#include "peakengine/core/Property.hpp"
 
 namespace peak
 {
@@ -30,12 +31,44 @@ namespace peak
 
 		bool ServerEntityComponent::hasChanged(unsigned int time)
 		{
+			for (unsigned int i = 0; i < properties.size(); i++)
+			{
+				if (properties[i]->getLastChange() > time)
+					return true;
+			}
+			return false;
 		}
 		void ServerEntityComponent::getUpdate(Buffer *buffer, unsigned int time)
 		{
+			for (unsigned int i = 0; i < properties.size(); i++)
+			{
+				// TODO: Property flags
+				if (properties[i]->getLastChange() > time)
+				{
+					// Bit set: Property changed.
+					buffer->writeUnsignedInt(1, 1);
+					// Write the property to the stream.
+					properties[i]->serialize(buffer);
+				}
+				else
+				{
+					// Bit not set: Property remained unchanged.
+					buffer->writeUnsignedInt(0, 1);
+				}
+			}
 		}
 		void ServerEntityComponent::applyUpdate(Buffer *buffer, unsigned int time)
 		{
+			// Update all properties.
+			for (unsigned int i = 0; i < clientproperties.size(); i++)
+			{
+				int changed = buffer->readUnsignedInt(1);
+				if (changed)
+				{
+					clientproperties[i]->deserialize(buffer);
+				}
+			}
+			// TODO: Callback
 		}
 	}
 }

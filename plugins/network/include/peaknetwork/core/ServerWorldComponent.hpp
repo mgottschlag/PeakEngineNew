@@ -63,8 +63,8 @@ namespace peak
 					return serverdata.get();
 				}
 
-				virtual void addEntity(Entity *entity);
-				virtual void removeEntity(Entity *entity);
+				void addEntity(Entity *entity);
+				void removeEntity(Entity *entity);
 				virtual Entity *getEntity(unsigned int id);
 				ServerEntityComponent *getComponent(unsigned int id);
 

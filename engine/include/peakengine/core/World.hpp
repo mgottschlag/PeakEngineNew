@@ -64,6 +64,14 @@ namespace peak
 			void removeEntity(Entity *entity);
 
 			/**
+			 * Sets the current time of the world. Only call this if you know
+			 * what you do.
+			 */
+			void setTime(unsigned int time)
+			{
+				this->time = time;
+			}
+			/**
 			 * Returns the time of the world. The unit used are 20ms steps.
 			 */
 			unsigned int getTime()
