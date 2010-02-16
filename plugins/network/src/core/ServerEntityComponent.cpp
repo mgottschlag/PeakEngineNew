@@ -14,43 +14,28 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKENGINE_CORE_ENTITYCOMPONENT_HPP_
-#define _PEAKENGINE_CORE_ENTITYCOMPONENT_HPP_
+#include "peaknetwork/core/ServerEntityComponent.hpp"
 
 namespace peak
 {
-	class Entity;
-
-	enum EntityComponentType
+	namespace network
 	{
-		EECT_Script = 1,
-		EECT_Physics = 2,
-		EECT_Graphics = 3,
-		EECT_Server = 4,
-		EECT_Client = 5
-	};
+		ServerEntityComponent::ServerEntityComponent(Entity *entity)
+			: NetworkEntityComponent(entity), owner(0)
+		{
+		}
+		ServerEntityComponent::~ServerEntityComponent()
+		{
+		}
 
-	class EntityComponent
-	{
-		public:
-			EntityComponent(Entity *entity);
-			virtual ~EntityComponent();
-
-			virtual bool installProperties();
-			virtual bool init();
-
-			virtual void update();
-
-			virtual int getType() = 0;
-
-			Entity *getEntity()
-			{
-				return entity;
-			}
-		private:
-			Entity *entity;
-	};
+		bool ServerEntityComponent::hasChanged(unsigned int time)
+		{
+		}
+		void ServerEntityComponent::getUpdate(Buffer *buffer, unsigned int time)
+		{
+		}
+		void ServerEntityComponent::applyUpdate(Buffer *buffer, unsigned int time)
+		{
+		}
+	}
 }
-
-#endif
-

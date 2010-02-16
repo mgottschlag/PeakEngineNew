@@ -14,43 +14,39 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKENGINE_CORE_ENTITYCOMPONENT_HPP_
-#define _PEAKENGINE_CORE_ENTITYCOMPONENT_HPP_
+#include "peaknetwork/core/NetworkScriptBinding.hpp"
+#include "peaknetwork/core/Network.hpp"
+#include "peaknetwork/network/NetworkConnection.hpp"
+#include "peakengine/core/Engine.hpp"
+
+#include <luabind/operator.hpp>
 
 namespace peak
 {
-	class Entity;
-
-	enum EntityComponentType
+	namespace network
 	{
-		EECT_Script = 1,
-		EECT_Physics = 2,
-		EECT_Graphics = 3,
-		EECT_Server = 4,
-		EECT_Client = 5
-	};
+		template<class T> static T *get_pointer(const SharedPointer<T> &p)
+		{
+			return p.get();
+		}
 
-	class EntityComponent
-	{
-		public:
-			EntityComponent(Entity *entity);
-			virtual ~EntityComponent();
+		template<class A> static SharedPointer<A const> *get_const_holder(SharedPointer<A>*)
+		{
+			return 0;
+		}
 
-			virtual bool installProperties();
-			virtual bool init();
-
-			virtual void update();
-
-			virtual int getType() = 0;
-
-			Entity *getEntity()
-			{
-				return entity;
-			}
-		private:
-			Entity *entity;
-	};
+		void NetworkScriptBinding::apply(Script *script)
+		{
+			lua_State *state = script->getState();
+			luabind::module(state, "peak")
+			[
+				luabind::namespace_("graphics")
+				[
+					// Network
+					luabind::class_<Network>("Network")
+						.def("getEngine", &Network::getEngine)
+				]
+			];
+		}
+	}
 }
-
-#endif
-

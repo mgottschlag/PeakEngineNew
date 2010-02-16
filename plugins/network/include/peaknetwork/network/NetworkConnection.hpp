@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010, Mathias Gottschlag
+Copyright (c) 2009, Lukas Kropatschek
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -14,43 +14,37 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKENGINE_CORE_ENTITYCOMPONENT_HPP_
-#define _PEAKENGINE_CORE_ENTITYCOMPONENT_HPP_
+#ifndef _PEAKNETWORK_NETWORK_NETWORKCONNECTION_HPP_
+#define _PEAKNETWORK_NETWORK_NETWORKCONNECTION_HPP_
+
+#include "peakengine/support/Buffer.hpp"
+
+#include <enet/enet.h>
+#include <queue>
 
 namespace peak
 {
-	class Entity;
-
-	enum EntityComponentType
+	namespace network
 	{
-		EECT_Script = 1,
-		EECT_Physics = 2,
-		EECT_Graphics = 3,
-		EECT_Server = 4,
-		EECT_Client = 5
-	};
+		class NetworkConnection
+		{
+			public:
+				NetworkConnection(ENetPeer* peer);
+				~NetworkConnection();
 
-	class EntityComponent
-	{
-		public:
-			EntityComponent(Entity *entity);
-			virtual ~EntityComponent();
+				void injectData(BufferPointer buffer);
 
-			virtual bool installProperties();
-			virtual bool init();
+				bool isConnected();
+				void close();
 
-			virtual void update();
-
-			virtual int getType() = 0;
-
-			Entity *getEntity()
-			{
-				return entity;
-			}
-		private:
-			Entity *entity;
-	};
+				void send(BufferPointer buffer, bool reliable = false);
+				bool hasData();
+				BufferPointer receive();
+			private:
+				std::queue<BufferPointer> received;
+				ENetPeer* peer;
+		};
+	}
 }
 
 #endif
-

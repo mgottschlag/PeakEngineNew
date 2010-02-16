@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010, Mathias Gottschlag
+Copyright (c) 2009, Mathias Gottschlag
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -14,43 +14,26 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKENGINE_CORE_ENTITYCOMPONENT_HPP_
-#define _PEAKENGINE_CORE_ENTITYCOMPONENT_HPP_
+#ifndef _PEAKNETWORK_NETWORK_NETWORKDATA_HPP_
+#define _PEAKNETWORK_NETWORK_NETWORKDATA_HPP_
 
 namespace peak
 {
-	class Entity;
-
-	enum EntityComponentType
+	namespace network
 	{
-		EECT_Script = 1,
-		EECT_Physics = 2,
-		EECT_Graphics = 3,
-		EECT_Server = 4,
-		EECT_Client = 5
-	};
-
-	class EntityComponent
-	{
-		public:
-			EntityComponent(Entity *entity);
-			virtual ~EntityComponent();
-
-			virtual bool installProperties();
-			virtual bool init();
-
-			virtual void update();
-
-			virtual int getType() = 0;
-
-			Entity *getEntity()
-			{
-				return entity;
-			}
-		private:
-			Entity *entity;
-	};
+		enum PacketType
+		{
+			EPT_Ready = 1,
+			EPT_InitialData,
+			EPT_EntityCreated,
+			EPT_EntityDeleted,
+			EPT_ActivateEntity,
+			EPT_DeactivateEntity,
+			EPT_Update,
+			EPT_UpdateReceived,
+			EPT_EntityMessage
+		};
+	}
 }
 
 #endif
-
