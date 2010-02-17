@@ -16,6 +16,7 @@ src/core/ClientEntityComponent.cpp
 src/core/ClientWorldComponent.cpp
 src/core/Network.cpp
 src/core/NetworkEntityComponent.cpp
+src/core/NetworkEntityComponentFactory.cpp
 src/core/NetworkScriptBinding.cpp
 src/core/NetworkWorldComponent.cpp
 src/core/ServerEntityComponent.cpp

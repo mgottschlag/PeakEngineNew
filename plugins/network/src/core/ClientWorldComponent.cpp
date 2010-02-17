@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/core/Game.hpp"
 #include "peakengine/core/Entity.hpp"
 
+#include <iostream>
+
 namespace peak
 {
 	namespace network
@@ -75,6 +77,16 @@ namespace peak
 			return true;
 		}
 
+		void ClientWorldComponent::setReady()
+		{
+			if (!connection)
+				return;
+			// Send ready signal
+			BufferPointer msg = new Buffer();
+			msg->write8(EPT_Ready);
+			connection->send(msg, true);
+		}
+
 		Entity *ClientWorldComponent::getEntity(unsigned int id)
 		{
 			ClientEntityComponent *component = getComponent(id);
@@ -110,15 +122,15 @@ namespace peak
 						EntityFactory *factory = game->getEntityFactory(type);
 						if (!factory)
 						{
-							// TODO: Warn
+							std::cout << "Could not get entity factory " << type << std::endl;
 							continue;
 						}
-						// TODO: Local?
 						Entity *entity = factory->createEntity(getWorld());
 						ClientEntityComponent *component = (ClientEntityComponent*)entity->getComponent(EECT_Client);
 						component->setID(id);
 						component->setState(data.get());
 						addEntity(entity);
+						getWorld()->addEntity(entity);
 						break;
 					}
 					case EPT_EntityDeleted:

@@ -43,6 +43,8 @@ namespace peak
 					return serverdata.get();
 				}
 
+				void setReady();
+
 				virtual Entity *getEntity(unsigned int id);
 				ClientEntityComponent *getComponent(unsigned int id);
 

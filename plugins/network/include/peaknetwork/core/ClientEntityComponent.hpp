@@ -29,6 +29,11 @@ namespace peak
 				ClientEntityComponent(Entity *entity);
 				virtual ~ClientEntityComponent();
 
+				virtual int getType()
+				{
+					return EECT_Client;
+				}
+
 				bool hasChanged(unsigned int time);
 				void getUpdate(Buffer *buffer, unsigned int time);
 				void applyUpdate(Buffer *buffer, unsigned int time);

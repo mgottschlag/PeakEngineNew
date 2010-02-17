@@ -14,31 +14,28 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include "peaknetwork/core/Network.hpp"
 #include "peaknetwork/core/NetworkEntityComponentFactory.hpp"
-#include "peakengine/core/Game.hpp"
-
-#include <enet/enet.h>
+#include "peaknetwork/core/ServerEntityComponent.hpp"
+#include "peaknetwork/core/ClientEntityComponent.hpp"
+#include "peakengine/core/WorldComponent.hpp"
+#include "peakengine/core/Entity.hpp"
+#include "peakengine/core/World.hpp"
 
 namespace peak
 {
 	namespace network
 	{
-		Network::Network() : engine(0)
+		EntityComponent *NetworkEntityComponentFactory::createComponent(Entity *entity)
 		{
-			// Initialize networking
-			enet_initialize();
-		}
-		Network::~Network()
-		{
-			// Shutdown networking
-			enet_deinitialize();
-		}
-
-		void Network::registerComponents(Game *game)
-		{
-			NetworkEntityComponentFactory *factory = new NetworkEntityComponentFactory(this);
-			game->addEntityComponentFactory(factory);
+			World *world = entity->getWorld();
+			bool isserver = (world->getComponent(EWCT_Server) != 0);
+			bool isclient = (world->getComponent(EWCT_Client) != 0);
+			if (isserver)
+				return new ServerEntityComponent(entity);
+			else if (isclient)
+				return new ClientEntityComponent(entity);
+			else
+				return 0;
 		}
 	}
 }

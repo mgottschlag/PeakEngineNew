@@ -29,6 +29,13 @@ namespace peak
 				ServerEntityComponent(Entity *entity);
 				virtual ~ServerEntityComponent();
 
+				virtual bool init();
+
+				virtual int getType()
+				{
+					return EECT_Server;
+				}
+
 				bool hasChanged(unsigned int time);
 				void getUpdate(Buffer *buffer, unsigned int time);
 				void applyUpdate(Buffer *buffer, unsigned int time);

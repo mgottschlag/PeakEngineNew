@@ -139,19 +139,22 @@ namespace peak
 	{
 		while (!stopthread)
 		{
-			entitymutex.lock();
 			if (!pausethread)
 			{
 				// Pre-update callbacks
 				componentmutex.lock();
 				for (unsigned int i = 0; i < components.size(); i++)
 				{
+					componentmutex.unlock();
+					// TODO: Unsafe?
 					components[i]->onPreUpdate();
+					componentmutex.lock();
 				}
 				componentmutex.unlock();
 				// Increase time
 				time++;
 				// Update entities
+				entitymutex.lock();
 				// TODO: Locking
 				for (unsigned int i = 0; i < entities.size(); i++)
 				{
@@ -162,15 +165,19 @@ namespace peak
 						entitymutex.lock();
 					}
 				}
+				entitymutex.unlock();
 				// Post-update callbacks
 				componentmutex.lock();
 				for (unsigned int i = 0; i < components.size(); i++)
 				{
+					componentmutex.unlock();
 					components[i]->onPostUpdate();
+					componentmutex.lock();
 				}
 				componentmutex.unlock();
 			}
 			// Delete unneeded entities
+			entitymutex.lock();
 			while (!removalqueue.empty())
 			{
 				unsigned int id = removalqueue.front();

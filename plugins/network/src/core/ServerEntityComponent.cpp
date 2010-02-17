@@ -15,7 +15,10 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "peaknetwork/core/ServerEntityComponent.hpp"
+#include "peaknetwork/core/ServerWorldComponent.hpp"
 #include "peakengine/core/Property.hpp"
+#include "peakengine/core/World.hpp"
+#include "peakengine/core/Entity.hpp"
 
 namespace peak
 {
@@ -27,6 +30,16 @@ namespace peak
 		}
 		ServerEntityComponent::~ServerEntityComponent()
 		{
+		}
+
+		bool ServerEntityComponent::init()
+		{
+			World *world = getEntity()->getWorld();
+			ServerWorldComponent *server = (ServerWorldComponent*)world->getComponent(EWCT_Server);
+			if (!server)
+				return false;
+			server->addEntity(getEntity());
+			return true;
 		}
 
 		bool ServerEntityComponent::hasChanged(unsigned int time)

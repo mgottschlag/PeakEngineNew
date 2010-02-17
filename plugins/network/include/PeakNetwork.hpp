@@ -17,6 +17,10 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef _PEAKNETWORK_HPP_
 #define _PEAKNETWORK_HPP_
 
+#include "peaknetwork/core/Network.hpp"
+#include "peaknetwork/core/ServerWorldComponent.hpp"
+#include "peaknetwork/core/ClientWorldComponent.hpp"
+
 namespace peak
 {
 	/**

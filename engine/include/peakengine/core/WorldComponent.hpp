@@ -48,6 +48,10 @@ namespace peak
 			{
 				return type;
 			}
+			void setWorld(World *world)
+			{
+				this->world = world;
+			}
 			World *getWorld()
 			{
 				return world;

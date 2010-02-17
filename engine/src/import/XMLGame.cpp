@@ -137,7 +137,6 @@ namespace peak
 		{
 			initialworld = root->ToElement()->Attribute("initialworld");
 		}
-		std::cout << "Engine: "<< getEngine() << std::endl;
 		return true;
 	}
 	bool XMLGame::shutdown()
@@ -150,7 +149,6 @@ namespace peak
 		if (initialworld == "")
 			return 0;
 		// Create XML world
-		std::cout << "Engine2: "<< getEngine() << std::endl;
 		XMLWorld *world = new XMLWorld(getEngine(),
 			getEngine()->getDirectory() + "/Data/Worlds/" + initialworld + ".xml");
 		if (!world->load())

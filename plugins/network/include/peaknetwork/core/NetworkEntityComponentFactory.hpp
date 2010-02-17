@@ -14,31 +14,30 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include "peaknetwork/core/Network.hpp"
-#include "peaknetwork/core/NetworkEntityComponentFactory.hpp"
-#include "peakengine/core/Game.hpp"
+#ifndef _PEAKNETWORK_CORE_NETWORKENTITYCOMPONENTFACTORY_HPP_
+#define _PEAKNETWORK_CORE_NETWORKENTITYCOMPONENTFACTORY_HPP_
 
-#include <enet/enet.h>
+#include "peakengine/core/EntityComponentFactory.hpp"
 
 namespace peak
 {
 	namespace network
 	{
-		Network::Network() : engine(0)
-		{
-			// Initialize networking
-			enet_initialize();
-		}
-		Network::~Network()
-		{
-			// Shutdown networking
-			enet_deinitialize();
-		}
+		class Network;
 
-		void Network::registerComponents(Game *game)
+		class NetworkEntityComponentFactory : public EntityComponentFactory
 		{
-			NetworkEntityComponentFactory *factory = new NetworkEntityComponentFactory(this);
-			game->addEntityComponentFactory(factory);
-		}
+			public:
+				NetworkEntityComponentFactory(Network *network)
+					: EntityComponentFactory("Network"), network(network)
+				{
+				}
+
+				virtual EntityComponent *createComponent(Entity *entity);
+			private:
+				Network *network;
+		};
 	}
 }
+
+#endif
