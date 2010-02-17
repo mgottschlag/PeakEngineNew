@@ -31,7 +31,8 @@ namespace peak
 		EPT_Vector2I,
 		EPT_Vector3F,
 		EPT_Vector3I,
-		EPT_Quaternion
+		EPT_Quaternion,
+		EPT_Quaternion16
 	};
 
 	class Property

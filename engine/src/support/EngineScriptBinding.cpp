@@ -24,6 +24,11 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/core/Entity.hpp"
 #include "peakengine/core/EntityComponent.hpp"
 #include "peakengine/core/World.hpp"
+#include "peakengine/core/IntProperty.hpp"
+#include "peakengine/core/FloatProperty.hpp"
+#include "peakengine/core/QuaternionProperty.hpp"
+#include "peakengine/core/Vector2FProperty.hpp"
+#include "peakengine/core/Vector3FProperty.hpp"
 #include "peakengine/import/ScriptEntityComponent.hpp"
 
 #include <luabind/operator.hpp>
@@ -178,7 +183,34 @@ namespace peak
 				.def("getType", &EntityComponent::getType)
 				.def("getEntity", &EntityComponent::getEntity),
 			// ScriptEntityComponent
-			luabind::class_<ScriptEntityComponent, EntityComponent>("ScriptEntityComponent")
+			luabind::class_<ScriptEntityComponent, EntityComponent>("ScriptEntityComponent"),
+			// Property
+			luabind::class_<Property>("Property")
+				.def("getType", &Property::getType),
+			// IntProperty
+			luabind::class_<IntProperty, Property>("IntProperty")
+				.def("get", &IntProperty::get)
+				.def("set", &IntProperty::set),
+			// FloatProperty
+			luabind::class_<FloatProperty, Property>("FloatProperty")
+				.def("get", &FloatProperty::get)
+				.def("set", &FloatProperty::set),
+			// QuaternionProperty
+			luabind::class_<QuaternionProperty, Property>("QuaternionProperty")
+				.def("get", &QuaternionProperty::get)
+				.def("set", &QuaternionProperty::set),
+			// QuaternionProperty16
+			luabind::class_<QuaternionProperty16, Property>("QuaternionProperty16")
+				.def("get", &QuaternionProperty16::get)
+				.def("set", &QuaternionProperty16::set),
+			// Vector2FProperty
+			luabind::class_<Vector2FProperty, Property>("Vector2FProperty")
+				.def("get", &Vector2FProperty::get)
+				.def("set", &Vector2FProperty::set),
+			// Vector3FProperty
+			luabind::class_<Vector3FProperty, Property>("Vector3FProperty")
+				.def("get", &Vector3FProperty::get)
+				.def("set", &Vector3FProperty::set)
 		];
 	}
 }

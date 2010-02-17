@@ -15,7 +15,12 @@ set(SRC
 src/core/Engine.cpp
 src/core/Entity.cpp
 src/core/EntityComponent.cpp
+src/core/FloatProperty.cpp
+src/core/IntProperty.cpp
 src/core/Property.cpp
+src/core/QuaternionProperty.cpp
+src/core/Vector2FProperty.cpp
+src/core/Vector3FProperty.cpp
 src/core/World.cpp
 src/import/ScriptEntityComponent.cpp
 src/import/ScriptEntityComponentFactory.cpp
