@@ -16,6 +16,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "peaknetwork/core/Network.hpp"
 #include "peaknetwork/core/NetworkEntityComponentFactory.hpp"
+#include "peaknetwork/core/NetworkScriptBinding.hpp"
 #include "peakengine/core/Game.hpp"
 
 #include <enet/enet.h>
@@ -37,8 +38,11 @@ namespace peak
 
 		void Network::registerComponents(Game *game)
 		{
+			// Register components
 			NetworkEntityComponentFactory *factory = new NetworkEntityComponentFactory(this);
 			game->addEntityComponentFactory(factory);
+			// Register script bindings
+			game->addScriptBinding(new NetworkScriptBinding());
 		}
 	}
 }

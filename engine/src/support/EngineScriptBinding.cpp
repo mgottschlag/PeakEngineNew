@@ -32,6 +32,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/import/ScriptEntityComponent.hpp"
 
 #include <luabind/operator.hpp>
+#include <luabind/adopt_policy.hpp>
 
 namespace peak
 {
@@ -172,9 +173,9 @@ namespace peak
 			luabind::class_<Entity>("Entity")
 				.def("getID", &Entity::getID)
 				.def("getType", &Entity::getType)
-				.def("addProperty", &Entity::addProperty)
+				.def("addProperty", &Entity::addProperty, luabind::adopt(_2))
 				.def("getProperty", &Entity::getProperty)
-				.def("addComponent", &Entity::addComponent)
+				.def("addComponent", &Entity::addComponent, luabind::adopt(_2))
 				.def("getComponent", (EntityComponent *(Entity::*)(int))&Entity::getComponent)
 				.def("getComponent", (EntityComponent *(Entity::*)(int, unsigned int))&Entity::getComponent)
 				.def("getWorld", &Entity::getWorld),
@@ -189,26 +190,38 @@ namespace peak
 				.def("getType", &Property::getType),
 			// IntProperty
 			luabind::class_<IntProperty, Property>("IntProperty")
+				.def(luabind::constructor<Entity*>())
+				.def("init", &IntProperty::init)
 				.def("get", &IntProperty::get)
 				.def("set", &IntProperty::set),
 			// FloatProperty
 			luabind::class_<FloatProperty, Property>("FloatProperty")
+				.def(luabind::constructor<Entity*>())
+				.def("init", &FloatProperty::init)
 				.def("get", &FloatProperty::get)
 				.def("set", &FloatProperty::set),
 			// QuaternionProperty
 			luabind::class_<QuaternionProperty, Property>("QuaternionProperty")
+				.def(luabind::constructor<Entity*>())
+				.def("init", &QuaternionProperty::init)
 				.def("get", &QuaternionProperty::get)
 				.def("set", &QuaternionProperty::set),
 			// QuaternionProperty16
 			luabind::class_<QuaternionProperty16, Property>("QuaternionProperty16")
+				.def(luabind::constructor<Entity*>())
+				.def("init", &QuaternionProperty16::init)
 				.def("get", &QuaternionProperty16::get)
 				.def("set", &QuaternionProperty16::set),
 			// Vector2FProperty
 			luabind::class_<Vector2FProperty, Property>("Vector2FProperty")
+				.def(luabind::constructor<Entity*>())
+				.def("init", &Vector2FProperty::init)
 				.def("get", &Vector2FProperty::get)
 				.def("set", &Vector2FProperty::set),
 			// Vector3FProperty
 			luabind::class_<Vector3FProperty, Property>("Vector3FProperty")
+				.def(luabind::constructor<Entity*>())
+				.def("init", &Vector3FProperty::init)
 				.def("get", &Vector3FProperty::get)
 				.def("set", &Vector3FProperty::set)
 		];

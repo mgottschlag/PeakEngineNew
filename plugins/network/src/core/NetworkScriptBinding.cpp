@@ -16,10 +16,14 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "peaknetwork/core/NetworkScriptBinding.hpp"
 #include "peaknetwork/core/Network.hpp"
+#include "peaknetwork/core/ClientEntityComponent.hpp"
+#include "peaknetwork/core/ServerEntityComponent.hpp"
 #include "peaknetwork/network/NetworkConnection.hpp"
 #include "peakengine/core/Engine.hpp"
+#include "peakengine/core/Property.hpp"
 
 #include <luabind/operator.hpp>
+#include <luabind/adopt_policy.hpp>
 
 namespace peak
 {
@@ -40,11 +44,22 @@ namespace peak
 			lua_State *state = script->getState();
 			luabind::module(state, "peak")
 			[
-				luabind::namespace_("graphics")
+				luabind::namespace_("network")
 				[
 					// Network
 					luabind::class_<Network>("Network")
-						.def("getEngine", &Network::getEngine)
+						.def("getEngine", &Network::getEngine),
+					// NetworkEntityComponent
+					luabind::class_<NetworkEntityComponent, EntityComponent>("NetworkEntityComponent")
+						.def("getID", &NetworkEntityComponent::getID)
+						.def("addProperty", &NetworkEntityComponent::addProperty)
+						.def("addClientProperty", &NetworkEntityComponent::addClientProperty, luabind::adopt(_2))
+						.def("onUpdate", &NetworkEntityComponent::onUpdate)
+						.def("onMessage", &NetworkEntityComponent::onMessage),
+					// ServerEntityComponent
+					luabind::class_<ServerEntityComponent, NetworkEntityComponent>("ServerEntityComponent"),
+					// ClientEntityComponent
+					luabind::class_<ClientEntityComponent, NetworkEntityComponent>("ClientEntityComponent")
 				]
 			];
 		}

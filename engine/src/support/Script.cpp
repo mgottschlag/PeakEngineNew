@@ -26,6 +26,25 @@ extern "C"
 
 namespace peak
 {
+	static int add_file_and_line(lua_State* L)
+	{
+		lua_Debug d;
+		lua_getstack(L, 1, &d);
+		lua_getinfo(L, "Sln", &d);
+		std::string err = lua_tostring(L, -1);
+		lua_pop(L, 1);
+		std::stringstream msg;
+		msg << d.short_src << ":" << d.currentline;
+
+		if (d.name != 0)
+		{
+			msg << "(" << d.namewhat << " " << d.name << ")";
+		}
+		msg << " " << err;
+		lua_pushstring(L, msg.str().c_str());
+		return 1;
+	}
+
 	Script::Script()
 	{
 		state = lua_open();
@@ -35,6 +54,7 @@ namespace peak
 		luaopen_math(state);
 		luaopen_os(state);
 		luabind::open(state);
+		luabind::set_pcall_callback(add_file_and_line);
 	}
 	Script::~Script()
 	{
