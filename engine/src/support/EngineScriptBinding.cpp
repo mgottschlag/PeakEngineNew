@@ -193,7 +193,9 @@ namespace peak
 				.def(luabind::constructor<Entity*>())
 				.def("init", &IntProperty::init)
 				.def("get", &IntProperty::get)
-				.def("set", &IntProperty::set),
+				.def("set", &IntProperty::set)
+				.def("getBit", &IntProperty::getBit)
+				.def("setBit", &IntProperty::setBit),
 			// FloatProperty
 			luabind::class_<FloatProperty, Property>("FloatProperty")
 				.def(luabind::constructor<Entity*>())

@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/import/XMLGame.hpp"
 #include "peakengine/import/XMLWorld.hpp"
 #include "peakengine/support/FrameLimiter.hpp"
+#include "peakengine/support/OS.hpp"
 
 /**
  * Namespace containing all PeakEngine classes, but also those from plugins.

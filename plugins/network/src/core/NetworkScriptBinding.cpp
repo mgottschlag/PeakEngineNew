@@ -53,7 +53,7 @@ namespace peak
 					luabind::class_<NetworkEntityComponent, EntityComponent>("NetworkEntityComponent")
 						.def("getID", &NetworkEntityComponent::getID)
 						.def("addProperty", &NetworkEntityComponent::addProperty)
-						.def("addClientProperty", &NetworkEntityComponent::addClientProperty, luabind::adopt(_2))
+						.def("addClientProperty", &NetworkEntityComponent::addClientProperty)
 						.def("onUpdate", &NetworkEntityComponent::onUpdate)
 						.def("onMessage", &NetworkEntityComponent::onMessage),
 					// ServerEntityComponent

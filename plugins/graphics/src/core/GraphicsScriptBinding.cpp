@@ -52,7 +52,8 @@ namespace peak
 						.def("getRootSceneNode", &Graphics::getRootSceneNode)
 						.def("setDefaultCamera", &Graphics::setDefaultCamera)
 						.def("getEngine", &Graphics::getEngine)
-						.def("getMouseMoveEvent", &Graphics::getMouseMoveEvent),
+						.def("getMouseMoveEvent", &Graphics::getMouseMoveEvent)
+						.def("getKeyboardEvent", &Graphics::getKeyboardEvent),
 					// GraphicsEntityComponent
 					luabind::class_<GraphicsEntityComponent, EntityComponent>("GraphicsEntityComponent")
 						.def("addSceneNode", &GraphicsEntityComponent::addSceneNode)

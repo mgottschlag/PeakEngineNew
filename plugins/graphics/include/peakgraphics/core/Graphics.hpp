@@ -67,8 +67,16 @@ namespace peak
 				{
 					return mouseevent;
 				}
+				Event2<int, int> &getKeyboardEvent()
+				{
+					return keyboardevent;
+				}
 
 				void injectMouseMovement(int x, int y, int dx, int dy);
+				void injectKeyboard(int key, int state)
+				{
+					keyboardevent.trigger(key, state);
+				}
 
 				bool render();
 			private:
@@ -85,6 +93,7 @@ namespace peak
 				SharedPointer<CameraSceneNode> defcamera;
 
 				Event2<int, int> mouseevent;
+				Event2<int, int> keyboardevent;
 		};
 	}
 }

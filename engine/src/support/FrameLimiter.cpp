@@ -50,6 +50,8 @@ namespace peak
 		else
 		{
 			// TODO: Warning/statistics
+			if (currenttime > lasttime + interval)
+				lasttime = OS::getSystemTime();
 		}
 	}
 }

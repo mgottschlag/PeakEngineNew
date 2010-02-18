@@ -37,6 +37,20 @@ namespace peak
 			void set(int value);
 			int get();
 
+			void setBit(unsigned int bit, bool state)
+			{
+				unsigned int value = get();
+				if (state)
+					value |= 1 << bit;
+				else
+					value &= ~(1 << bit);
+				set(value);
+			}
+			bool getBit(unsigned int bit)
+			{
+				return (get() & (1 << bit)) != 0;
+			}
+
 			virtual PropertyType getType()
 			{
 				return EPT_Int;
