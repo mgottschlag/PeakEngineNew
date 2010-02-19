@@ -35,7 +35,7 @@ namespace peak
 
 			bool load();
 
-			virtual Entity *createEntity(World *world, bool local = true);
+			virtual Entity *createEntity(World *world, unsigned int flags = 0);
 		private:
 			std::string file;
 			TiXmlDocument xml;
@@ -45,6 +45,8 @@ namespace peak
 				bool loaded;
 				TiXmlElement *xml;
 				EntityComponentTemplate *tpl;
+				unsigned int flagsset;
+				unsigned int flagsunset;
 			};
 			std::vector<ComponentInfo> components;
 	};

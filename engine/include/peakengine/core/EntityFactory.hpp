@@ -57,7 +57,7 @@ namespace peak
 			 * Creates an entity for use with the given world. Does not insert
 			 * the entity into the world.
 			 */
-			virtual Entity *createEntity(World *world, bool local = true) = 0;
+			virtual Entity *createEntity(World *world, unsigned int flags = 0) = 0;
 		private:
 			/**
 			 * Type name of the factory.

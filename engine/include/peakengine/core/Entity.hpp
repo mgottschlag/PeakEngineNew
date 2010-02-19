@@ -30,6 +30,34 @@ namespace peak
 	class EntityComponent;
 
 	/**
+	 * Entity flags signalling the state of the entity. For example XML entities
+	 * can load different components if different flags are set.
+	 *
+	 * For the flag bitmask, the value of the entries of this enum tells which
+	 * bit is set (e.g. for EEF_Local the bit is (1 << EEF_Local)).
+	 */
+	enum EntityFlag
+	{
+		/**
+		 * The entity is used on a game server.
+		 */
+		EEF_Server,
+		/**
+		 * The entity is used on a game client.
+		 */
+		EEF_Client,
+		/**
+		 * The entity is owned by this game instance (used with networking).
+		 */
+		EEF_Local,
+		/**
+		 * No entity flag, but rather the value returned by Entity::getFlag()
+		 * if the string does not represent any of the flags.
+		 */
+		EEF_Invalid
+	};
+
+	/**
 	 * Dynamic game object, this can be everything from the player to objects
 	 * like doors or just a menu.
 	 */
@@ -57,6 +85,27 @@ namespace peak
 			 * Returns the ID of the entity.
 			 */
 			unsigned int getID();
+
+			/**
+			 * Returns an entity flag.
+			 */
+			bool getFlag(EntityFlag flag);
+			/**
+			 * Sets an entity flag.
+			 */
+			void setFlag(EntityFlag flag, bool value);
+			/**
+			 * Returns an unsigned integer containing all flags as a bitset.
+			 */
+			unsigned int getFlags();
+			/**
+			 * Sets all flags to the value in the bitset.
+			 */
+			void setFlags(unsigned int flags);
+			/**
+			 * Returns the entity flag with the given name.
+			 */
+			static EntityFlag getFlag(std::string name);
 
 			/**
 			 * Sets the type name of the entity. This name is used e.g. for
@@ -120,7 +169,6 @@ namespace peak
 			 * Updates all components.
 			 */
 			void update();
-
 		private:
 			/**
 			 * Type name.
@@ -134,6 +182,10 @@ namespace peak
 			 * ID of the entity.
 			 */
 			unsigned int id;
+			/**
+			 * Entity flags.
+			 */
+			unsigned int flags;
 			/**
 			 * Entity properties.
 			 */

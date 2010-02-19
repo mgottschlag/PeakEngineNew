@@ -77,23 +77,71 @@ namespace peak
 			info.loaded = false;
 			info.xml = componentelem;
 			info.tpl = 0;
+			info.flagsset = 0;
+			info.flagsunset = 0;
+			if (componentelem->Attribute("flags"))
+			{
+				// Parse flag conditions
+				std::string flags = componentelem->Attribute("flags");
+				size_t tokenpos = 0;
+				std::string flagstr;
+				while (tokenpos < flags.size())
+				{
+					// Get next flag token
+					size_t newtokenpos = flags.find(';', tokenpos);
+					if (newtokenpos == std::string::npos)
+						newtokenpos = flags.size();
+					flagstr = flags.substr(tokenpos, newtokenpos - tokenpos);
+					tokenpos = newtokenpos + 1;
+					if (flagstr == "")
+						continue;
+					// Parse flag token
+					unsigned int equalpos = flags.find('=');
+					std::string flagname = flagstr.substr(0, equalpos);
+					bool flagset = flagstr.substr(equalpos + 1,
+						flagstr.size() - equalpos - 1) == "yes";
+					std::cout << "Flag: " << flagname << ": " << flagset << std::endl;
+					EntityFlag flag = Entity::getFlag(flagname);
+					if (flag == EEF_Invalid)
+					{
+						std::cout << "Invalid flag." << std::endl;
+						continue;
+					}
+					// TODO: Warn here
+					if (flagset)
+						info.flagsset |= 1 << flag;
+					else
+						info.flagsunset |= 1 << flag;
+				}
+			}
 			components.push_back(info);
 			componentnode = root->IterateChildren("Component", componentnode);
 		}
 		return true;
 	}
 
-	Entity *XMLEntityFactory::createEntity(World *world, bool local)
+	Entity *XMLEntityFactory::createEntity(World *world, unsigned int flags)
 	{
 		Game *game = world->getEngine()->getGame();
 		// Get component factories
 		std::vector<EntityComponentFactory*> componentfactories;
 		for (unsigned int i = 0; i < components.size(); i++)
 		{
+			// Check flags
 			ComponentInfo &info = components[i];
+			if (((flags & info.flagsunset) != 0)
+				|| ((flags & info.flagsset) != info.flagsset))
+			{
+				componentfactories.push_back(0);
+				continue;
+			}
+			// Retrieve component factory
 			EntityComponentFactory *factory = game->getEntityComponentFactory(info.type);
 			if (!factory)
+			{
+				std::cout << "Component factory " << info.type << " not found." << std::endl;
 				return 0;
+			}
 			if (!info.loaded)
 			{
 				// Load template
@@ -110,6 +158,8 @@ namespace peak
 		// Create components
 		for (unsigned int i = 0; i < componentfactories.size(); i++)
 		{
+			if (!componentfactories[i])
+				continue;
 			EntityComponent *component = componentfactories[i]->createComponent(entity,
 				components[i].tpl);
 			if (!component)

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 namespace peak
 {
-	Entity::Entity(World *world) : world(world), id(0)
+	Entity::Entity(World *world) : world(world), id(0), flags(0)
 	{
 	}
 	Entity::~Entity()
@@ -46,6 +46,36 @@ namespace peak
 	unsigned int Entity::getID()
 	{
 		return id;
+	}
+
+	bool Entity::getFlag(EntityFlag flag)
+	{
+		return (flags & (1 << flag)) != 0;
+	}
+	void Entity::setFlag(EntityFlag flag, bool value)
+	{
+		if (value)
+			flags |= 1 << flag;
+		else
+			flags &= ~(1 << flag);
+	}
+	unsigned int Entity::getFlags()
+	{
+		return flags;
+	}
+	void Entity::setFlags(unsigned int flags)
+	{
+		this->flags = flags;
+	}
+	EntityFlag Entity::getFlag(std::string name)
+	{
+		if (name == "server")
+			return EEF_Server;
+		if (name == "client")
+			return EEF_Client;
+		if (name == "local")
+			return EEF_Local;
+		return EEF_Invalid;
 	}
 
 	void Entity::setType(std::string type)
