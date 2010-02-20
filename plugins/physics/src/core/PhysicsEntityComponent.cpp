@@ -15,6 +15,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "peakphysics/core/PhysicsEntityComponent.hpp"
+#include "peakphysics/physics/Body.hpp"
 
 namespace peak
 {
@@ -27,8 +28,28 @@ namespace peak
 		}
 		PhysicsEntityComponent::~PhysicsEntityComponent()
 		{
+			std::map<std::string, Body*>::iterator it = bodies.begin();
+			while (it != bodies.end())
+			{
+				// TODO: Delete shapes
+				it->second->destroy();
+				delete it->second;
+				it++;
+			}
 		}
 
+		void PhysicsEntityComponent::addBody(std::string name, Body *body)
+		{
+			bodies[name] = body;
+		}
+		Body *PhysicsEntityComponent::getBody(std::string name)
+		{
+			std::map<std::string, Body*>::iterator it = bodies.find(name);
+			if (it != bodies.end())
+				return it->second;
+			return 0;
+		}
+		
 		void PhysicsEntityComponent::update()
 		{
 		}

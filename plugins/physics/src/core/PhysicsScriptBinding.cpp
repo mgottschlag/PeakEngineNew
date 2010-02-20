@@ -15,6 +15,11 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "peakphysics/core/PhysicsScriptBinding.hpp"
+#include "peakphysics/core/PhysicsEntityComponent.hpp"
+#include "peakphysics/physics/Body.hpp"
+#include "peakphysics/physics/Simulation.hpp"
+
+#include <luabind/adopt_policy.hpp>
 
 namespace peak
 {
@@ -22,6 +27,27 @@ namespace peak
 	{
 		void PhysicsScriptBinding::apply(Script *script)
 		{
+			lua_State *state = script->getState();
+			luabind::module(state, "peak")
+			[
+				luabind::namespace_("physics")
+				[
+					// PhysicsEntityComponent
+					luabind::class_<PhysicsEntityComponent, EntityComponent>("PhysicsEntityComponent")
+						.def("addBody", &PhysicsEntityComponent::addBody, luabind::adopt(_3))
+						.def("getBody", &PhysicsEntityComponent::getBody)
+						.def("getSimulation", &PhysicsEntityComponent::getSimulation),
+					// Body
+					luabind::class_<Body>("Body")
+						.def("setPosition", &Body::setPosition)
+						.def("getPosition", &Body::getPosition)
+						.def("setRotation",(void (Body::*)(const Quaternion&)) &Body::setRotation)
+						.def("setRotation",(void (Body::*)(const Vector3F&)) &Body::setRotation)
+						.def("getRotation", &Body::getRotation),
+					// Simulation
+					luabind::class_<Simulation>("Simulation")
+				]
+			];
 		}
 	}
 }

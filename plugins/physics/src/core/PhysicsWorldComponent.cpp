@@ -15,6 +15,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "peakphysics/core/PhysicsWorldComponent.hpp"
+#include "peakphysics/physics/Simulation.hpp"
 
 namespace peak
 {
@@ -26,6 +27,12 @@ namespace peak
 		}
 		PhysicsWorldComponent::~PhysicsWorldComponent()
 		{
+			delete simulation;
+		}
+
+		void PhysicsWorldComponent::onPreUpdate()
+		{
+			simulation->update();
 		}
 	}
 }

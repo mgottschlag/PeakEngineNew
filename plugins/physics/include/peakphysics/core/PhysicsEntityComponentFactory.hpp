@@ -27,6 +27,7 @@ namespace peak
 	namespace physics
 	{
 		class Physics;
+		class Shape;
 
 		class PhysicsEntityComponentTemplate : public EntityComponentTemplate
 		{
@@ -35,6 +36,41 @@ namespace peak
 					: EntityComponentTemplate(factory)
 				{
 				}
+				~PhysicsEntityComponentTemplate()
+				{
+					for (unsigned int i = 0; i < bodies.size(); i++)
+					{
+						for (unsigned int j = 0; j < bodies[i].shapes.size(); j++)
+						{
+							delete bodies[i].shapes[j];
+						}
+					}
+				}
+
+				
+				struct ShapeInfo
+				{
+					float mass;
+					virtual Shape *create() = 0;
+				};
+				struct BoxInfo : public ShapeInfo
+				{
+					Vector3F size;
+					virtual Shape *create();
+				};
+				struct PlaneInfo : public ShapeInfo
+				{
+					Vector3F normal;
+					virtual Shape *create();
+				};
+				struct BodyInfo
+				{
+					std::string name;
+					Vector3F position;
+					Vector3F rotation;
+					std::vector<ShapeInfo*> shapes;
+				};
+				std::vector<BodyInfo> bodies;
 		};
 
 		class PhysicsEntityComponentFactory : public EntityComponentFactory
@@ -51,6 +87,8 @@ namespace peak
 				virtual EntityComponent *createComponent(Entity *entity,
 					EntityComponentTemplate *tpl);
 			private:
+				bool parseBody(PhysicsEntityComponentTemplate::BodyInfo &body,
+					TiXmlElement *xml);
 				Physics *physics;
 		};
 	}

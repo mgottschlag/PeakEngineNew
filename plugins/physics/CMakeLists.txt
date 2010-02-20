@@ -35,7 +35,7 @@ src/physics/Trimesh.cpp
 include_directories(include ../../engine/include ${LUA_INCLUDE_DIR} /usr/local/include/bullet)
 
 add_library(PeakPhysics SHARED ${SRC})
-#target_link_libraries(PeakPhysics Horde3D Horde3DUtils)
+target_link_libraries(PeakPhysics freeimageplus bulletsoftbody bulletdynamics bulletcollision bulletmath)
 
 install(DIRECTORY include/peakphysics/ DESTINATION include/peakphysics FILES_MATCHING PATTERN *.hpp)
 install(FILES include/PeakPhysics.hpp DESTINATION include)

@@ -31,6 +31,8 @@ namespace peak
 				PhysicsWorldComponent(World *world, Simulation *simulation);
 				virtual ~PhysicsWorldComponent();
 
+				virtual void onPreUpdate();
+
 				Simulation *getSimulation()
 				{
 					return simulation;

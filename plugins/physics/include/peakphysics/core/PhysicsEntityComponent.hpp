@@ -19,17 +19,24 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "peakengine/core/EntityComponent.hpp"
 
+#include <string>
+#include <map>
+
 namespace peak
 {
 	namespace physics
 	{
 		class Simulation;
+		class Body;
 
 		class PhysicsEntityComponent : public EntityComponent
 		{
 			public:
 				PhysicsEntityComponent(Entity *entity, Simulation *simulation);
 				virtual ~PhysicsEntityComponent();
+
+				void addBody(std::string name, Body *body);
+				Body *getBody(std::string name);
 
 				virtual int getType()
 				{
@@ -44,6 +51,7 @@ namespace peak
 				}
 			private:
 				Simulation *simulation;
+				std::map<std::string, Body*> bodies;
 		};
 	}
 }

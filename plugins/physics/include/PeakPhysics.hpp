@@ -17,6 +17,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef _PEAKPHYSICS_HPP_
 #define _PEAKPHYSICS_HPP_
 
+#include "peakphysics/core/Physics.hpp"
+
 namespace peak
 {
 	/**
