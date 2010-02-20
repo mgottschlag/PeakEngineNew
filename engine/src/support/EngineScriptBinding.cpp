@@ -189,7 +189,15 @@ namespace peak
 			// EntityComponent
 			luabind::class_<EntityComponent>("EntityComponent")
 				.def("getType", &EntityComponent::getType)
-				.def("getEntity", &EntityComponent::getEntity),
+				.def("getEntity", &EntityComponent::getEntity)
+				.enum_("EntityComponentType")
+				[
+					luabind::value("Script", EECT_Script),
+					luabind::value("Physics", EECT_Physics),
+					luabind::value("Graphics", EECT_Graphics),
+					luabind::value("Server", EECT_Server),
+					luabind::value("Client", EECT_Client)
+				],
 			// ScriptEntityComponent
 			luabind::class_<ScriptEntityComponent, EntityComponent>("ScriptEntityComponent"),
 			// Property

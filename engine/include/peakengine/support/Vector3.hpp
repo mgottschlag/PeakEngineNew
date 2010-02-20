@@ -18,6 +18,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define _PEAKENGINE_SUPPORT_VECTOR3_HPP_
 
 #include <cmath>
+#include <string>
+#include <cstdlib>
 
 namespace peak
 {
@@ -45,6 +47,20 @@ namespace peak
 			template <class T2> Vector3(const Vector3<T2> &v)
 				: x(v.x), y(v.y), z(v.z)
 			{
+			}
+			/**
+			 * Constructor.
+			 */
+			Vector3(const char *s)
+			{
+				set(s);
+			}
+			/**
+			 * Constructor.
+			 */
+			Vector3(const std::string &s)
+			{
+				set(s);
 			}
 
 			/**
@@ -159,6 +175,32 @@ namespace peak
 				return *this;
 			}
 
+			/**
+			 * Reads the vector from a string in the form "x/y/z".
+			 */
+			void set(const std::string &s)
+			{
+				size_t separator = s.find("/");
+				size_t separator2;
+				if (separator != std::string::npos)
+					separator2 = s.find("/", separator + 1);
+				if ((separator == std::string::npos)
+					|| (separator2 == std::string::npos))
+				{
+					x = 0;
+					y = 0;
+					z = 0;
+				}
+				else
+				{
+					x = (T)atof(s.c_str());
+					const char *ys = s.c_str() + separator + 1;
+					y = (T)atof(ys);
+					const char *zs = s.c_str() + separator2 + 1;
+					z = (T)atof(zs);
+				}
+			}
+
 			template<typename T2> Vector3<T> operator*(T2 s) const
 			{
 				return Vector3<T>((T)(x * s), (T)(y * s), (T)(z * s));
@@ -194,6 +236,16 @@ namespace peak
 				x = (T)v.x;
 				y = (T)v.y;
 				z = (T)v.z;
+				return *this;
+			}
+			Vector3<T> &operator=(const std::string &s)
+			{
+				set(s);
+				return *this;
+			}
+			Vector3<T> &operator=(const char *s)
+			{
+				set(s);
 				return *this;
 			}
 			template<typename T2> Vector3<T> &operator+=(const Vector3<T2> &v)

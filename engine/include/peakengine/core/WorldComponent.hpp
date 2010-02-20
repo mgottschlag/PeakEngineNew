@@ -41,8 +41,8 @@ namespace peak
 			{
 			}
 
-			virtual void onPostUpdate() {};
 			virtual void onPreUpdate() {};
+			virtual void onPostUpdate() {};
 
 			unsigned int getType()
 			{

@@ -129,6 +129,7 @@ namespace peak
 		{
 			// Check flags
 			ComponentInfo &info = components[i];
+			std::cout << "Flags: " << flags << "(" << info.flagsunset << "/" << info.flagsset << ")" << std::endl;
 			if (((flags & info.flagsunset) != 0)
 				|| ((flags & info.flagsset) != info.flagsset))
 			{
@@ -164,6 +165,7 @@ namespace peak
 				components[i].tpl);
 			if (!component)
 			{
+				std::cout << "Could not create entity component " << components[i].type << std::endl;
 				delete entity;
 				return 0;
 			}
@@ -172,6 +174,7 @@ namespace peak
 		// Initialize entity
 		if (!entity->init())
 		{
+			std::cout << "Could not initialize entity." << std::endl;
 			delete entity;
 			return 0;
 		}

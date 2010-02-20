@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "peakengine/core/Game.hpp"
 #include "peakengine/core/Engine.hpp"
+#include "peakengine/core/Entity.hpp"
 #include "peakengine/core/EntityComponent.hpp"
 #include "peakengine/core/EntityFactory.hpp"
 #include "peakengine/core/World.hpp"

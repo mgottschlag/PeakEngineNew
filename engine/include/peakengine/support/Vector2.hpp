@@ -113,7 +113,7 @@ namespace peak
 				y = (T)v.y;
 				return *this;
 			}
-			Vector2<T> &operator=(std::string s)
+			Vector2<T> &operator=(const std::string &s)
 			{
 				set(s);
 				return *this;
@@ -144,6 +144,9 @@ namespace peak
 				return x != v.x || y != v.y;
 			}
 
+			/**
+			 * Reads the vector from a string in the form "x/y".
+			 */
 			void set(const std::string &s)
 			{
 				size_t separator = s.find("/");

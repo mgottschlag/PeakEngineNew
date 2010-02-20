@@ -59,7 +59,6 @@ namespace peak
 				std::string file = modelelem->Attribute("file");
 				modelinfo.file = file;
 				tpl->models.push_back(modelinfo);
-				// Create model
 				modelnode = xml->IterateChildren("Model", modelnode);
 			}
 			// Light scene nodes

@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/core/Engine.hpp"
 
 #include <luabind/operator.hpp>
+#include <luabind/adopt_policy.hpp>
 
 namespace peak
 {
@@ -56,7 +57,7 @@ namespace peak
 						.def("getKeyboardEvent", &Graphics::getKeyboardEvent),
 					// GraphicsEntityComponent
 					luabind::class_<GraphicsEntityComponent, EntityComponent>("GraphicsEntityComponent")
-						.def("addSceneNode", &GraphicsEntityComponent::addSceneNode)
+						.def("addSceneNode", &GraphicsEntityComponent::addSceneNode, luabind::adopt(_3))
 						.def("getSceneNode", &GraphicsEntityComponent::getSceneNode)
 						.def("getGraphics", &GraphicsEntityComponent::getGraphics),
 					// SceneNode
