@@ -21,6 +21,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakgraphics/scene/CameraSceneNode.hpp"
 #include "peakgraphics/scene/ModelSceneNode.hpp"
 #include "peakgraphics/scene/LightSceneNode.hpp"
+#include "peakgraphics/scene/GUISceneNode.hpp"
+#include "peakgraphics/gui/ButtonElement.hpp"
 #include "peakengine/core/Engine.hpp"
 
 #include <luabind/operator.hpp>
@@ -77,7 +79,20 @@ namespace peak
 					// ModelSceneNode
 					luabind::class_<ModelSceneNode, SceneNode>("ModelSceneNode"),
 					// LightSceneNode
-					luabind::class_<LightSceneNode, SceneNode>("LightSceneNode")
+					luabind::class_<LightSceneNode, SceneNode>("LightSceneNode"),
+					// GUISceneNode
+					luabind::class_<GUISceneNode, SceneNode>("GUISceneNode"),
+					// GUIElement
+					luabind::class_<GUIElement, Loadable, SharedPointer<GUIElement> >("GUIElement")
+						.def("setPosition", &GUIElement::setPosition)
+						.def("getPosition", &GUIElement::getPosition)
+						.def("setSize", &GUIElement::setSize)
+						.def("getSize", &GUIElement::getSize)
+						.def("setVisible", &GUIElement::setVisible)
+						.def("isVisible", &GUIElement::isVisible),
+					// ButtonElement
+					luabind::class_<ButtonElement, GUIElement, SharedPointer<ButtonElement> >("ButtonElement")
+						.def(luabind::constructor<GUISceneNode*, GUIElement*, std::string>())
 				]
 			];
 		}

@@ -66,6 +66,13 @@ namespace peak
 					std::string file;
 				};
 				std::vector<CameraInfo> cameras;
+
+				struct GUIInfo
+				{
+					SceneNodeInfo info;
+					std::string file;
+				};
+				std::vector<GUIInfo> guis;
 		};
 
 		class GraphicsEntityComponentFactory : public EntityComponentFactory

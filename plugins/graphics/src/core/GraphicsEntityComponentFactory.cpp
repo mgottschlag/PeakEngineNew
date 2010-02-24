@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakgraphics/scene/CameraSceneNode.hpp"
 #include "peakgraphics/scene/LightSceneNode.hpp"
 #include "peakgraphics/scene/GroupSceneNode.hpp"
+#include "peakgraphics/scene/GUISceneNode.hpp"
 
 #include "peakengine/support/tinyxml.h"
 
@@ -117,6 +118,31 @@ namespace peak
 				// Create model
 				cameranode = xml->IterateChildren("Camera", cameranode);
 			}
+			// GUI scene nodes
+			TiXmlNode *guinode = xml->FirstChild("GUI");
+			while (guinode)
+			{
+				TiXmlElement *guielem = guinode->ToElement();
+				if (!guielem)
+				{
+					guinode = xml->IterateChildren("GUI", guinode);
+					continue;
+				}
+				GraphicsEntityComponentTemplate::GUIInfo guiinfo;
+				if (!readSceneNodeInfo(guielem, guiinfo.info)
+					|| !guielem->Attribute("skin"))
+				{
+					std::cout << "GUI skin or name missing." << std::endl;
+					guinode = xml->IterateChildren("GUI", guinode);
+					continue;
+				}
+				// Get component factory information
+				std::string file = guielem->Attribute("skin");
+				guiinfo.file = file;
+				tpl->guis.push_back(guiinfo);
+				// Create model
+				guinode = xml->IterateChildren("GUI", guinode);
+			}
 			return tpl;
 		}
 
@@ -174,6 +200,18 @@ namespace peak
 				camera->setRotation(info.info.rotation);
 				camera->setScale(info.info.scale);
 				component->addSceneNode(info.info.name, camera);
+			}
+			// Add gui scene nodes
+			for (unsigned int i = 0; i < gtpl->guis.size(); i++)
+			{
+				GraphicsEntityComponentTemplate::GUIInfo &info = gtpl->guis[i];
+				peak::graphics::GUISceneNode *gui = new peak::graphics::GUISceneNode(graphics,
+					info.file);
+				gui->setParent(root);
+				gui->setPosition(info.info.position);
+				gui->setRotation(info.info.rotation);
+				gui->setScale(info.info.scale);
+				component->addSceneNode(info.info.name, gui);
 			}
 			return component;
 		}

@@ -43,7 +43,6 @@ namespace peak
 			std::string line;
 			while (getline(input, line))
 				data += line + '\n';
-			std::cout << "Script read: \"" << data << "\"" << std::endl;
 			return true;
 		}
 	}

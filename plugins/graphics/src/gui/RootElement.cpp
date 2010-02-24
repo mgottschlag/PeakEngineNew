@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009, Mathias Gottschlag
+Copyright (c) 2010, Mathias Gottschlag
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -14,51 +14,42 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKGRAPHICS_SUPPORT_LOADABLE_HPP_
-#define _PEAKGRAPHICS_SUPPORT_LOADABLE_HPP_
+#include "peakgraphics/gui/RootElement.hpp"
+#include "peakgraphics/scene/GUISceneNode.hpp"
 
-#include "ReferenceCounted.hpp"
+#include <Horde3DGUI.h>
 
 namespace peak
 {
-	class Loadable : public ReferenceCounted
+	namespace graphics
 	{
-		public:
-			Loadable() : ReferenceCounted(), loaded(false)
-			{
-			}
-			virtual ~Loadable()
-			{
-				if (isLoaded())
-					destroy();
-			}
+		RootElement::RootElement(GUISceneNode *node)
+			: GUIElement(node)
+		{
+		}
+		RootElement::~RootElement()
+		{
+		}
 
-			bool tryLoading()
+		bool RootElement::load()
+		{
+			mutex.lock();
+			element = h3dguiGetRoot(node->getNode());
+			mutex.unlock();
+			return true;
+		}
+		bool RootElement::destroy()
+		{
+			// Delete children
+			// TODO: Locking
+			for (unsigned int i = 0; i < children.size(); i++)
 			{
-				if (load())
-				{
-					setLoaded(true);
-					return true;
-				}
-				else
-					return false;
+				children[i]->destroy();
+				children[i]->setLoaded(false);
 			}
-			virtual bool load() = 0;
-			virtual bool destroy()
-			{
-				return false;
-			}
-			void setLoaded(bool loaded)
-			{
-				this->loaded = loaded;
-			}
-			bool isLoaded()
-			{
-				return loaded;
-			}
-		private:
-			bool loaded;
-	};
+			children.clear();
+			element = 0;
+			return true;
+		}
+	}
 }
-
-#endif

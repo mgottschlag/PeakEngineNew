@@ -70,6 +70,10 @@ namespace peak
 				{
 					return node;
 				}
+				Graphics *getGraphics()
+				{
+					return graphics;
+				}
 			protected:
 				void removeChild(SceneNode *child);
 

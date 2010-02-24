@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009, Mathias Gottschlag
+Copyright (c) 2010, Mathias Gottschlag
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -14,51 +14,26 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKGRAPHICS_SUPPORT_LOADABLE_HPP_
-#define _PEAKGRAPHICS_SUPPORT_LOADABLE_HPP_
+#ifndef _PEAKGRAPHICS_GUI_ROOTELEMENT_HPP_
+#define _PEAKGRAPHICS_GUI_ROOTELEMENT_HPP_
 
-#include "ReferenceCounted.hpp"
+#include "GUIElement.hpp"
 
 namespace peak
 {
-	class Loadable : public ReferenceCounted
+	namespace graphics
 	{
-		public:
-			Loadable() : ReferenceCounted(), loaded(false)
-			{
-			}
-			virtual ~Loadable()
-			{
-				if (isLoaded())
-					destroy();
-			}
+		class RootElement : public GUIElement
+		{
+			public:
+				RootElement(GUISceneNode *node);
+				~RootElement();
 
-			bool tryLoading()
-			{
-				if (load())
-				{
-					setLoaded(true);
-					return true;
-				}
-				else
-					return false;
-			}
-			virtual bool load() = 0;
-			virtual bool destroy()
-			{
-				return false;
-			}
-			void setLoaded(bool loaded)
-			{
-				this->loaded = loaded;
-			}
-			bool isLoaded()
-			{
-				return loaded;
-			}
-		private:
-			bool loaded;
-	};
+				virtual bool load();
+				virtual bool destroy();
+			private:
+		};
+	}
 }
 
 #endif

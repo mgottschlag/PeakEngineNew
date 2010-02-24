@@ -19,7 +19,9 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/support/Vector2.hpp"
 #include "peakengine/support/Vector3.hpp"
 #include "peakengine/support/Quaternion.hpp"
+#include "peakengine/support/ScreenPosition.hpp"
 #include "peakengine/support/EventQueue.hpp"
+#include "peakengine/support/Loadable.hpp"
 #include "peakengine/core/Property.hpp"
 #include "peakengine/core/Entity.hpp"
 #include "peakengine/core/EntityComponent.hpp"
@@ -54,6 +56,8 @@ namespace peak
 			// ReferenceCounted class
 			luabind::class_<ReferenceCounted, SharedPointer<ReferenceCounted> >("ReferenceCounted")
 				.def(luabind::constructor<>()),
+			// Loadable
+			luabind::class_<Loadable, ReferenceCounted, SharedPointer<Loadable> >("Loadable"),
 			// Vector2F
 			luabind::class_<Vector2F>("Vector2F")
 				.def(luabind::constructor<>())
@@ -128,6 +132,15 @@ namespace peak
 				.def(luabind::constructor<float, float, float, float>())
 				.def(luabind::constructor<const Quaternion &>())
 				.def(luabind::constructor<const Vector3F &>()),
+			// ScreenPosition
+			luabind::class_<ScreenPosition>("ScreenPosition")
+				.def(luabind::constructor<>())
+				.def(luabind::constructor<Vector2F, Vector2I>())
+				.def("getAbsolute", &ScreenPosition::getAbsolute)
+				.def_readwrite("rel", &ScreenPosition::rel)
+				.def_readwrite("abs", &ScreenPosition::abs)
+				.def(luabind::self + ScreenPosition())
+				.def(luabind::self - ScreenPosition()),
 			// ScriptEventReceiver
 			luabind::class_<ScriptEventReceiver>("ScriptEventReceiver")
 				.def(luabind::constructor<Script*, std::string>())
