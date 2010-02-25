@@ -17,6 +17,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/core/World.hpp"
 #include "peakengine/core/Entity.hpp"
 #include "peakengine/core/WorldComponent.hpp"
+#include "peakengine/support/ScopedLock.hpp"
 
 namespace peak
 {
@@ -102,7 +103,7 @@ namespace peak
 
 	void World::start()
 	{
-		threadmutex.lock();
+		ScopedLock lock(threadmutex);
 		if (threadrunning)
 			return;
 		// Start thread
@@ -110,25 +111,22 @@ namespace peak
 		stopthread = false;
 		pausethread = false;
 		thread.create(new ClassFunctor<World>(this, &World::worldThread));
-		threadmutex.unlock();
 	}
 	void World::pause()
 	{
-		threadmutex.lock();
+		ScopedLock lock(threadmutex);
 		if (!threadrunning)
 			return;
 		pausethread = true;
-		threadmutex.unlock();
 	}
 	void World::stop(bool wait)
 	{
-		threadmutex.lock();
+		ScopedLock lock(threadmutex);
 		if (!threadrunning)
 			return;
 		stopthread = true;
 		if (wait)
 			thread.wait();
-		threadmutex.unlock();
 	}
 	bool World::isRunning()
 	{

@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/core/Entity.hpp"
 #include "peakengine/core/EntityComponent.hpp"
 #include "peakengine/core/World.hpp"
+#include "peakengine/core/Engine.hpp"
+#include "peakengine/core/Game.hpp"
 #include "peakengine/core/IntProperty.hpp"
 #include "peakengine/core/FloatProperty.hpp"
 #include "peakengine/core/QuaternionProperty.hpp"
@@ -271,7 +273,15 @@ namespace peak
 				.def(luabind::constructor<Entity*>())
 				.def("init", &Vector3FProperty::init)
 				.def("get", &Vector3FProperty::get)
-				.def("set", &Vector3FProperty::set)
+				.def("set", &Vector3FProperty::set),
+			// World
+			luabind::class_<World>("World")
+				.def("getEngine", &World::getEngine),
+			// Engine
+			luabind::class_<Engine>("Engine")
+				.def("stop", &Engine::stop)
+				.def("getDirectory", &Engine::getDirectory)
+				.def("getGame", &Engine::getGame)
 		];
 	}
 }

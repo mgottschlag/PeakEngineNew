@@ -96,6 +96,7 @@ namespace peak
 		void GUIElement::setActionID(int actionid)
 		{
 			this->actionid = actionid;
+			changed = true;
 		}
 
 		void GUIElement::updateParent()

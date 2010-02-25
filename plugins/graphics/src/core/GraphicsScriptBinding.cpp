@@ -87,7 +87,8 @@ namespace peak
 						.def("injectMousePosition", &GUISceneNode::injectMousePosition)
 						.def("injectMouseButton", &GUISceneNode::injectMouseButton)
 						.def("injectChar", &GUISceneNode::injectChar)
-						.def("injectKeyboard", &GUISceneNode::injectKeyboard),
+						.def("injectKeyboard", &GUISceneNode::injectKeyboard)
+						.def("getActionEvent", &GUISceneNode::getActionEvent),
 					// GUIElement
 					luabind::class_<GUIElement, Loadable, SharedPointer<GUIElement> >("GUIElement")
 						.def("setPosition", &GUIElement::setPosition)
@@ -95,7 +96,9 @@ namespace peak
 						.def("setSize", &GUIElement::setSize)
 						.def("getSize", &GUIElement::getSize)
 						.def("setVisible", &GUIElement::setVisible)
-						.def("isVisible", &GUIElement::isVisible),
+						.def("isVisible", &GUIElement::isVisible)
+						.def("setActionID", &GUIElement::setActionID)
+						.def("getActionID", &GUIElement::getActionID),
 					// ButtonElement
 					luabind::class_<ButtonElement, GUIElement, SharedPointer<ButtonElement> >("ButtonElement")
 						.def(luabind::constructor<GUISceneNode*, GUIElement*, std::string>())
