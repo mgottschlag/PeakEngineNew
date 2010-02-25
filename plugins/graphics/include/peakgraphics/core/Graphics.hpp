@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "../scene/SceneNode.hpp"
 #include "peakengine/support/Event.hpp"
+#include "KeyCode.hpp"
 
 #include <queue>
 
@@ -67,15 +68,31 @@ namespace peak
 				{
 					return mouseevent;
 				}
+				Event2<int, int> &getMouseButtonEvent()
+				{
+					return mousebuttonevent;
+				}
 				Event2<int, int> &getKeyboardEvent()
 				{
 					return keyboardevent;
 				}
+				Event1<int> &getCharEvent()
+				{
+					return charevent;
+				}
 
 				void injectMouseMovement(int x, int y, int dx, int dy);
-				void injectKeyboard(int key, int state)
+				void injectMouseButton(int button, int state)
+				{
+					mousebuttonevent.trigger(button, state);
+				}
+				void injectKeyboard(KeyCode key, int state)
 				{
 					keyboardevent.trigger(key, state);
+				}
+				void injectChar(wchar_t c)
+				{
+					charevent.trigger(c);
 				}
 
 				bool render();
@@ -93,7 +110,9 @@ namespace peak
 				SharedPointer<CameraSceneNode> defcamera;
 
 				Event2<int, int> mouseevent;
+				Event2<int, int> mousebuttonevent;
 				Event2<int, int> keyboardevent;
+				Event1<int> charevent;
 		};
 	}
 }

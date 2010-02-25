@@ -27,16 +27,65 @@ namespace peak
 {
 	namespace graphics
 	{
+		struct InputEvent
+		{
+			virtual void apply(unsigned int node) = 0;
+		};
+		struct CharEvent : public InputEvent
+		{
+			CharEvent(wchar_t c) : c(c)
+			{
+			}
+			virtual void apply(unsigned int node)
+			{
+				h3dguiInsertChar(node, c);
+			}
+			wchar_t c;
+		};
+		struct MousePosEvent : public InputEvent
+		{
+			MousePosEvent(float x, float y) : x(x), y(y)
+			{
+			}
+			virtual void apply(unsigned int node)
+			{
+				h3dguiSetMousePosition(node, x, y);
+			}
+			float x;
+			float y;
+		};
+		struct MouseButtonEvent : public InputEvent
+		{
+			MouseButtonEvent(int button, int state)
+				: button(button), state(state)
+			{
+			}
+			virtual void apply(unsigned int node)
+			{
+				h3dguiSetMouseButton(node, button, state);
+			}
+			int button;
+			int state;
+		};
+
 		GUISceneNode::GUISceneNode(Graphics *graphics, std::string skin,
 			std::string layout)
-			: SceneNode(graphics), skin(skin), layout(layout), root(0)
+			: SceneNode(graphics), skin(skin), layout(layout), root(0),
+			screensize(640, 480)
 		{
 			graphics->registerLoading(this);
 			root = new RootElement(this);
+			// TODO: Release the root again
+			root->grab();
 			graphics->registerLoading(root);
 		}
 		GUISceneNode::~GUISceneNode()
 		{
+			while (!input.empty())
+			{
+				delete input.front();
+				input.pop();
+			}
 		}
 
 		bool GUISceneNode::load()
@@ -56,6 +105,74 @@ namespace peak
 			#endif
 			mutex.unlock();
 			return true;
+		}
+
+		void GUISceneNode::setScreenSize(Vector2I size)
+		{
+			mutex.lock();
+			screensize = size;
+			changed = true;
+			mutex.unlock();
+		}
+
+		void GUISceneNode::injectMousePosition(int x, int y)
+		{
+			mutex.lock();
+			float fx = (float)x / screensize.x;
+			float fy = (float)y / screensize.y;
+			input.push(new MousePosEvent(fx, fy));
+			mutex.unlock();
+		}
+		void GUISceneNode::injectMouseButton(unsigned int button, int state)
+		{
+			mutex.lock();
+			input.push(new MouseButtonEvent(button, state));
+			mutex.unlock();
+		}
+		void GUISceneNode::injectChar(int c)
+		{
+			mutex.lock();
+			input.push(new CharEvent(c));
+			mutex.unlock();
+		}
+		void GUISceneNode::injectKeyboard(KeyCode key, int state)
+		{
+		}
+
+		void GUISceneNode::update()
+		{
+			mutex.lock();
+			if (isLoaded())
+			{
+				// Insert input
+				while (!input.empty())
+				{
+					input.front()->apply(node);
+					delete input.front();
+					input.pop();
+				}
+				// Update GUI elements
+				root->update();
+				// Receive events
+				while(h3dguiHasEvent(node))
+				{
+					int type = h3dguiGetEventType(node);
+					unsigned int actionid = h3dguiGetEventActionID(node);
+					if (type == H3DGUIEvent::Action)
+					{
+						actionevent.trigger(actionid);
+					}
+					h3dguiDeleteEvent(node);
+				}
+			}
+			if (changed && isLoaded())
+			{
+				// Change virtual screen size
+				h3dSetNodeParamI(node, H3DGUINode::WidthI, screensize.x);
+				h3dSetNodeParamI(node, H3DGUINode::HeightI, screensize.y);
+			}
+			mutex.unlock();
+			SceneNode::update();
 		}
 	}
 }

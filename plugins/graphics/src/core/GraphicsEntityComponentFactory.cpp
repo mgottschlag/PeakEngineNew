@@ -139,6 +139,9 @@ namespace peak
 				// Get component factory information
 				std::string file = guielem->Attribute("skin");
 				guiinfo.file = file;
+				guiinfo.screensize = Vector2I(640, 480);
+				if (guielem->Attribute("screensize"))
+					guiinfo.screensize = guielem->Attribute("screensize");
 				tpl->guis.push_back(guiinfo);
 				// Create model
 				guinode = xml->IterateChildren("GUI", guinode);
@@ -211,6 +214,7 @@ namespace peak
 				gui->setPosition(info.info.position);
 				gui->setRotation(info.info.rotation);
 				gui->setScale(info.info.scale);
+				gui->setScreenSize(info.screensize);
 				component->addSceneNode(info.info.name, gui);
 			}
 			return component;

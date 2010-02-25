@@ -25,9 +25,11 @@ namespace peak
 	namespace graphics
 	{
 		GUIElement::GUIElement(GUISceneNode *node, GUIElement *parent)
-			: node(node), gui(node->getNode()), newparent(parent), parent(0), element(0),
-			visible(true), changed(false)
+			: node(node), gui(0), newparent(parent), parent(0), element(0),
+			visible(true), actionid(0), changed(false)
 		{
+			position = ScreenPosition(Vector2F(0.0, 0.0), Vector2I(0, 0));
+			size = ScreenPosition(Vector2F(1.0, 1.0), Vector2I(0, 0));
 		}
 		GUIElement::~GUIElement()
 		{
@@ -74,6 +76,7 @@ namespace peak
 		void GUIElement::setSize(ScreenSize size)
 		{
 			this->size = size;
+			changed = true;
 		}
 		ScreenSize GUIElement::getSize()
 		{
@@ -88,6 +91,11 @@ namespace peak
 		bool GUIElement::isVisible()
 		{
 			return visible;
+		}
+
+		void GUIElement::setActionID(int actionid)
+		{
+			this->actionid = actionid;
 		}
 
 		void GUIElement::updateParent()
@@ -116,7 +124,7 @@ namespace peak
 			// Set size/position
 			h3dguiSetPosition(gui, element, position.rel.x, position.abs.x,
 				position.rel.y, position.abs.y);
-			h3dguiSetPosition(gui, element, size.rel.x, size.abs.x, size.rel.y,
+			h3dguiSetSize(gui, element, size.rel.x, size.abs.x, size.rel.y,
 				size.abs.y);
 		}
 		void GUIElement::update()
@@ -127,6 +135,8 @@ namespace peak
 				updatePosition();
 				// Update visibility
 				h3dguiSetVisible(node->getNode(), element, visible ? 1 : 0);
+				// Update action ID
+				h3dguiSetElementParamI(node->getNode(), element, H3DElementParam::ActionIdI, actionid);
 				// Reset change flag
 				changed = false;
 			}
@@ -149,6 +159,13 @@ namespace peak
 				}
 			}
 			mutex.unlock();
+		}
+
+		void GUIElement::initialUpdate()
+		{
+			gui = node->getNode();
+			changed = true;
+			update();
 		}
 	}
 }

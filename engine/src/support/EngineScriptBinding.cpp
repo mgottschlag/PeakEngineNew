@@ -148,6 +148,8 @@ namespace peak
 				.def("getFunction", &ScriptEventReceiver::getFunction),
 			// EventReceiver
 			luabind::class_<EventReceiver>("EventReceiver"),
+			// EventReceiver1<int>
+			luabind::class_<EventReceiver1<int> >("EventReceiver1I"),
 			// EventReceiver2<int, int>
 			luabind::class_<EventReceiver2<int, int> >("EventReceiver2II"),
 			// Event
@@ -158,6 +160,14 @@ namespace peak
 				.def("connect", (void (Event::*)(ScriptEventReceiver*))&Event::connect)
 				.def("disconnect", (void (Event::*)(ScriptEventReceiver*))&Event::disconnect)
 				.def("trigger", &Event::trigger),
+			// Event1I
+			luabind::class_<Event1<int> >("Event1I")
+				.def(luabind::constructor<>())
+				.def("connect", (void (Event1<int>::*)(EventReceiver1<int>*))&Event1<int>::connect)
+				.def("disconnect", (void (Event1<int>::*)(EventReceiver1<int>*))&Event1<int>::disconnect)
+				.def("connect", (void (Event1<int>::*)(ScriptEventReceiver*))&Event1<int>::connect)
+				.def("disconnect", (void (Event1<int>::*)(ScriptEventReceiver*))&Event1<int>::disconnect)
+				.def("trigger", &Event1<int>::trigger),
 			// Event2II
 			luabind::class_<Event2<int, int> >("Event2II")
 				.def(luabind::constructor<>())
@@ -182,6 +192,14 @@ namespace peak
 				.def("getParam2", &EventQueue2<int, int>::getParam2)
 				.def("trigger", &EventQueue2<int, int>::trigger)
 				.def("getReceiver", &EventQueue2<int, int>::getReceiver),
+			// EventQueue1<int>
+			luabind::class_<EventQueue1<int> >("EventQueue1I")
+				.def(luabind::constructor<>())
+				.def("triggered", &EventQueue1<int>::triggered)
+				.def("dropEvent", &EventQueue1<int>::dropEvent)
+				.def("getParam", &EventQueue1<int>::getParam)
+				.def("trigger", &EventQueue1<int>::trigger)
+				.def("getReceiver", &EventQueue1<int>::getReceiver),
 			// Entity
 			luabind::class_<Entity>("Entity")
 				.def("getID", &Entity::getID)

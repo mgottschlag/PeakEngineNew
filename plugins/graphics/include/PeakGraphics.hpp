@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "peakgraphics/core/Graphics.hpp"
 #include "peakgraphics/core/GraphicsWorldComponentFactory.hpp"
+#include "peakgraphics/core/KeyCode.hpp"
 #include "peakgraphics/scene/CameraSceneNode.hpp"
 #include "peakgraphics/scene/ModelSceneNode.hpp"
 

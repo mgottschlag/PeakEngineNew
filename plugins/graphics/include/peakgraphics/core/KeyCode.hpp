@@ -14,43 +14,53 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include "peakgraphics/gui/RootElement.hpp"
-#include "peakgraphics/scene/GUISceneNode.hpp"
-
-#include <Horde3DGUI.h>
+#ifndef _PEAKGRAPHICS_KEYCODE_GRAPHICS_HPP_
+#define _PEAKGRAPHICS_KEYCODE_GRAPHICS_HPP_
 
 namespace peak
 {
 	namespace graphics
 	{
-		RootElement::RootElement(GUISceneNode *node)
-			: GUIElement(node)
+		enum KeyCode
 		{
-		}
-		RootElement::~RootElement()
-		{
-		}
-
-		bool RootElement::load()
-		{
-			mutex.lock();
-			element = h3dguiGetRoot(node->getNode());
-			mutex.unlock();
-			initialUpdate();
-			return true;
-		}
-		bool RootElement::destroy()
-		{
-			// Delete children
-			// TODO: Locking
-			for (unsigned int i = 0; i < children.size(); i++)
-			{
-				children[i]->destroy();
-				children[i]->setLoaded(false);
-			}
-			children.clear();
-			element = 0;
-			return true;
-		}
+			EK_MinChar = 0,
+			EK_MaxChar = 0x100,
+			EK_None = 0x100,
+			EK_Return,
+			EK_Escape,
+			EK_Space,
+			EK_Backspace,
+			EK_Insert,
+			EK_Delete,
+			EK_Home,
+			EK_End,
+			EK_PageUp,
+			EK_PageDown,
+			EK_Control,
+			EK_Shift,
+			EK_Alt,
+			EK_AltGr,
+			EK_Menu,
+			EK_Up,
+			EK_Down,
+			EK_Left,
+			EK_Right,
+			EK_Tab,
+			EK_F1,
+			EK_F2,
+			EK_F3,
+			EK_F4,
+			EK_F5,
+			EK_F6,
+			EK_F7,
+			EK_F8,
+			EK_F9,
+			EK_F10,
+			EK_F11,
+			EK_F12
+			// TODO: Numpad
+		};
 	}
 }
+
+#endif

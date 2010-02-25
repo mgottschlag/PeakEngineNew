@@ -18,6 +18,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define _PEAKGRAPHICS_GUI_BUTTONELEMENT_HPP_
 
 #include "GUIElement.hpp"
+#include "peakengine/support/Event.hpp"
 
 namespace peak
 {
@@ -31,8 +32,24 @@ namespace peak
 				~ButtonElement();
 
 				virtual bool load();
+
+				void setLabel(const std::string &label);
+				std::string getLabel()
+				{
+					return label;
+				}
+
+				virtual void update();
+
+				Event &getActionEvent()
+				{
+					return actionevent;
+				}
 			private:
+				void setLabel();
 				std::string label;
+
+				Event actionevent;
 		};
 	}
 }

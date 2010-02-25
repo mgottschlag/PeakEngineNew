@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "peakengine/core/EntityComponentFactory.hpp"
 #include "peakengine/support/Vector3.hpp"
+#include "peakengine/support/Vector2.hpp"
 
 #include <vector>
 
@@ -71,6 +72,7 @@ namespace peak
 				{
 					SceneNodeInfo info;
 					std::string file;
+					Vector2I screensize;
 				};
 				std::vector<GUIInfo> guis;
 		};

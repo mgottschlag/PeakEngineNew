@@ -56,7 +56,9 @@ namespace peak
 						.def("setDefaultCamera", &Graphics::setDefaultCamera)
 						.def("getEngine", &Graphics::getEngine)
 						.def("getMouseMoveEvent", &Graphics::getMouseMoveEvent)
-						.def("getKeyboardEvent", &Graphics::getKeyboardEvent),
+						.def("getMouseButtonEvent", &Graphics::getMouseButtonEvent)
+						.def("getKeyboardEvent", &Graphics::getKeyboardEvent)
+						.def("getCharEvent", &Graphics::getCharEvent),
 					// GraphicsEntityComponent
 					luabind::class_<GraphicsEntityComponent, EntityComponent>("GraphicsEntityComponent")
 						.def("addSceneNode", &GraphicsEntityComponent::addSceneNode, luabind::adopt(_3))
@@ -81,7 +83,11 @@ namespace peak
 					// LightSceneNode
 					luabind::class_<LightSceneNode, SceneNode>("LightSceneNode"),
 					// GUISceneNode
-					luabind::class_<GUISceneNode, SceneNode>("GUISceneNode"),
+					luabind::class_<GUISceneNode, SceneNode>("GUISceneNode")
+						.def("injectMousePosition", &GUISceneNode::injectMousePosition)
+						.def("injectMouseButton", &GUISceneNode::injectMouseButton)
+						.def("injectChar", &GUISceneNode::injectChar)
+						.def("injectKeyboard", &GUISceneNode::injectKeyboard),
 					// GUIElement
 					luabind::class_<GUIElement, Loadable, SharedPointer<GUIElement> >("GUIElement")
 						.def("setPosition", &GUIElement::setPosition)

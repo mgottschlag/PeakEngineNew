@@ -18,14 +18,19 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define _PEAKGRAPHICS_GUI_GUISCENENODE_HPP_
 
 #include "SceneNode.hpp"
+#include "peakengine/support/Vector2.hpp"
+#include "peakengine/support/Event.hpp"
+#include "../core/KeyCode.hpp"
 
 #include <string>
+#include <queue>
 
 namespace peak
 {
 	namespace graphics
 	{
 		class GUIElement;
+		class InputEvent;
 
 		class GUISceneNode : public SceneNode
 		{
@@ -36,6 +41,23 @@ namespace peak
 
 				virtual bool load();
 
+				virtual void setScreenSize(Vector2I size);
+				Vector2I getScreenSize()
+				{
+					return screensize;
+				}
+
+				void injectMousePosition(int x, int y);
+				void injectMouseButton(unsigned int button, int state);
+				void injectChar(int c);
+				void injectKeyboard(KeyCode key, int state);
+
+				virtual void update();
+
+				Event1<int> &getActionEvent()
+				{
+					return actionevent;
+				}
 				GUIElement *getRootElement()
 				{
 					return root;
@@ -45,6 +67,12 @@ namespace peak
 				std::string layout;
 
 				GUIElement *root;
+
+				Vector2I screensize;
+
+				Event1<int> actionevent;
+
+				std::queue<InputEvent*> input;
 		};
 	}
 }

@@ -47,6 +47,12 @@ namespace peak
 				virtual void setVisible(bool visible);
 				virtual bool isVisible();
 
+				void setActionID(int actionid);
+				int getActionID()
+				{
+					return actionid;
+				}
+
 				virtual void updateParent();
 				virtual void updatePosition();
 				virtual void update();
@@ -57,6 +63,7 @@ namespace peak
 				}
 			protected:
 				void removeChild(GUIElement *child);
+				void initialUpdate();
 
 				GUISceneNode *node;
 				unsigned int gui;
@@ -69,6 +76,7 @@ namespace peak
 				ScreenPosition position;
 				ScreenPosition size;
 				bool visible;
+				int actionid;
 
 				bool changed;
 

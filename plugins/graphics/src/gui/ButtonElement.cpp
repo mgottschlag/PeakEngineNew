@@ -19,6 +19,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakgraphics/core/Graphics.hpp"
 
 #include <Horde3DGUI.h>
+#include <cstdlib>
+#include <iostream>
 
 namespace peak
 {
@@ -40,7 +42,36 @@ namespace peak
 			element = h3dguiAddButton(node->getNode(),
 				h3dguiGetRoot(node->getNode()));
 			mutex.unlock();
+			initialUpdate();
 			return true;
+		}
+
+		void ButtonElement::setLabel(const std::string &label)
+		{
+			mutex.lock();
+			this->label = label;
+			changed = true;
+			mutex.unlock();
+		}
+
+		void ButtonElement::update()
+		{
+			mutex.lock();
+			if (changed && element)
+			{
+				setLabel();
+			}
+			mutex.unlock();
+			GUIElement::update();
+		}
+
+		void ButtonElement::setLabel()
+		{
+			wchar_t *wstr = new wchar_t[label.size() + 1];
+			mbstowcs(wstr, label.c_str(), label.size() + 1);
+			h3dguiSetElementParamStr(node->getNode(), element,
+				ButtonParam::LabelStr, wstr);
+			delete[] wstr;
 		}
 	}
 }
