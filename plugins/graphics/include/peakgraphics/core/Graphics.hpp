@@ -68,6 +68,10 @@ namespace peak
 				{
 					return mouseevent;
 				}
+				Event2<int, int> &getMousePositionEvent()
+				{
+					return mousepositionevent;
+				}
 				Event2<int, int> &getMouseButtonEvent()
 				{
 					return mousebuttonevent;
@@ -110,6 +114,7 @@ namespace peak
 				SharedPointer<CameraSceneNode> defcamera;
 
 				Event2<int, int> mouseevent;
+				Event2<int, int> mousepositionevent;
 				Event2<int, int> mousebuttonevent;
 				Event2<int, int> keyboardevent;
 				Event1<int> charevent;

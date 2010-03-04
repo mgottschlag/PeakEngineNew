@@ -56,6 +56,7 @@ namespace peak
 						.def("setDefaultCamera", &Graphics::setDefaultCamera)
 						.def("getEngine", &Graphics::getEngine)
 						.def("getMouseMoveEvent", &Graphics::getMouseMoveEvent)
+						.def("getMousePositionEvent", &Graphics::getMousePositionEvent)
 						.def("getMouseButtonEvent", &Graphics::getMouseButtonEvent)
 						.def("getKeyboardEvent", &Graphics::getKeyboardEvent)
 						.def("getCharEvent", &Graphics::getCharEvent),

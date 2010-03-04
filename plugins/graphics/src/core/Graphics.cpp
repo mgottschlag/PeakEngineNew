@@ -107,6 +107,7 @@ namespace peak
 
 		void Graphics::injectMouseMovement(int x, int y, int dx, int dy)
 		{
+			mousepositionevent.trigger(x, y);
 			mouseevent.trigger(dx, dy);
 		}
 
