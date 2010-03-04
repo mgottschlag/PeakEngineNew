@@ -14,24 +14,35 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef _PEAKGRAPHICS_SCENE_ROOTSCENENODE_HPP_
-#define _PEAKGRAPHICS_SCENE_ROOTSCENENODE_HPP_
+#ifndef _PEAKGRAPHICS_GUI_FRAMEELEMENT_HPP_
+#define _PEAKGRAPHICS_GUI_FRAMEELEMENT_HPP_
 
-#include "SceneNode.hpp"
-
-#include <iostream>
+#include "GUIElement.hpp"
+#include "peakengine/support/Event.hpp"
 
 namespace peak
 {
 	namespace graphics
 	{
-		class RootSceneNode : public SceneNode
+		class FrameElement : public GUIElement
 		{
 			public:
-				RootSceneNode(Graphics *graphics);
-				~RootSceneNode();
+				FrameElement(GUISceneNode *node, GUIElement *parent = 0,
+					const std::string &label = "");
+				~FrameElement();
 
 				virtual bool load();
+
+				void setLabel(const std::string &label);
+				std::string getLabel()
+				{
+					return label;
+				}
+
+				virtual void update();
+			private:
+				void setLabel();
+				std::string label;
 		};
 	}
 }

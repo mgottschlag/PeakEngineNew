@@ -139,6 +139,13 @@ namespace peak
 		{
 		}
 
+		void GUISceneNode::registerParentChange(GUIElement *element)
+		{
+			mutex.lock();
+			element->grab();
+			parentchange.push(element);
+			mutex.unlock();
+		}
 		void GUISceneNode::update()
 		{
 			mutex.lock();
@@ -152,6 +159,13 @@ namespace peak
 					input.pop();
 				}
 				// Update GUI elements
+				while (parentchange.size() > 0)
+				{
+					GUIElement *element = parentchange.front();
+					parentchange.pop();
+					element->updateParent();
+					element->drop();
+				}
 				root->update();
 				// Receive events
 				while(h3dguiHasEvent(node))

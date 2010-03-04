@@ -31,6 +31,12 @@ namespace peak
 
 				virtual bool load();
 				virtual bool destroy();
+
+				virtual void updateParent()
+				{
+					newparent = 0;
+					parent = 0;
+				}
 			private:
 		};
 	}

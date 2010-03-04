@@ -52,6 +52,8 @@ namespace peak
 				void injectChar(int c);
 				void injectKeyboard(KeyCode key, int state);
 
+				void registerParentChange(GUIElement *element);
+
 				virtual void update();
 
 				Event1<int> &getActionEvent()
@@ -67,6 +69,7 @@ namespace peak
 				std::string layout;
 
 				GUIElement *root;
+				std::queue<GUIElement*> parentchange;
 
 				Vector2I screensize;
 

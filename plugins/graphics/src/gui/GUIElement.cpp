@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
 #include <Horde3DGUI.h>
+#include <iostream>
 
 namespace peak
 {
@@ -26,7 +27,7 @@ namespace peak
 	{
 		GUIElement::GUIElement(GUISceneNode *node, GUIElement *parent)
 			: node(node), gui(0), newparent(parent), parent(0), element(0),
-			visible(true), actionid(0), changed(false)
+			visible(true), background(false), actionid(0), changed(false)
 		{
 			position = ScreenPosition(Vector2F(0.0, 0.0), Vector2I(0, 0));
 			size = ScreenPosition(Vector2F(1.0, 1.0), Vector2I(0, 0));
@@ -93,6 +94,12 @@ namespace peak
 			return visible;
 		}
 
+		void GUIElement::setBackground(bool background)
+		{
+			this->background = background;
+			changed = true;
+		}
+
 		void GUIElement::setActionID(int actionid)
 		{
 			this->actionid = actionid;
@@ -136,6 +143,8 @@ namespace peak
 				updatePosition();
 				// Update visibility
 				h3dguiSetVisible(node->getNode(), element, visible ? 1 : 0);
+				// Update background
+				h3dguiSetElementParamI(node->getNode(), element, H3DElementParam::ShowBackgroundI, background);
 				// Update action ID
 				h3dguiSetElementParamI(node->getNode(), element, H3DElementParam::ActionIdI, actionid);
 				// Reset change flag
@@ -166,6 +175,7 @@ namespace peak
 		{
 			gui = node->getNode();
 			changed = true;
+			updateParent();
 			update();
 		}
 	}

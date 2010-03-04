@@ -47,6 +47,8 @@ namespace peak
 				virtual void setVisible(bool visible);
 				virtual bool isVisible();
 
+				void setBackground(bool background);
+
 				void setActionID(int actionid);
 				int getActionID()
 				{
@@ -76,6 +78,7 @@ namespace peak
 				ScreenPosition position;
 				ScreenPosition size;
 				bool visible;
+				bool background;
 				int actionid;
 
 				bool changed;

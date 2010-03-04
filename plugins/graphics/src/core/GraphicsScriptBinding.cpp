@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakgraphics/scene/LightSceneNode.hpp"
 #include "peakgraphics/scene/GUISceneNode.hpp"
 #include "peakgraphics/gui/ButtonElement.hpp"
+#include "peakgraphics/gui/FrameElement.hpp"
 #include "peakengine/core/Engine.hpp"
 
 #include <luabind/operator.hpp>
@@ -89,7 +90,8 @@ namespace peak
 						.def("injectMouseButton", &GUISceneNode::injectMouseButton)
 						.def("injectChar", &GUISceneNode::injectChar)
 						.def("injectKeyboard", &GUISceneNode::injectKeyboard)
-						.def("getActionEvent", &GUISceneNode::getActionEvent),
+						.def("getActionEvent", &GUISceneNode::getActionEvent)
+						.def("getRootElement", &GUISceneNode::getRootElement),
 					// GUIElement
 					luabind::class_<GUIElement, Loadable, SharedPointer<GUIElement> >("GUIElement")
 						.def("setPosition", &GUIElement::setPosition)
@@ -98,10 +100,14 @@ namespace peak
 						.def("getSize", &GUIElement::getSize)
 						.def("setVisible", &GUIElement::setVisible)
 						.def("isVisible", &GUIElement::isVisible)
+						.def("setBackground", &GUIElement::setBackground)
 						.def("setActionID", &GUIElement::setActionID)
 						.def("getActionID", &GUIElement::getActionID),
 					// ButtonElement
 					luabind::class_<ButtonElement, GUIElement, SharedPointer<ButtonElement> >("ButtonElement")
+						.def(luabind::constructor<GUISceneNode*, GUIElement*, std::string>()),
+					// FrameElement
+					luabind::class_<FrameElement, GUIElement, SharedPointer<FrameElement> >("FrameElement")
 						.def(luabind::constructor<GUISceneNode*, GUIElement*, std::string>())
 				]
 			];
