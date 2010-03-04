@@ -37,6 +37,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <luabind/operator.hpp>
 #include <luabind/adopt_policy.hpp>
+#include <luabind/iterator_policy.hpp>
 
 namespace peak
 {
@@ -276,7 +277,12 @@ namespace peak
 				.def("set", &Vector3FProperty::set),
 			// World
 			luabind::class_<World>("World")
-				.def("getEngine", &World::getEngine),
+				.def("getEngine", &World::getEngine)
+				.def("getEntityCount", (unsigned int (World::*)())&World::getEntityCount)
+				.def("getEntityCount", (unsigned int (World::*)(std::string))&World::getEntityCount)
+				.def("getEntityCount", (std::vector<Entity*> (World::*)())&World::getEntities, luabind::return_stl_iterator)
+				.def("getEntityCount", (std::vector<Entity*> (World::*)(std::string))&World::getEntities, luabind::return_stl_iterator)
+				.def("getEntity", &World::getEntity),
 			// Engine
 			luabind::class_<Engine>("Engine")
 				.def("stop", &Engine::stop)

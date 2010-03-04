@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <vector>
 #include <queue>
+#include <string>
 
 namespace peak
 {
@@ -62,6 +63,27 @@ namespace peak
 			 * Removes an entity from the world and deletes the class instance.
 			 */
 			void removeEntity(Entity *entity);
+
+			/**
+			 * Returns the number of entities in the world.
+			 */
+			unsigned int getEntityCount();
+			/**
+			 * Returns all entities.
+			 */
+			std::vector<Entity*> getEntities();
+			/**
+			 * Returns the number of entities with the given type.
+			 */
+			unsigned int getEntityCount(std::string type);
+			/**
+			 * Returns all entities with the given type.
+			 */
+			std::vector<Entity*> getEntities(std::string type);
+			/**
+			 * Returns a single entity with the given type.
+			 */
+			Entity *getEntity(std::string type, unsigned int index);
 
 			/**
 			 * Sets the current time of the world. Only call this if you know

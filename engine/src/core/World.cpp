@@ -78,6 +78,69 @@ namespace peak
 		entitymutex.unlock();
 	}
 
+	unsigned int World::getEntityCount()
+	{
+	}
+	std::vector<Entity*> World::getEntities()
+	{
+		std::vector<Entity*> result;
+		entitymutex.lock();
+		// Copy all entities
+		for (unsigned int i = 0; i < entities.size(); i++)
+		{
+			if (entities[i])
+				result.push_back(entities[i]);
+		}
+		entitymutex.unlock();
+		return result;
+	}
+	unsigned int World::getEntityCount(std::string type)
+	{
+		entitymutex.lock();
+		unsigned int count = 0;
+		for (unsigned int i = 0; i < entities.size(); i++)
+		{
+			if (entities[i] && entities[i]->getType() == type)
+				count++;
+		}
+		entitymutex.unlock();
+		return count;
+	}
+	std::vector<Entity*> World::getEntities(std::string type)
+	{
+		std::vector<Entity*> result;
+		entitymutex.lock();
+		// Copy only certain entities
+		for (unsigned int i = 0; i < entities.size(); i++)
+		{
+			if (entities[i] && entities[i]->getType() == type)
+				result.push_back(entities[i]);
+		}
+		entitymutex.unlock();
+		return result;
+	}
+	Entity *World::getEntity(std::string type, unsigned int index)
+	{
+		Entity *result = 0;
+		unsigned int count = 0;
+		entitymutex.lock();
+		for (unsigned int i = 0; i < entities.size(); i++)
+		{
+			if (entities[i] && entities[i]->getType() == type)
+			{
+				if (count == index)
+				{
+					result = entities[i];
+					break;
+				}
+				else
+					count++;
+			}
+		}
+		entitymutex.unlock();
+		return result;
+	}
+
 	void World::addComponent(WorldComponent *component)
 	{
 		componentmutex.lock();
