@@ -28,6 +28,7 @@ namespace peak
 	namespace graphics
 	{
 		class Graphics;
+		class SceneNode;
 
 		class GraphicsEntityComponentTemplate : public EntityComponentTemplate
 		{
@@ -43,6 +44,7 @@ namespace peak
 					Vector3F position;
 					Vector3F rotation;
 					Vector3F scale;
+					bool visible;
 				};
 
 				struct ModelInfo
@@ -94,6 +96,8 @@ namespace peak
 			private:
 				bool readSceneNodeInfo(TiXmlElement *xml,
 					GraphicsEntityComponentTemplate::SceneNodeInfo &info);
+				void applySceneNodeInfo(SceneNode *node,
+					const GraphicsEntityComponentTemplate::SceneNodeInfo &info);
 
 				Graphics *graphics;
 		};

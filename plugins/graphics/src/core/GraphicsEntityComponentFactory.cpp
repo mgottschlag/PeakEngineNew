@@ -178,9 +178,7 @@ namespace peak
 				peak::graphics::ModelSceneNode *model = new peak::graphics::ModelSceneNode(graphics,
 					info.file);
 				model->setParent(root);
-				model->setPosition(info.info.position);
-				model->setRotation(info.info.rotation);
-				model->setScale(info.info.scale);
+				applySceneNodeInfo(model, info.info);
 				component->addSceneNode(info.info.name, model);
 			}
 			// Add light scene nodes
@@ -190,9 +188,7 @@ namespace peak
 				peak::graphics::LightSceneNode *light = new peak::graphics::LightSceneNode(graphics,
 					info.file, info.lighting, info.shadow);
 				light->setParent(root);
-				light->setPosition(info.info.position);
-				light->setRotation(info.info.rotation);
-				light->setScale(info.info.scale);
+				applySceneNodeInfo(light, info.info);
 				component->addSceneNode(info.info.name, light);
 			}
 			// Add camera scene nodes
@@ -202,9 +198,7 @@ namespace peak
 				peak::graphics::CameraSceneNode *camera = new peak::graphics::CameraSceneNode(graphics,
 					info.file);
 				camera->setParent(root);
-				camera->setPosition(info.info.position);
-				camera->setRotation(info.info.rotation);
-				camera->setScale(info.info.scale);
+				applySceneNodeInfo(camera, info.info);
 				component->addSceneNode(info.info.name, camera);
 				if (info.defaultcam)
 					graphics->setDefaultCamera(camera);
@@ -216,9 +210,7 @@ namespace peak
 				peak::graphics::GUISceneNode *gui = new peak::graphics::GUISceneNode(graphics,
 					info.file);
 				gui->setParent(root);
-				gui->setPosition(info.info.position);
-				gui->setRotation(info.info.rotation);
-				gui->setScale(info.info.scale);
+				applySceneNodeInfo(gui, info.info);
 				gui->setScreenSize(info.screensize);
 				component->addSceneNode(info.info.name, gui);
 			}
@@ -257,7 +249,19 @@ namespace peak
 			}
 			else
 				info.rotation = Vector3F(0, 0, 0);
+			if (xml->Attribute("visible"))
+				info.visible = !strcmp(xml->Attribute("visible"), "yes");
+			else
+				info.visible = true;
 			return true;
+		}
+		void GraphicsEntityComponentFactory::applySceneNodeInfo(SceneNode *node,
+			const GraphicsEntityComponentTemplate::SceneNodeInfo &info)
+		{
+			node->setPosition(info.position);
+			node->setRotation(info.rotation);
+			node->setScale(info.scale);
+			node->setVisible(info.visible);
 		}
 	}
 }

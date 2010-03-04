@@ -122,6 +122,7 @@ namespace peak
 				Matrix4 rot = rotation.toMatrix();
 				Matrix4 m = Matrix4::TransMat(position) * Matrix4::ScaleMat(scale) * rot;
 				h3dSetNodeTransMat(node, m.x);
+				h3dSetNodeActivation(node, visible);
 				changed = false;
 			}
 			// Update children
