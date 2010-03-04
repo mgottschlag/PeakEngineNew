@@ -111,6 +111,9 @@ namespace peak
 					cameranode = xml->IterateChildren("Camera", cameranode);
 					continue;
 				}
+				camerainfo.defaultcam = false;
+				if (cameraelem->Attribute("default"))
+					camerainfo.defaultcam = !strcmp(cameraelem->Attribute("default"), "yes");
 				// Get component factory information
 				std::string file = cameraelem->Attribute("pipeline");
 				camerainfo.file = file;
@@ -203,6 +206,8 @@ namespace peak
 				camera->setRotation(info.info.rotation);
 				camera->setScale(info.info.scale);
 				component->addSceneNode(info.info.name, camera);
+				if (info.defaultcam)
+					graphics->setDefaultCamera(camera);
 			}
 			// Add gui scene nodes
 			for (unsigned int i = 0; i < gtpl->guis.size(); i++)

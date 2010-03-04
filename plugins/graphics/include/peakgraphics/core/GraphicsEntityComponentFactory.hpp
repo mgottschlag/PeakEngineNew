@@ -65,6 +65,7 @@ namespace peak
 				{
 					SceneNodeInfo info;
 					std::string file;
+					bool defaultcam;
 				};
 				std::vector<CameraInfo> cameras;
 
