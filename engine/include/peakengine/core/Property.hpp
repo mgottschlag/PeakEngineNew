@@ -46,9 +46,6 @@ namespace peak
 
 			virtual bool hasChanged() = 0;
 
-			void setDirty(bool dirty);
-			bool isDirty();
-
 			void setLastChange(unsigned int time);
 			unsigned int getLastChange();
 
@@ -56,7 +53,6 @@ namespace peak
 		protected:
 			void setChanged();
 		private:
-			bool dirty;
 			Entity *entity;
 			unsigned int changetime;
 	};
