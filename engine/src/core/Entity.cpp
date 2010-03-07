@@ -28,6 +28,10 @@ namespace peak
 		// Delete components
 		for (unsigned int i = 0; i < components.size(); i++)
 		{
+			components[i]->destroy();
+		}
+		for (unsigned int i = 0; i < components.size(); i++)
+		{
 			delete components[i];
 		}
 		// Delete properties
@@ -50,14 +54,14 @@ namespace peak
 
 	bool Entity::getFlag(EntityFlag flag)
 	{
-		return (flags & (1 << flag)) != 0;
+		return (flags & flag) != 0;
 	}
 	void Entity::setFlag(EntityFlag flag, bool value)
 	{
 		if (value)
-			flags |= 1 << flag;
+			flags |= flag;
 		else
-			flags &= ~(1 << flag);
+			flags &= ~flag;
 	}
 	unsigned int Entity::getFlags()
 	{

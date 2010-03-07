@@ -109,9 +109,9 @@ namespace peak
 					}
 					// TODO: Warn here
 					if (flagset)
-						info.flagsset |= 1 << flag;
+						info.flagsset |= flag;
 					else
-						info.flagsunset |= 1 << flag;
+						info.flagsunset |= flag;
 				}
 			}
 			components.push_back(info);

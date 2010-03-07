@@ -41,20 +41,20 @@ namespace peak
 		/**
 		 * The entity is used on a game server.
 		 */
-		EEF_Server,
+		EEF_Server = 0x1,
 		/**
 		 * The entity is used on a game client.
 		 */
-		EEF_Client,
+		EEF_Client = 0x2,
 		/**
 		 * The entity is owned by this game instance (used with networking).
 		 */
-		EEF_Local,
+		EEF_Local = 0x4,
 		/**
 		 * No entity flag, but rather the value returned by Entity::getFlag()
 		 * if the string does not represent any of the flags.
 		 */
-		EEF_Invalid
+		EEF_Invalid = 0x0
 	};
 
 	/**
