@@ -18,9 +18,13 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peaknetwork/core/Network.hpp"
 #include "peaknetwork/core/ClientEntityComponent.hpp"
 #include "peaknetwork/core/ServerEntityComponent.hpp"
+#include "peaknetwork/core/ClientWorldComponent.hpp"
+#include "peaknetwork/core/ServerWorldComponent.hpp"
 #include "peaknetwork/network/NetworkConnection.hpp"
 #include "peakengine/core/Engine.hpp"
 #include "peakengine/core/Property.hpp"
+#include "peakengine/core/World.hpp"
+#include "peakengine/core/Entity.hpp"
 
 #include <luabind/operator.hpp>
 #include <luabind/adopt_policy.hpp>
@@ -59,7 +63,20 @@ namespace peak
 					// ServerEntityComponent
 					luabind::class_<ServerEntityComponent, NetworkEntityComponent>("ServerEntityComponent"),
 					// ClientEntityComponent
-					luabind::class_<ClientEntityComponent, NetworkEntityComponent>("ClientEntityComponent")
+					luabind::class_<ClientEntityComponent, NetworkEntityComponent>("ClientEntityComponent"),
+					// NetworkWorldComponent
+					luabind::class_<NetworkWorldComponent, WorldComponent>("NetworkWorldComponent")
+						.def("getEntity", &NetworkWorldComponent::getEntity),
+					// ServerWorldComponent
+					luabind::class_<ServerWorldComponent, NetworkWorldComponent>("ServerWorldComponent")
+						.def(luabind::constructor<World*>())
+						.def("init", &ServerWorldComponent::init)
+						.def("getServerData", &ServerWorldComponent::getServerData)
+						.def("addEntity", &ServerWorldComponent::addEntity)
+						.def("removeEntity", &ServerWorldComponent::removeEntity),
+					// ClientWorldComponent
+					luabind::class_<ClientWorldComponent, NetworkWorldComponent>("ClientWorldComponent")
+						.def(luabind::constructor<World*>())
 				]
 			];
 		}

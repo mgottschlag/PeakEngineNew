@@ -22,10 +22,12 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/support/ScreenPosition.hpp"
 #include "peakengine/support/EventQueue.hpp"
 #include "peakengine/support/Loadable.hpp"
+#include "peakengine/support/Buffer.hpp"
 #include "peakengine/core/Property.hpp"
 #include "peakengine/core/Entity.hpp"
 #include "peakengine/core/EntityComponent.hpp"
 #include "peakengine/core/World.hpp"
+#include "peakengine/core/WorldComponent.hpp"
 #include "peakengine/core/Engine.hpp"
 #include "peakengine/core/Game.hpp"
 #include "peakengine/core/IntProperty.hpp"
@@ -34,6 +36,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakengine/core/Vector2FProperty.hpp"
 #include "peakengine/core/Vector3FProperty.hpp"
 #include "peakengine/import/ScriptEntityComponent.hpp"
+#include "peakengine/import/XMLWorld.hpp"
 
 #include <luabind/operator.hpp>
 #include <luabind/adopt_policy.hpp>
@@ -203,6 +206,31 @@ namespace peak
 				.def("getParam", &EventQueue1<int>::getParam)
 				.def("trigger", &EventQueue1<int>::trigger)
 				.def("getReceiver", &EventQueue1<int>::getReceiver),
+			// Buffer
+			luabind::class_<Buffer, ReferenceCounted, SharedPointer<Buffer> >("Buffer")
+				.def(luabind::constructor<>())
+				.def("setSize", &Buffer::setSize)
+				.def("getSize", &Buffer::getSize)
+				.def("setPosition", &Buffer::setPosition)
+				.def("getPosition", &Buffer::getPosition)
+				.def("write8", &Buffer::write8)
+				.def("read8", &Buffer::read8)
+				.def("write16", &Buffer::write16)
+				.def("read16", &Buffer::read16)
+				.def("write32", &Buffer::write32)
+				.def("read32", &Buffer::read32)
+				.def("write64", &Buffer::write64)
+				.def("read64", &Buffer::read64)
+				.def("writeFloat", &Buffer::writeFloat)
+				.def("readFloat", &Buffer::readFloat)
+				.def("writeString", &Buffer::writeString)
+				.def("readString", &Buffer::readString)
+				.def("writeInt", &Buffer::writeInt)
+				.def("readInt", &Buffer::readInt)
+				.def("writeUnsignedInt", &Buffer::writeUnsignedInt)
+				.def("readUnsignedInt", &Buffer::readUnsignedInt)
+				.def("nextByte", &Buffer::nextByte)
+				.def("dump", &Buffer::dump),
 			// Entity
 			luabind::class_<Entity>("Entity")
 				.def("getID", &Entity::getID)
@@ -282,12 +310,39 @@ namespace peak
 				.def("getEntityCount", (unsigned int (World::*)(std::string))&World::getEntityCount)
 				.def("getEntityCount", (std::vector<Entity*> (World::*)())&World::getEntities, luabind::return_stl_iterator)
 				.def("getEntityCount", (std::vector<Entity*> (World::*)(std::string))&World::getEntities, luabind::return_stl_iterator)
-				.def("getEntity", &World::getEntity),
+				.def("getEntity", &World::getEntity)
+				.def("addEntity", &World::addEntity)
+				.def("addComponent", &World::addComponent, luabind::adopt(_2))
+				.def("getComponent", &World::getComponent)
+				.def("start", &World::start)
+				.def("pause", &World::pause)
+				.def("stop", &World::stop)
+				.def("isRunning", &World::isRunning),
+				// WorldComponent
+			luabind::class_<WorldComponent>("WorldComponent")
+				.def("setWorld", &WorldComponent::setWorld),
 			// Engine
 			luabind::class_<Engine>("Engine")
 				.def("stop", &Engine::stop)
 				.def("getDirectory", &Engine::getDirectory)
 				.def("getGame", &Engine::getGame)
+				.def("addWorld", &Engine::addWorld, luabind::adopt(_2))
+				.def("removeWorld", &Engine::removeWorld)
+				.def("deleteWorld", &Engine::deleteWorld),
+			// XMLWorld
+			luabind::class_<XMLWorld, World>("XMLWorld")
+				.def(luabind::constructor<Engine*, std::string>())
+				.def("load", &XMLWorld::load),
+			// Game
+			luabind::class_<Game>("Game")
+				.def("getEngine", &Game::getEngine)
+				.def("getEntityFactory", &Game::getEntityFactory)
+				.def("getEntityComponentFactory", &Game::getEntityComponentFactory)
+				.def("getWorldComponentFactory", &Game::getWorldComponentFactory),
+			// EntityFactory
+			luabind::class_<EntityFactory>("EntityFactory")
+				.def("getName", &EntityFactory::getName)
+				.def("createEntity", &EntityFactory::createEntity)
 		];
 	}
 }
