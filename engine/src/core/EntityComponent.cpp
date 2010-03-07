@@ -33,6 +33,9 @@ namespace peak
 	{
 		return true;
 	}
+	void EntityComponent::destroy()
+	{
+	}
 
 	void EntityComponent::update()
 	{

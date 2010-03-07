@@ -68,6 +68,11 @@ namespace peak
 			return false;
 		return script->callFunction<bool>("init");
 	}
+	void ScriptEntityComponent::destroy()
+	{
+		if (script->isFunction("destroy"))
+			script->callFunction("destroy");
+	}
 
 	void ScriptEntityComponent::update()
 	{
