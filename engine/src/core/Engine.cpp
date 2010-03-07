@@ -53,6 +53,9 @@ namespace peak
 	}
 	void Engine::removeWorld(World *world)
 	{
+		// Stops the world
+		world->stop(false);
+		// Remove the world from the world list
 		mutex.lock();
 		for (unsigned int i = 0; i < worlds.size(); i++)
 		{
@@ -63,6 +66,34 @@ namespace peak
 			}
 		}
 		mutex.unlock();
+	}
+	void Engine::deleteWorld(World *world, bool wait)
+	{
+		// Stops the world
+		world->stop(wait);
+		// Remove the world from the world list
+		mutex.lock();
+		for (unsigned int i = 0; i < worlds.size(); i++)
+		{
+			if (worlds[i] == world)
+			{
+				worlds.erase(worlds.begin() + i);
+				break;
+			}
+		}
+		mutex.unlock();
+		if (wait)
+		{
+			// Delete the world
+			delete world;
+		}
+		else
+		{
+			// Push the world to the delete queue
+			mutex.lock();
+			tobedeleted.push_back(world);
+			mutex.unlock();
+		}
 	}
 
 	void Engine::stop(bool wait)
@@ -91,5 +122,23 @@ namespace peak
 		}
 		mutex.unlock();
 		return running;
+	}
+
+	void Engine::update()
+	{
+		mutex.lock();
+		while (tobedeleted.size() > 0)
+		{
+			// Get the first world in the queue
+			World *world = tobedeleted[0];
+			// Delete the world if it was stopped
+			mutex.unlock();
+			if (world->isRunning())
+				return;
+			delete world;
+			mutex.lock();
+			tobedeleted.erase(tobedeleted.begin());
+		}
+		mutex.unlock();
 	}
 }

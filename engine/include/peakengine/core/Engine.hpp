@@ -71,6 +71,13 @@ namespace peak
 			 * Stops a world and removes it from the engine.
 			 */
 			void removeWorld(World *world);
+			/**
+			 * Stops a world and completely deletes it. Deletion happens
+			 * asynchronous, after the world thread has exited if wait is false.
+			 * In this case (any only this) the function might be called from
+			 * the world which is to be deleted.
+			 */
+			void deleteWorld(World *world, bool wait = false);
 
 			/**
 			 * Tells all worlds to stop.
@@ -90,6 +97,13 @@ namespace peak
 			 * Checks whether there are any worlds running.
 			 */
 			bool isRunning();
+
+			/**
+			 * Deletes worlds which were stopped if deleteWorld() was called for
+			 * them.
+			 * @note Must only be called from one thread!
+			 */
+			void update();
 
 		private:
 			/**
@@ -113,6 +127,10 @@ namespace peak
 			 * stop().
 			 */
 			//ConditionVariable stopped;
+			/**
+			 * List of worlds to be deleted.
+			 */
+			std::vector<World*> tobedeleted;
 	};
 }
 
