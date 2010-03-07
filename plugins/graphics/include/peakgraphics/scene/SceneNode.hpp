@@ -36,6 +36,8 @@ namespace peak
 				SceneNode(Graphics *graphics);
 				virtual ~SceneNode();
 
+				virtual void remove();
+
 				void setPosition(Vector3F pos);
 				Vector3F getPosition()
 				{

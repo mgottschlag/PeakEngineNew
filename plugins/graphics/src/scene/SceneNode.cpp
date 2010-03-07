@@ -33,6 +33,39 @@ namespace peak
 		}
 		SceneNode::~SceneNode()
 		{
+			// Delete children
+			children.clear();
+			// Remove scene node
+			if (node)
+			{
+				h3dRemoveNode(node);
+			}
+		}
+
+		void SceneNode::remove()
+		{
+			grab();
+			mutex.lock();
+			// Remove from parent
+			if (newparent)
+				newparent = 0;
+			if (parent)
+			{
+				mutex.unlock();
+				parent->mutex.lock();
+				for (unsigned int i = 0; i < parent->children.size(); i++)
+				{
+					if (parent->children[i] == this)
+					{
+						parent->children.erase(parent->children.begin() + i);
+						break;
+					}
+				}
+				parent->mutex.unlock();
+				mutex.lock();
+			}
+			mutex.unlock();
+			drop();
 		}
 
 		void SceneNode::setPosition(Vector3F pos)

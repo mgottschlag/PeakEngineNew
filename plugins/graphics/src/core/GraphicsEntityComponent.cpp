@@ -33,6 +33,7 @@ namespace peak
 				it->second->drop();
 				it++;
 			}
+			rootnode->remove();
 		}
 
 		void GraphicsEntityComponent::addSceneNode(std::string name, SceneNode *node)
