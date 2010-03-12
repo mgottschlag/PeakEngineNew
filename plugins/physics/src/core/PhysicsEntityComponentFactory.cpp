@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakphysics/physics/Box.hpp"
 #include "peakphysics/physics/Plane.hpp"
 #include "peakphysics/physics/Body.hpp"
+#include "peakphysics/physics/CharacterController.hpp"
 #include "peakengine/core/World.hpp"
 #include "peakengine/core/Entity.hpp"
 
@@ -77,7 +78,20 @@ namespace peak
 				bodynode = xml->IterateChildren("Body", bodynode);
 			}
 			// Character controllers
-			// TODO
+			for (TiXmlNode *charnode = xml->FirstChild("CharacterController");
+				charnode != 0;
+				charnode = xml->IterateChildren("CharacterController", charnode))
+			{
+				TiXmlElement *charelem = charnode->ToElement();
+				if (!charelem)
+					continue;
+				// Get character controller information
+				PhysicsEntityComponentTemplate::CharacterInfo info;
+				if (!charelem->Attribute("name"))
+					continue;
+				info.name = charelem->Attribute("name");
+				tpl->charcontrollers.push_back(info);
+			}
 			return tpl;
 		}
 
@@ -136,6 +150,14 @@ namespace peak
 				body->setPosition(bodyinfo.position);
 				body->setRotation(bodyinfo.rotation);
 				component->addBody(bodyinfo.name, body);
+			}
+			// Create character controllers
+			for (unsigned int i = 0; i < ptpl->charcontrollers.size(); i++)
+			{
+				PhysicsEntityComponentTemplate::CharacterInfo &charinfo = ptpl->charcontrollers[i];
+				CharacterController *controller = new CharacterController();
+				controller->init(simulation);
+				component->addCharacterController(charinfo.name, controller);
 			}
 			return component;
 		}

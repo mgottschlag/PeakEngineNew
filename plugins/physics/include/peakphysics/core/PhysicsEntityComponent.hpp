@@ -28,6 +28,7 @@ namespace peak
 	{
 		class Simulation;
 		class Body;
+		class CharacterController;
 
 		class PhysicsEntityComponent : public EntityComponent
 		{
@@ -37,6 +38,9 @@ namespace peak
 
 				void addBody(std::string name, Body *body);
 				Body *getBody(std::string name);
+
+				void addCharacterController(std::string name, CharacterController *c);
+				CharacterController *getCharacterController(std::string name);
 
 				virtual int getType()
 				{
@@ -52,6 +56,7 @@ namespace peak
 			private:
 				Simulation *simulation;
 				std::map<std::string, Body*> bodies;
+				std::map<std::string, CharacterController*> charcontrollers;
 		};
 	}
 }

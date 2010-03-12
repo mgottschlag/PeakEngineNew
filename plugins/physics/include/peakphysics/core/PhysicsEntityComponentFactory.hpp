@@ -71,6 +71,11 @@ namespace peak
 					std::vector<ShapeInfo*> shapes;
 				};
 				std::vector<BodyInfo> bodies;
+				struct CharacterInfo
+				{
+					std::string name;
+				};
+				std::vector<CharacterInfo> charcontrollers;
 		};
 
 		class PhysicsEntityComponentFactory : public EntityComponentFactory

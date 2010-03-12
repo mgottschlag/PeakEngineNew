@@ -16,6 +16,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "peakphysics/core/PhysicsEntityComponent.hpp"
 #include "peakphysics/physics/Body.hpp"
+#include "peakphysics/physics/CharacterController.hpp"
 
 namespace peak
 {
@@ -28,6 +29,7 @@ namespace peak
 		}
 		PhysicsEntityComponent::~PhysicsEntityComponent()
 		{
+			// Delete bodies
 			std::map<std::string, Body*>::iterator it = bodies.begin();
 			while (it != bodies.end())
 			{
@@ -35,6 +37,15 @@ namespace peak
 				it->second->destroy();
 				delete it->second;
 				it++;
+			}
+			// Delete character controllers
+			std::map<std::string, CharacterController*>::iterator it2 = charcontrollers.begin();
+			while (it2 != charcontrollers.end())
+			{
+				// TODO: Delete shapes
+				it2->second->destroy();
+				delete it2->second;
+				it2++;
 			}
 		}
 
@@ -49,9 +60,26 @@ namespace peak
 				return it->second;
 			return 0;
 		}
-		
+
+		void PhysicsEntityComponent::addCharacterController(std::string name, CharacterController *c)
+		{
+			charcontrollers[name] = c;
+		}
+		CharacterController *PhysicsEntityComponent::getCharacterController(std::string name)
+		{
+			std::map<std::string, CharacterController*>::iterator it = charcontrollers.find(name);
+			if (it != charcontrollers.end())
+				return it->second;
+			return 0;
+		}
+
 		void PhysicsEntityComponent::update()
 		{
+			for (std::map<std::string, CharacterController*>::iterator it = charcontrollers.begin();
+				it != charcontrollers.end(); it++)
+			{
+				it->second->update();
+			}
 		}
 	}
 }

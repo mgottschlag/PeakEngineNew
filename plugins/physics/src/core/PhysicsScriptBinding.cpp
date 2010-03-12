@@ -17,6 +17,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakphysics/core/PhysicsScriptBinding.hpp"
 #include "peakphysics/core/PhysicsEntityComponent.hpp"
 #include "peakphysics/physics/Body.hpp"
+#include "peakphysics/physics/CharacterController.hpp"
 #include "peakphysics/physics/Simulation.hpp"
 
 #include <luabind/adopt_policy.hpp>
@@ -36,6 +37,8 @@ namespace peak
 					luabind::class_<PhysicsEntityComponent, EntityComponent>("PhysicsEntityComponent")
 						.def("addBody", &PhysicsEntityComponent::addBody, luabind::adopt(_3))
 						.def("getBody", &PhysicsEntityComponent::getBody)
+						.def("addCharacterController", &PhysicsEntityComponent::addCharacterController, luabind::adopt(_3))
+						.def("getCharacterController", &PhysicsEntityComponent::getCharacterController)
 						.def("getSimulation", &PhysicsEntityComponent::getSimulation),
 					// Body
 					luabind::class_<Body>("Body")
@@ -44,6 +47,15 @@ namespace peak
 						.def("setRotation",(void (Body::*)(const Quaternion&)) &Body::setRotation)
 						.def("setRotation",(void (Body::*)(const Vector3F&)) &Body::setRotation)
 						.def("getRotation", &Body::getRotation),
+					// CharacterController
+					luabind::class_<CharacterController>("CharacterController")
+						.def(luabind::constructor<>())
+						.def("init", &CharacterController::init)
+						.def("destroy", &CharacterController::destroy)
+						.def("setHorizontalSpeed", &CharacterController::setHorizontalSpeed)
+						.def("onGround", &CharacterController::onGround)
+						.def("update", &CharacterController::update)
+						.def("getBody", &CharacterController::getBody),
 					// Simulation
 					luabind::class_<Simulation>("Simulation")
 				]
