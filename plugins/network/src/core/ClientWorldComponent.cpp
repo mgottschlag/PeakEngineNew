@@ -114,7 +114,7 @@ namespace peak
 				{
 					case EPT_EntityCreated:
 					{
-						unsigned int id = data->read16();
+						unsigned int id = data->read16() + 1;
 						std::string type = data->readString();
 						bool local = data->readUnsignedInt(1);
 						// Create entity
