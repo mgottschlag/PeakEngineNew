@@ -46,11 +46,11 @@ namespace peak
 				{
 					RGBQUAD color;
 					image->getPixelColor(x, image->getHeight() - y - 1, &color);
-					heightvalues[x + y * image->getWidth()] = ((float)color.rgbRed + color.rgbGreen + color.rgbBlue) / 3.0f;
+					heightvalues[x + y * image->getWidth()] = ((float)color.rgbRed + (float)color.rgbGreen / 255.0f) / 256.0f;
 				}
 			}
 			// Create heightfield
-			terrain = new btHeightfieldTerrainShape(image->getWidth(), image->getHeight(), heightvalues, 256, 1, true, false);
+			terrain = new btHeightfieldTerrainShape(image->getWidth(), image->getHeight(), heightvalues, 1.0f, 1, true, false);
 			terrain->setLocalScaling(btVector3(scale.x, scale.y, scale.z));
 			shape = terrain;
 

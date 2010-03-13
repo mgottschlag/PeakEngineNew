@@ -51,17 +51,23 @@ namespace peak
 				struct ShapeInfo
 				{
 					float mass;
-					virtual Shape *create() = 0;
+					virtual Shape *create(Entity *entity) = 0;
 				};
 				struct BoxInfo : public ShapeInfo
 				{
 					Vector3F size;
-					virtual Shape *create();
+					virtual Shape *create(Entity *entity);
 				};
 				struct PlaneInfo : public ShapeInfo
 				{
 					Vector3F normal;
-					virtual Shape *create();
+					virtual Shape *create(Entity *entity);
+				};
+				struct HeightfieldInfo : public ShapeInfo
+				{
+					std::string heightmap;
+					Vector3F scale;
+					virtual Shape *create(Entity *entity);
 				};
 				struct BodyInfo
 				{

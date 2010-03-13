@@ -19,10 +19,12 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakphysics/core/PhysicsWorldComponent.hpp"
 #include "peakphysics/physics/Box.hpp"
 #include "peakphysics/physics/Plane.hpp"
+#include "peakphysics/physics/Heightfield.hpp"
 #include "peakphysics/physics/Body.hpp"
 #include "peakphysics/physics/CharacterController.hpp"
 #include "peakengine/core/World.hpp"
 #include "peakengine/core/Entity.hpp"
+#include "peakengine/core/Engine.hpp"
 
 #include "peakengine/support/tinyxml.h"
 
@@ -32,7 +34,7 @@ namespace peak
 {
 	namespace physics
 	{
-		Shape *PhysicsEntityComponentTemplate::BoxInfo::create()
+		Shape *PhysicsEntityComponentTemplate::BoxInfo::create(Entity *entity)
 		{
 			Box *box = new Box;
 			if (!box->init(size, mass))
@@ -42,7 +44,7 @@ namespace peak
 			}
 			return box;
 		}
-		Shape *PhysicsEntityComponentTemplate::PlaneInfo::create()
+		Shape *PhysicsEntityComponentTemplate::PlaneInfo::create(Entity *entity)
 		{
 			Plane *plane = new Plane;
 			if (!plane->init(normal, 0))
@@ -51,6 +53,18 @@ namespace peak
 				return 0;
 			}
 			return plane;
+		}
+		Shape *PhysicsEntityComponentTemplate::HeightfieldInfo::create(Entity *entity)
+		{
+			Heightfield *heightfield = new Heightfield;
+			Engine *engine = entity->getWorld()->getEngine();
+			if (!heightfield->init(engine->getDirectory() + "/Data/Graphics/"
+				+ heightmap, 0, scale))
+			{
+				delete heightfield;
+				return 0;
+			}
+			return heightfield;
 		}
 
 		EntityComponentTemplate *PhysicsEntityComponentFactory::createTemplate(TiXmlElement *xml)
@@ -131,7 +145,7 @@ namespace peak
 				for (unsigned int j = 0; j < bodyinfo.shapes.size(); j++)
 				{
 					std::cout << "Shape: " << bodyinfo.shapes[j] << std::endl;
-					Shape *shape = bodyinfo.shapes[j]->create();
+					Shape *shape = bodyinfo.shapes[j]->create(entity);
 					if (shape)
 						shapes.push_back(shape);
 				}
@@ -209,6 +223,23 @@ namespace peak
 				if (planeelem->Attribute("mass"))
 					plane->mass = atof(planeelem->Attribute("mass"));
 				info.shapes.push_back(plane);
+			}
+			// Height fields
+			for (TiXmlNode *hfnode = xml->FirstChild("Heightfield"); hfnode != 0;
+				hfnode = xml->IterateChildren("Heightfield", hfnode))
+			{
+				TiXmlElement *hfelem = hfnode->ToElement();
+				if (!hfelem)
+					continue;
+				if (!hfelem->Attribute("heightmap"))
+					continue;
+				PhysicsEntityComponentTemplate::HeightfieldInfo *heightfield;
+				heightfield = new PhysicsEntityComponentTemplate::HeightfieldInfo;
+				heightfield->scale = Vector3F(1, 1, 1);
+				heightfield->heightmap = hfelem->Attribute("heightmap");
+				if (hfelem->Attribute("scale"))
+					heightfield->scale.set(hfelem->Attribute("scale"));
+				info.shapes.push_back(heightfield);
 			}
 			return true;
 		}
