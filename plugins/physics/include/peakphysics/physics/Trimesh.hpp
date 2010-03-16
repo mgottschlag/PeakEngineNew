@@ -39,10 +39,11 @@ namespace peak
 				~TrimeshData();
 
 				/**
-				 * Creates the trimesh data from a .obj file.
-				 * @param name The mesh's filename
+				 * Creates the trimesh data from a .obj or .scene.xml file.
+				 * The file type is chosen by the extension of the file name.
+				 * @param filename The mesh's filename
 				 */
-				bool init(std::string name);
+				bool init(std::string filename);
 
 				/**
 				 * Creates the trimesh data from user-defined data
@@ -61,6 +62,9 @@ namespace peak
 				int getIndexCount() const;
 
 			private:
+				bool initObj(std::string filename);
+				bool initHorde3D(std::string filename);
+
 				Vector3F *vertices;
 				int *indices;
 				int vertexcount, indexcount;
@@ -81,7 +85,7 @@ namespace peak
 				 * @param mass Mass of the trimesh (0 = static)
 				 * @param buildhull Should be true if input mesh is concave and should result in a non-static shape
 				 */
-				bool init(TrimeshData data, float mass = 0.0f, bool buildhull = true);
+				bool init(const TrimeshData &data, float mass = 0.0f, bool buildhull = true);
 				virtual bool destroy();
 
 			private:

@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakphysics/physics/Box.hpp"
 #include "peakphysics/physics/Plane.hpp"
 #include "peakphysics/physics/Heightfield.hpp"
+#include "peakphysics/physics/Trimesh.hpp"
 #include "peakphysics/physics/Body.hpp"
 #include "peakphysics/physics/CharacterController.hpp"
 #include "peakengine/core/World.hpp"
@@ -65,6 +66,24 @@ namespace peak
 				return 0;
 			}
 			return heightfield;
+		}
+		Shape *PhysicsEntityComponentTemplate::TrimeshInfo::create(Entity *entity)
+		{
+			Engine *engine = entity->getWorld()->getEngine();
+			// Load trimesh data
+			TrimeshData tridata;
+			if (!tridata.init(engine->getDirectory() + "/Data/Graphics/" + file))
+			{
+				return 0;
+			}
+			// Create shape
+			Trimesh *trimesh = new Trimesh;
+			if (!trimesh->init(tridata, 0.0f, false))
+			{
+				delete trimesh;
+				return 0;
+			}
+			return trimesh;
 		}
 
 		EntityComponentTemplate *PhysicsEntityComponentFactory::createTemplate(TiXmlElement *xml)
@@ -240,6 +259,20 @@ namespace peak
 				if (hfelem->Attribute("scale"))
 					heightfield->scale.set(hfelem->Attribute("scale"));
 				info.shapes.push_back(heightfield);
+			}
+			// Trimeshes
+			for (TiXmlNode *node = xml->FirstChild("Trimesh"); node != 0;
+				node = xml->IterateChildren("Trimesh", node))
+			{
+				TiXmlElement *elem = node->ToElement();
+				if (!elem)
+					continue;
+				if (!elem->Attribute("file"))
+					continue;
+				PhysicsEntityComponentTemplate::TrimeshInfo *trimesh;
+				trimesh = new PhysicsEntityComponentTemplate::TrimeshInfo;
+				trimesh->file = elem->Attribute("file");
+				info.shapes.push_back(trimesh);
 			}
 			return true;
 		}

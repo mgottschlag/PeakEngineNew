@@ -27,135 +27,29 @@ namespace peak
 {
 	namespace physics
 	{
-		TrimeshData::TrimeshData()
+		TrimeshData::TrimeshData() : vertices(0), indices(0)
 		{
 		}
 		TrimeshData::~TrimeshData()
 		{
+			destroy();
 		}
 
 		bool TrimeshData::init(std::string name)
 		{
-			// Open file from harddisk
-			std::ifstream file(name.c_str());
-			if (!file.is_open())
-				return false;
-
-			// Determine file size
-			file.seekg(0, std::ios_base::end);
-			int length = file.tellg();
-			file.seekg(0, std::ios_base::beg);
-
-			// Copy file content to a local buffer and close file
-			char *buffer = new char[length];
-			file.read(buffer, length);
-			file.close();
-
-
-			// Declare these dynamic sized arrays because of missing vertex and index counts in .obj files
-			std::vector<Vector3F> dynvertices = std::vector<Vector3F>();
-			std::vector<int> dynindices = std::vector<int>();
-
-			// Read the vertex and index data, until the virtual file end is reached.
-			int p = 0;
-			while (p != length)
+			if (name.substr(name.size() - 4) == ".obj")
 			{
-				// If line starts with 'v' vertex data is read
-				if (buffer[p] == 'v')
-				{
-					p++;
-
-					char buffer2[16] = "";
-					int p2 = 0;
-					float vertexcomponents[3] = {0.0f, 0.0f, 0.0f};
-					int p3 = 0;
-					while (p3 < 3)
-					{
-						if (buffer[p] == ' ' || p == length || buffer[p] == '\n')
-						{
-							if (p2 != 0)
-							{
-								// Convert to float
-								buffer[p2] = '\0';
-								std::string vertexstring(buffer2);
-								char *end = (char *)vertexstring.c_str() + vertexstring.length();
-								vertexcomponents[p3] = (float)strtod(vertexstring.c_str(), &end);
-								p2 = 0;
-								p3++;
-							}
-						}
-						if ((buffer[p] >= 48 && buffer[p] <= 57) || buffer[p] == '.' || buffer[p] == '-')
-						{
-							buffer2[p2] = buffer[p];
-							p2++;
-						}
-						if (p != length)
-							p++;
-					}
-					dynvertices.push_back(Vector3F(vertexcomponents[0], vertexcomponents[1], vertexcomponents[2]));
-				}
-				// If line starts with 'f' index data is read
-				else if (buffer[p] == 'f')
-				{
-					p++;
-
-					char buffer2[16] = "";
-					int p2 = 0;
-					int facecomponents[3] = {0, 0, 0};
-					int p3 = 0;
-					while (p3 < 3)
-					{
-						if (buffer[p] == ' ' || p == length || buffer[p] == '\n')
-						{
-							buffer[p2] = '\0';
-							if (p2 != 0)
-							{
-								// Convert to int
-								std::string facestring(buffer2);
-								char *end = (char *)facestring.c_str() + facestring.length();
-								// Subtract one because file format uses one-based-indexing
-								facecomponents[p3] = (int)strtol(facestring.c_str(), &end, 10) - 1;
-								p2 = 0;
-								p3++;
-							}
-						}
-						if ((buffer[p] >= 48 && buffer[p] <= 57))
-						{
-							buffer2[p2] = buffer[p];
-							p2++;
-						}
-						if (p != length)
-							p++;
-					}
-					for (int i = 0; i < 3; i++)
-						dynindices.push_back(facecomponents[i]);
-				}
-				// If line starts with any other charcter than 'v' or 'f', then skip line
-				else
-				{
-					while (buffer[p] != '\n' && p != length)
-						p++;
-					if (p != length)
-						p++;
-				}
-
+				return initObj(name);
 			}
-
-			// Free memory
-			delete[] buffer;
-
-			// Copy the data from dynamic sized to fixed sized arrays (better performance)
-			vertexcount = dynvertices.size();
-			vertices = new Vector3F[vertexcount];
-			indexcount = dynindices.size();
-			indices = new int[indexcount];
-
-			for (int i = 0; i < vertexcount; i++)
-				vertices[i] = dynvertices[i];
-			for (int i = 0; i < indexcount; i++)
-				indices[i] = dynindices[i];
-
-			return true;
+			else if (name.substr(name.size() - 10) == ".scene.xml")
+			{
+				return initHorde3D(name);
+			}
+			else
+			{
+				std::cout << "Trimesh: Invalid extension: " << name << std::endl;
+				return false;
+			}
 		}
 
 		bool TrimeshData::init(Vector3F *vertices, int *indices, int vertexcount, int indexcount)
@@ -174,7 +68,9 @@ namespace peak
 			if (!vertices || !indices)
 				return false;
 			delete[] vertices;
+			vertices = 0;
 			delete[] indices;
+			indices = 0;
 			return true;
 		}
 
@@ -195,6 +91,74 @@ namespace peak
 			return indexcount;
 		}
 
+		bool TrimeshData::initObj(std::string filename)
+		{
+			// Open file from harddisk
+			std::ifstream file(filename.c_str());
+			if (!file)
+				return false;
+
+			// Declare these dynamic sized arrays because of missing vertex and index counts in .obj files
+			std::vector<Vector3F> dynvertices = std::vector<Vector3F>();
+			std::vector<int> dynindices = std::vector<int>();
+
+			// Read the vertex and index data, until the virtual file end is reached.
+			while (!file.eof())
+			{
+				std::string key;
+				file >> key;
+				if (key == "v")
+				{
+					// Vertex data
+					float vertex[3] = {0.0f, 0.0f, 0.0f};
+					for (unsigned int i = 0; i < 3; i++)
+					{
+						std::string s;
+						file >> s;
+						vertex[i] = (float)strtod(s.c_str(), 0);
+					}
+					dynvertices.push_back(Vector3F(vertex[0], vertex[1], vertex[2]));
+				}
+				else if (key == "f")
+				{
+					// Index data
+					for (unsigned int i = 0; i < 3; i++)
+					{
+						std::string s;
+						file >> s;
+						dynindices.push_back(atoi(s.c_str()) - 1);
+					}
+				}
+				else
+				{
+					// Skip line
+					std::string line;
+					std::getline(file, line);
+				}
+			}
+
+			// Close file
+			file.close();
+
+			// Copy the data from dynamic sized to fixed sized arrays (better performance)
+			vertexcount = dynvertices.size();
+			vertices = new Vector3F[vertexcount];
+			indexcount = dynindices.size();
+			indices = new int[indexcount];
+
+			for (int i = 0; i < vertexcount; i++)
+				vertices[i] = dynvertices[i];
+			for (int i = 0; i < indexcount; i++)
+				indices[i] = dynindices[i];
+
+			return true;
+		}
+		bool TrimeshData::initHorde3D(std::string filename)
+		{
+			// TODO
+			return false;
+		}
+
 		Trimesh::Trimesh() : Shape()
 		{
 		}
@@ -202,7 +166,7 @@ namespace peak
 		{
 		}
 
-		bool Trimesh::init(TrimeshData data, float mass, bool buildhull)
+		bool Trimesh::init(const TrimeshData &data, float mass, bool buildhull)
 		{
 			// Build triangle mesh from data
 			trimesh = new btTriangleMesh();

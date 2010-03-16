@@ -69,6 +69,11 @@ namespace peak
 					Vector3F scale;
 					virtual Shape *create(Entity *entity);
 				};
+				struct TrimeshInfo : public ShapeInfo
+				{
+					std::string file;
+					virtual Shape *create(Entity *entity);
+				};
 				struct BodyInfo
 				{
 					std::string name;
