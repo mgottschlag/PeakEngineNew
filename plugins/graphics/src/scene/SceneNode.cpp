@@ -19,8 +19,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "Horde3D.h"
 
-#include <iostream>
-
 namespace peak
 {
 	namespace graphics
@@ -141,7 +139,8 @@ namespace peak
 			// Add to the new parent
 			parent = newparent;
 			parent->children.push_back(this);
-			// TODO: Set parent
+			// Set parent
+			h3dSetNodeParent(node, parent->node);
 			newparent = 0;
 			drop();
 			mutex.unlock();

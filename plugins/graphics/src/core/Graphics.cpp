@@ -82,7 +82,9 @@ namespace peak
 		bool Graphics::loadAll()
 		{
 			std::string dir = engine->getDirectory() + "/Data/Graphics";
-			return h3dutLoadResourcesFromDisk(dir.c_str());
+			bool success = h3dutLoadResourcesFromDisk(dir.c_str());
+			h3dutDumpMessages();
+			return success;
 		}
 
 		void Graphics::registerLoading(Loadable *loadable)
