@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakphysics/physics/Simulation.hpp"
 
 #include <luabind/adopt_policy.hpp>
+#include <luabind/out_value_policy.hpp>
 
 namespace peak
 {
@@ -56,8 +57,15 @@ namespace peak
 						.def("onGround", &CharacterController::onGround)
 						.def("update", &CharacterController::update)
 						.def("getBody", &CharacterController::getBody),
+					// CollisionInfo
+					luabind::class_<CollisionInfo>("CollisionInfo")
+						.def(luabind::constructor<>())
+						.def_readwrite("lambda", &CollisionInfo::lambda)
+						.def_readwrite("point", &CollisionInfo::point)
+						.def_readwrite("body", &CollisionInfo::body),
 					// Simulation
 					luabind::class_<Simulation>("Simulation")
+						.def("castRay", &Simulation::castRay, luabind::pure_out_value(_4))
 				]
 			];
 		}

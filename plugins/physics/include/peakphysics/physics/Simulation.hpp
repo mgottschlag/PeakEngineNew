@@ -38,6 +38,9 @@ namespace peak
 		 */
 		struct CollisionInfo
 		{
+			CollisionInfo() : lambda(1.0f), body(0)
+			{
+			}
 			/**
 			 * For ray casts, leads to the point where the ray hit any geometry.
 			 * This point is start + lambda * (end - start).
@@ -96,8 +99,8 @@ namespace peak
 				 * collision information.
 				 * @return True if a shape was hit by the ray.
 				 */
-				bool castRay(Vector3F from, Vector3F to, CollisionInfo *info = 0,
-					Body *exclude = 0);
+				bool castRay(const Vector3F &from, const Vector3F &to,
+					CollisionInfo *info = 0, Body *exclude = 0);
 
 				/**
 				 * Returns the Bullet world. Can be used e.g. for manual collision

@@ -103,8 +103,8 @@ namespace peak
 				btCollisionObject *me;
 		};
 
-		bool Simulation::castRay(Vector3F from, Vector3F to, CollisionInfo *info,
-			Body *exclude)
+		bool Simulation::castRay(const Vector3F &from, const Vector3F &to,
+			CollisionInfo *info, Body *exclude)
 		{
 			// Cast ray
 			btVector3 bfrom(from.x, from.y, from.z);

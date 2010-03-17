@@ -39,19 +39,30 @@ namespace peak
 			if (!image->load(heightmap.c_str()))
 				return false;
 			// Convert height data
-			float *heightvalues = new float[image->getWidth() * image->getHeight()];
+			float *heightvalues = new float[(image->getWidth() + 1) * (image->getHeight() + 1)];
 			for (int y = 0; y < image->getHeight(); y++)
 			{
 				for (int x = 0; x < image->getWidth(); x++)
 				{
 					RGBQUAD color;
 					image->getPixelColor(x, image->getHeight() - y - 1, &color);
-					heightvalues[x + y * image->getWidth()] = ((float)color.rgbRed + (float)color.rgbGreen / 255.0f) / 256.0f;
+					heightvalues[x + y * (image->getWidth() + 1)] = ((float)color.rgbRed + (float)color.rgbGreen / 255.0f) / 256.0f;
 				}
 			}
+			// Fill in more data
+			for (unsigned int i = 0; i < image->getWidth(); i++)
+			{
+				heightvalues[image->getHeight() * (image->getWidth() + 1) + i] =
+					heightvalues[(image->getHeight() - 1) * (image->getWidth() + 1) + i];
+			}
+			for (unsigned int i = 0; i < image->getHeight() + 1; i++)
+			{
+				heightvalues[image->getWidth() + i * (image->getWidth() + 1)] =
+					heightvalues[image->getWidth() - 1 + i * (image->getWidth() + 1)];
+			}
 			// Create heightfield
-			terrain = new btHeightfieldTerrainShape(image->getWidth(), image->getHeight(), heightvalues, 1.0f, 1, true, false);
-			terrain->setLocalScaling(btVector3(scale.x, scale.y, scale.z));
+			terrain = new btHeightfieldTerrainShape(image->getWidth() + 1, image->getHeight() + 1, heightvalues, 1.0f, 1, true, false);
+			terrain->setLocalScaling(btVector3(scale.x / (image->getWidth() + 1), scale.y, scale.z / (image->getHeight() + 1)));
 			shape = terrain;
 
 			this->mass = mass;
