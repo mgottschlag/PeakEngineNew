@@ -18,6 +18,3 @@ add_subdirectory(plugins/physics)
 add_subdirectory(plugins/sound)
 
 # Tools
-
-add_subdirectory(tools/editor)
-
