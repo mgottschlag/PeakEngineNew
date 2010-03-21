@@ -21,6 +21,7 @@ src/core/GraphicsWorldComponentFactory.cpp
 src/gui/ButtonElement.cpp
 src/gui/FrameElement.cpp
 src/gui/GUIElement.cpp
+src/gui/ListBoxElement.cpp
 src/gui/RootElement.cpp
 src/scene/CameraSceneNode.cpp
 src/scene/GroupSceneNode.cpp

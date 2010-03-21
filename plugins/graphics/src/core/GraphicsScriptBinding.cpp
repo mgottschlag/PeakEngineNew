@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peakgraphics/scene/GUISceneNode.hpp"
 #include "peakgraphics/gui/ButtonElement.hpp"
 #include "peakgraphics/gui/FrameElement.hpp"
+#include "peakgraphics/gui/ListBoxElement.hpp"
 #include "peakengine/core/Engine.hpp"
 
 #include <luabind/operator.hpp>
@@ -105,10 +106,23 @@ namespace peak
 						.def("getActionID", &GUIElement::getActionID),
 					// ButtonElement
 					luabind::class_<ButtonElement, GUIElement, SharedPointer<ButtonElement> >("ButtonElement")
-						.def(luabind::constructor<GUISceneNode*, GUIElement*, std::string>()),
+						.def(luabind::constructor<GUISceneNode*, GUIElement*, std::string>())
+						.def("setLabel", (void (ButtonElement::*)(const std::string&))&ButtonElement::setLabel)
+						.def("getLabel", &ButtonElement::getLabel),
 					// FrameElement
 					luabind::class_<FrameElement, GUIElement, SharedPointer<FrameElement> >("FrameElement")
+						.def(luabind::constructor<GUISceneNode*, GUIElement*, std::string>()),
+					// ListBoxElement
+					luabind::class_<ListBoxElement, GUIElement, SharedPointer<ListBoxElement> >("ListBoxElement")
 						.def(luabind::constructor<GUISceneNode*, GUIElement*, std::string>())
+						.def("setTitle", &ListBoxElement::setTitle)
+						.def("getTitle", &ListBoxElement::getTitle)
+						.def("addRow", &ListBoxElement::addRow)
+						.def("getRow", &ListBoxElement::getRow)
+						.def("setRow", &ListBoxElement::setRow)
+						.def("deleteRow", &ListBoxElement::deleteRow)
+						.def("getRowCount", &ListBoxElement::getRowCount)
+						.def("clearRows", &ListBoxElement::clearRows)
 				]
 			];
 		}
