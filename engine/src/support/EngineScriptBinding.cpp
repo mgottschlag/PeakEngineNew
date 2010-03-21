@@ -312,6 +312,7 @@ namespace peak
 				.def("getEntityCount", (std::vector<Entity*> (World::*)(std::string))&World::getEntities, luabind::return_stl_iterator)
 				.def("getEntity", &World::getEntity)
 				.def("addEntity", &World::addEntity)
+				.def("removeEntity", &World::removeEntity)
 				.def("addComponent", &World::addComponent, luabind::adopt(_2))
 				.def("getComponent", &World::getComponent)
 				.def("start", &World::start)

@@ -243,6 +243,7 @@ namespace peak
 			{
 				unsigned int id = removalqueue.front();
 				deleteEntity(id);
+				removalqueue.pop();
 			}
 			entitymutex.unlock();
 			// Limit world to 50 fps
