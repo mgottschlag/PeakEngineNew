@@ -21,9 +21,12 @@ src/core/NetworkScriptBinding.cpp
 src/core/NetworkWorldComponent.cpp
 src/core/ServerEntityComponent.cpp
 src/core/ServerWorldComponent.cpp
+src/network/BroadcastClient.cpp
+src/network/BroadcastHost.cpp
 src/network/NetworkClient.cpp
 src/network/NetworkConnection.cpp
 src/network/NetworkHost.cpp
+src/network/ServerList.cpp
 )
 
 include_directories(include ../../engine/include ${LUA_INCLUDE_DIR})

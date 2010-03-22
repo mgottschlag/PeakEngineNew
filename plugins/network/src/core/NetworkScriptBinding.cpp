@@ -21,6 +21,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peaknetwork/core/ClientWorldComponent.hpp"
 #include "peaknetwork/core/ServerWorldComponent.hpp"
 #include "peaknetwork/network/NetworkConnection.hpp"
+#include "peaknetwork/network/BroadcastHost.hpp"
+#include "peaknetwork/network/BroadcastClient.hpp"
 #include "peakengine/core/Engine.hpp"
 #include "peakengine/core/Property.hpp"
 #include "peakengine/core/World.hpp"
@@ -76,7 +78,29 @@ namespace peak
 						.def("removeEntity", &ServerWorldComponent::removeEntity),
 					// ClientWorldComponent
 					luabind::class_<ClientWorldComponent, NetworkWorldComponent>("ClientWorldComponent")
-						.def(luabind::constructor<World*>())
+						.def(luabind::constructor<World*>()),
+					// ServerList
+					luabind::class_<ServerList, ReferenceCounted, SharedPointer<ServerList> >("ServerList")
+						.def("getServerCount", &ServerList::getServerCount)
+						.def("getAddress", &ServerList::getAddress)
+						.def("getInfo", &ServerList::getInfo),
+					// BroadcastHost
+					luabind::class_<BroadcastHost>("BroadcastHost")
+						.def(luabind::constructor<>())
+						.def("init", &BroadcastHost::init)
+						.def("shutdown", &BroadcastHost::shutdown)
+						.def("setReply", &BroadcastHost::setReply)
+						.def("getReply", &BroadcastHost::getReply)
+						.def("update", &BroadcastHost::update),
+					// BroadcastClient
+					luabind::class_<BroadcastClient>("BroadcastClient")
+						.def(luabind::constructor<>())
+						.def("start", &BroadcastClient::start)
+						.def("stop", &BroadcastClient::stop)
+						.def("clearList", &BroadcastClient::clearList)
+						.def("getServers", &BroadcastClient::getServers)
+						.def("getEvent", &BroadcastClient::getEvent)
+						.def("update", &BroadcastClient::update)
 				]
 			];
 		}

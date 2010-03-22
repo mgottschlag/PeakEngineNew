@@ -31,6 +31,7 @@ namespace peak
 		class ServerEntityComponent;
 		class ServerEntityComponent;
 		class NetworkConnection;
+		class BroadcastHost;
 
 		class ClientInfo
 		{
@@ -57,7 +58,8 @@ namespace peak
 				ServerWorldComponent(World *world);
 				virtual ~ServerWorldComponent();
 
-				bool init(BufferPointer serverdata, unsigned int port = 27272);
+				bool init(BufferPointer serverdata, unsigned int port = 27272,
+					bool broadcast = false, unsigned int broadcastport = 27273);
 				BufferPointer getServerData()
 				{
 					return serverdata.get();
@@ -80,6 +82,8 @@ namespace peak
 
 				std::vector<ServerEntityComponent*> entities;
 				std::queue<unsigned int> freelist;
+
+				BroadcastHost *broadcast;
 		};
 	}
 }

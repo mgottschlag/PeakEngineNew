@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "peaknetwork/network/NetworkHost.hpp"
 #include "peaknetwork/network/NetworkConnection.hpp"
 #include "peaknetwork/network/NetworkData.hpp"
+#include "peaknetwork/network/BroadcastHost.hpp"
 #include "peakengine/core/World.hpp"
 #include "peakengine/core/Entity.hpp"
 
@@ -31,15 +32,20 @@ namespace peak
 		unsigned int ClientInfo::lastid = 0;
 
 		ServerWorldComponent::ServerWorldComponent(World *world)
-			: NetworkWorldComponent(world, EWCT_Server)
+			: NetworkWorldComponent(world, EWCT_Server), broadcast(0)
 		{
 		}
 		ServerWorldComponent::~ServerWorldComponent()
 		{
+			if (broadcast)
+			{
+				broadcast->shutdown();
+				delete broadcast;
+			}
 		}
 
 		bool ServerWorldComponent::init(BufferPointer serverdata,
-			unsigned int port)
+			unsigned int port, bool broadcast, unsigned int broadcastport)
 		{
 			// Create network host
 			host = new NetworkHost();
@@ -51,6 +57,18 @@ namespace peak
 			}
 			// Save server data
 			this->serverdata = serverdata;
+			// Create broadcast host
+			if (broadcast)
+			{
+				this->broadcast = new BroadcastHost();
+				if (!this->broadcast->init(broadcastport))
+				{
+					delete host;
+					host = 0;
+					serverdata = 0;
+					return false;
+				}
+			}
 			return true;
 		}
 
@@ -139,6 +157,8 @@ namespace peak
 		void ServerWorldComponent::onPreUpdate()
 		{
 			host->update();
+			if (broadcast)
+				broadcast->update();
 			// Incoming network connections
 			NetworkConnection *newconnection = host->getNewConnection();
 			while (newconnection)
