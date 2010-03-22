@@ -107,6 +107,8 @@ namespace peak
 			if (parent != this->parent && parent != newparent)
 			{
 				// Register for parent change
+				if (parent)
+					parent->grab();
 				if (!newparent)
 					graphics->registerParentChange(this);
 				newparent = parent;
@@ -141,8 +143,9 @@ namespace peak
 			parent->children.push_back(this);
 			// Set parent
 			h3dSetNodeParent(node, parent->node);
-			newparent = 0;
 			drop();
+			newparent->drop();
+			newparent = 0;
 			mutex.unlock();
 		}
 		void SceneNode::update()

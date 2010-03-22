@@ -123,6 +123,8 @@ namespace peak
 						.def("deleteRow", &ListBoxElement::deleteRow)
 						.def("getRowCount", &ListBoxElement::getRowCount)
 						.def("clearRows", &ListBoxElement::clearRows)
+						.def("getSelection", &ListBoxElement::getSelection)
+						.def("setSelection", &ListBoxElement::setSelection)
 				]
 			];
 		}

@@ -53,11 +53,12 @@ namespace peak
 			h3dSetOption(H3DOptions::ShadowMapSize, 2048);
 			h3dSetupViewport(0, 0, width, height, true);
 			root = new RootSceneNode(this);
+			root->grab();
 			return true;
 		}
 		bool Graphics::shutdown()
 		{
-			delete root;
+			root->drop();
 			h3dRelease();
 			return true;
 		}
