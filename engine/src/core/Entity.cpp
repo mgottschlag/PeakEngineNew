@@ -147,6 +147,14 @@ namespace peak
 		return getComponent(type, 0);
 	}
 
+	void Entity::addedToWorld()
+	{
+		for (unsigned int i = 0; i < components.size(); i++)
+		{
+			components[i]->addedToWorld();
+		}
+	}
+
 	bool Entity::init()
 	{
 		// Install properties

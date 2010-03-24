@@ -39,6 +39,7 @@ namespace peak
 			virtual bool installProperties();
 			virtual bool init();
 			virtual void destroy();
+			virtual void addedToWorld();
 
 			virtual void update();
 

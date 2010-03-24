@@ -61,6 +61,7 @@ namespace peak
 			freelist.pop();
 		}
 		entitymutex.unlock();
+		entity->addedToWorld();
 	}
 	void World::removeEntity(Entity *entity)
 	{
@@ -80,6 +81,10 @@ namespace peak
 
 	unsigned int World::getEntityCount()
 	{
+		entitymutex.lock();
+		unsigned int count = entities.size() - freelist.size();
+		entitymutex.unlock();
+		return count;
 	}
 	std::vector<Entity*> World::getEntities()
 	{

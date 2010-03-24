@@ -161,6 +161,12 @@ namespace peak
 			}
 
 			/**
+			 * Called when the entity is added to a world. Calls
+			 * EntityComponent::addedToWorld() for all components.
+			 */
+			void addedToWorld();
+
+			/**
 			 * Installs all components.
 			 */
 			bool init();

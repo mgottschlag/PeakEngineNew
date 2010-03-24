@@ -36,6 +36,9 @@ namespace peak
 	void EntityComponent::destroy()
 	{
 	}
+	void EntityComponent::addedToWorld()
+	{
+	}
 
 	void EntityComponent::update()
 	{
