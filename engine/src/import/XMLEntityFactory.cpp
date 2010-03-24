@@ -129,7 +129,6 @@ namespace peak
 		{
 			// Check flags
 			ComponentInfo &info = components[i];
-			std::cout << "Flags: " << flags << "(" << info.flagsunset << "/" << info.flagsset << ")" << std::endl;
 			if (((flags & info.flagsunset) != 0)
 				|| ((flags & info.flagsset) != info.flagsset))
 			{
@@ -153,6 +152,7 @@ namespace peak
 		}
 		// Create entity
 		Entity *entity = new Entity(world);
+		entity->setFlags(flags);
 		entity->setType(getName());
 		// Create properties
 		// TODO

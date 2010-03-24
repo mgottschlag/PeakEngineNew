@@ -241,6 +241,9 @@ namespace peak
 				.def("getComponent", (EntityComponent *(Entity::*)(int))&Entity::getComponent)
 				.def("getComponent", (EntityComponent *(Entity::*)(int, unsigned int))&Entity::getComponent)
 				.def("getWorld", &Entity::getWorld)
+				.def("getFlag", (bool (Entity::*)(EntityFlag))&Entity::getFlag)
+				.def("getFlags", &Entity::getFlags)
+				.def("setFlag", &Entity::setFlag)
 				.enum_("EntityFlag")
 				[
 					luabind::value("ServerFlag", EEF_Server),

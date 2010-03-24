@@ -105,7 +105,7 @@ namespace peak
 			/**
 			 * Returns the entity flag with the given name.
 			 */
-			static EntityFlag getFlag(std::string name);
+			static EntityFlag getFlag(const std::string &name);
 
 			/**
 			 * Sets the type name of the entity. This name is used e.g. for

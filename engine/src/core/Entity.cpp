@@ -71,7 +71,7 @@ namespace peak
 	{
 		this->flags = flags;
 	}
-	EntityFlag Entity::getFlag(std::string name)
+	EntityFlag Entity::getFlag(const std::string &name)
 	{
 		if (name == "server")
 			return EEF_Server;
