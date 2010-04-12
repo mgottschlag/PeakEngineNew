@@ -44,15 +44,17 @@ namespace peak
 			}
 		}
 
-		bool ServerWorldComponent::init(BufferPointer serverdata,
+		bool ServerWorldComponent::init(Buffer *serverdata,
 			unsigned int port, bool broadcast, unsigned int broadcastport)
 		{
+			serverdata->grab();
 			// Create network host
 			host = new NetworkHost();
 			if (!host->init(port))
 			{
 				delete host;
 				host = 0;
+				serverdata->drop();
 				return false;
 			}
 			// Save server data
@@ -65,10 +67,12 @@ namespace peak
 				{
 					delete host;
 					host = 0;
-					serverdata = 0;
+					this->serverdata = 0;
+					serverdata->drop();
 					return false;
 				}
 			}
+			serverdata->drop();
 			return true;
 		}
 
@@ -279,8 +283,12 @@ namespace peak
 
 		void ServerWorldComponent::insertNewConnection(NetworkConnection *connection)
 		{
+			// TODO: Locking!
 			// TODO: Check whether we want to accept the connection
-			clients.push_back(ClientInfo(connection));
+			ClientInfo info(connection);
+			clients.push_back(info);
+			// Trigger event
+			connectionevent.trigger(info.id);
 			// Write server data
 			BufferPointer msg = new Buffer();
 			msg->write8(EPT_InitialData);

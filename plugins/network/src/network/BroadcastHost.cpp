@@ -77,7 +77,6 @@ namespace peak
 
 		void BroadcastHost::update()
 		{
-			std::cout << "BroadcastHost::update()" << std::endl;
 			int length;
 			ENetAddress addr;
 			ENetBuffer bcbuffer;
@@ -94,7 +93,6 @@ namespace peak
 				}
 				else
 				{
-					std::cout << "Got broadcast message." << std::endl;
 					// Send answer
 					ENetBuffer replybuffer;
 					if (reply)

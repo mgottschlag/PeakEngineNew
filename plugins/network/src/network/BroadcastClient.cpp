@@ -29,6 +29,7 @@ namespace peak
 		}
 		BroadcastClient::~BroadcastClient()
 		{
+			mutex.lock();
 			for (unsigned int i = 0; i < serverinfo.size(); i++)
 				serverinfo[i]->drop();
 		}
@@ -43,7 +44,6 @@ namespace peak
 				std::cout << "enet_socket_set_option2" << std::endl;
 			this->port = port;
 			updatetime = 50;
-			std::cout << "Started broadcast client (" << port << ")." << std::endl;
 		}
 		void BroadcastClient::stop()
 		{
@@ -55,6 +55,8 @@ namespace peak
 		{
 			mutex.lock();
 			address.clear();
+			for (unsigned int i = 0; i < serverinfo.size(); i++)
+				serverinfo[i]->drop();
 			serverinfo.clear();
 			mutex.unlock();
 		}
@@ -104,12 +106,15 @@ namespace peak
 				}
 				if (length > 0)
 				{
-					std::cout << "Got broadcast response." << std::endl;
+					mutex.lock();
 					// Get address
 					char addrstr[16];
 					enet_address_get_host_ip(&remoteaddr, addrstr, 16);
 					// Get server info
 					Buffer *reply = new Buffer(buffer.data, length);
+					reply->grab();
+					// FIXME: Reference leak!
+					// We somehow get a crash though without this.
 					reply->grab();
 					// Look if the server is already known
 					bool unknown = true;
@@ -133,6 +138,7 @@ namespace peak
 						serverinfo.push_back(reply);
 						listchanged = true;
 					}
+					mutex.unlock();
 				}
 			}
 			// Call calback function

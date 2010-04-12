@@ -63,7 +63,7 @@ namespace peak
 			luabind::class_<ReferenceCounted, SharedPointer<ReferenceCounted> >("ReferenceCounted")
 				.def(luabind::constructor<>()),
 			// Loadable
-			luabind::class_<Loadable, ReferenceCounted, SharedPointer<Loadable> >("Loadable"),
+			luabind::class_<Loadable, ReferenceCounted, SharedPointer<ReferenceCounted> >("Loadable"),
 			// Vector2F
 			luabind::class_<Vector2F>("Vector2F")
 				.def(luabind::constructor<>())
@@ -207,7 +207,7 @@ namespace peak
 				.def("trigger", &EventQueue1<int>::trigger)
 				.def("getReceiver", &EventQueue1<int>::getReceiver),
 			// Buffer
-			luabind::class_<Buffer, ReferenceCounted, SharedPointer<Buffer> >("Buffer")
+			luabind::class_<Buffer, ReferenceCounted, SharedPointer<ReferenceCounted> >("Buffer")
 				.def(luabind::constructor<>())
 				.def("setSize", &Buffer::setSize)
 				.def("getSize", &Buffer::getSize)
@@ -322,9 +322,16 @@ namespace peak
 				.def("pause", &World::pause)
 				.def("stop", &World::stop)
 				.def("isRunning", &World::isRunning),
-				// WorldComponent
+			// WorldComponent
 			luabind::class_<WorldComponent>("WorldComponent")
-				.def("setWorld", &WorldComponent::setWorld),
+				.def("setWorld", &WorldComponent::setWorld)
+				.enum_("WorldComponentType")
+				[
+					luabind::value("Physics", EWCT_Physics),
+					luabind::value("Graphics", EWCT_Graphics),
+					luabind::value("Server", EWCT_Server),
+					luabind::value("Client", EWCT_Client)
+				],
 			// Engine
 			luabind::class_<Engine>("Engine")
 				.def("stop", &Engine::stop)

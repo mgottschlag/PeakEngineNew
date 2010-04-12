@@ -30,6 +30,7 @@ namespace peak
 				virtual ~ServerEntityComponent();
 
 				virtual bool init();
+				virtual void addedToWorld();
 
 				virtual int getType()
 				{

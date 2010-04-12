@@ -38,8 +38,15 @@ namespace peak
 			ServerWorldComponent *server = (ServerWorldComponent*)world->getComponent(EWCT_Server);
 			if (!server)
 				return false;
-			server->addEntity(getEntity());
 			return true;
+		}
+		void ServerEntityComponent::addedToWorld()
+		{
+			World *world = getEntity()->getWorld();
+			ServerWorldComponent *server = (ServerWorldComponent*)world->getComponent(EWCT_Server);
+			if (!server)
+				return;
+			server->addEntity(getEntity());
 		}
 
 		bool ServerEntityComponent::hasChanged(unsigned int time)

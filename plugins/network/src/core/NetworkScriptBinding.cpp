@@ -63,7 +63,9 @@ namespace peak
 						.def("onUpdate", &NetworkEntityComponent::onUpdate)
 						.def("onMessage", &NetworkEntityComponent::onMessage),
 					// ServerEntityComponent
-					luabind::class_<ServerEntityComponent, NetworkEntityComponent>("ServerEntityComponent"),
+					luabind::class_<ServerEntityComponent, NetworkEntityComponent>("ServerEntityComponent")
+						.def("setOwner", &ServerEntityComponent::setOwner)
+						.def("getOwner", &ServerEntityComponent::getOwner),
 					// ClientEntityComponent
 					luabind::class_<ClientEntityComponent, NetworkEntityComponent>("ClientEntityComponent"),
 					// NetworkWorldComponent
@@ -75,12 +77,15 @@ namespace peak
 						.def("init", &ServerWorldComponent::init)
 						.def("getServerData", &ServerWorldComponent::getServerData)
 						.def("addEntity", &ServerWorldComponent::addEntity)
-						.def("removeEntity", &ServerWorldComponent::removeEntity),
+						.def("removeEntity", &ServerWorldComponent::removeEntity)
+						.def("getConnectionEvent", &ServerWorldComponent::getConnectionEvent),
 					// ClientWorldComponent
 					luabind::class_<ClientWorldComponent, NetworkWorldComponent>("ClientWorldComponent")
-						.def(luabind::constructor<World*>()),
+						.def(luabind::constructor<World*>())
+						.def("init", &ClientWorldComponent::init)
+						.def("getServerData", &ClientWorldComponent::getServerData),
 					// ServerList
-					luabind::class_<ServerList, ReferenceCounted, SharedPointer<ServerList> >("ServerList")
+					luabind::class_<ServerList, ReferenceCounted, SharedPointer<ReferenceCounted> >("ServerList")
 						.def("getServerCount", &ServerList::getServerCount)
 						.def("getAddress", &ServerList::getAddress)
 						.def("getInfo", &ServerList::getInfo),

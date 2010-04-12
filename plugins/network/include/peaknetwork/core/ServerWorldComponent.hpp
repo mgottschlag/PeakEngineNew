@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "NetworkWorldComponent.hpp"
 #include "peakengine/support/Buffer.hpp"
+#include "peakengine/support/Event.hpp"
 
 #include <string>
 #include <queue>
@@ -58,11 +59,11 @@ namespace peak
 				ServerWorldComponent(World *world);
 				virtual ~ServerWorldComponent();
 
-				bool init(BufferPointer serverdata, unsigned int port = 27272,
+				bool init(Buffer *serverdata, unsigned int port = 27272,
 					bool broadcast = false, unsigned int broadcastport = 27273);
 				BufferPointer getServerData()
 				{
-					return serverdata.get();
+					return serverdata;
 				}
 
 				void addEntity(Entity *entity);
@@ -72,6 +73,11 @@ namespace peak
 
 				virtual void onPreUpdate();
 				virtual void onPostUpdate();
+
+				Event1<int> &getConnectionEvent()
+				{
+					return connectionevent;
+				}
 
 			private:
 				void insertNewConnection(NetworkConnection *connection);
@@ -84,6 +90,8 @@ namespace peak
 				std::queue<unsigned int> freelist;
 
 				BroadcastHost *broadcast;
+
+				Event1<int> connectionevent;
 		};
 	}
 }

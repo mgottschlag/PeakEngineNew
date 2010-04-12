@@ -35,7 +35,7 @@ namespace peak
 
 		bool NetworkConnection::isConnected()
 		{
-			if(peer != 0)
+			if (peer != 0)
 				return true;
 			else
 				return false;
@@ -50,7 +50,7 @@ namespace peak
 
 		void NetworkConnection::send(BufferPointer buffer, bool reliable)
 		{
-			ENetPacket * packet = enet_packet_create (buffer->getData(),
+			ENetPacket *packet = enet_packet_create (buffer->getData(),
 				buffer->getSize(), reliable ? ENET_PACKET_FLAG_RELIABLE : 0);
 
 			// Send the packet to the peer over channel id 0.
