@@ -11,6 +11,8 @@ peak::graphics::Graphics graphics;
 peak::network::Network network;
 peak::physics::Physics physics;
 
+bool mouselocked = true;
+
 static int oldx;
 static int oldy;
 
@@ -114,6 +116,14 @@ static void GLFWCALL mouseButtonInput(int key, int state)
 }
 static void GLFWCALL keyboardInput(int key, int state)
 {
+	if (key == GLFW_KEY_RCTRL && state == GLFW_PRESS)
+	{
+		mouselocked = !mouselocked;
+		if (mouselocked)
+			glfwDisable(GLFW_MOUSE_CURSOR);
+		else
+			glfwEnable(GLFW_MOUSE_CURSOR);
+	}
 	graphics.injectKeyboard(convertKey(key), state);
 }
 static void GLFWCALL charInput(int c, int state)

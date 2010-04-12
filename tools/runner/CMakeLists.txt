@@ -17,7 +17,14 @@ set(SRC
 src/main.cpp
 )
 
-include_directories(include ${LUA_INCLUDE_DIR})
+include_directories(
+include
+../../engine/include
+../../plugins/physics/include
+../../plugins/graphics/include
+../../plugins/network/include
+${LUA_INCLUDE_DIR}
+)
 
 add_executable(PeakRunner ${SRC})
 target_link_libraries(PeakRunner Horde3D PeakEngine PeakGraphics PeakNetwork PeakPhysics Xrandr glfw)
